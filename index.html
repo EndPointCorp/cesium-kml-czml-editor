@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Cesium KML Editor</title>
+  <link rel="stylesheet" href="js/cesium-1.67/Widgets/widgets.css">
+  <script src="js/cesium-1.67/Cesium.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <input type="file" id="file"/>
+        <div id="editor">
+          <div v-if="entity">
+            <h4>{{ entity.name }}</h4>
+            <button v-on:click="flyToEntity();">FlyTo</button>
+
+            <billboard-editor v-if="entity.billboard"
+              v-bind:billboard="entity.billboard" ></billboard-editor>
+
+            <polygon-editor v-if="entity.polygon"
+              v-bind:polygon="entity.polygon" ></polygon-editor>
+          </div>
+          <h4>Entities:</h4>
+          <div v-for="e in entities" :key="e.id" v-on:click="selectEntity(e);">{{e.name}}</div>
+        </div>
+    </div>
+    <div id="viewer"></div>
+
+    <script src="js/index.js" type="module"></script>
+</body>
+</html>

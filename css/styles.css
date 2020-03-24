@@ -1,0 +1,22 @@
+html, body {
+    margin: 0px;
+    padding: 0px;
+}
+html, body {
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: row;
+}
+
+#viewer {
+    height: 100%;
+    min-width: 0px;
+    flex: 1 0 auto;
+}
+.sidebar {
+    height: 100%;
+    flex: 0 1 auto;
+    width: 25%;
+}
