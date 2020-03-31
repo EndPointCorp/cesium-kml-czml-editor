@@ -11,7 +11,7 @@ export default class EditorFieldsBuilder {
             template: createComponentsFieldTemplate(this.subjectAlias, fieldName, components),
             initFunction: createComponentsFieldInitFunction(this.subjectAlias, this.subjectType, fieldName, components),
             updateFunction: createUpdateFunction(this.subjectAlias, this.subjectType, fieldName, constructor),
-            newFunction: createNewFunction(this.subjectAlias, fieldName, constructor)
+            newFunction: createNewFunction(this.subjectAlias, this.subjectType, fieldName, constructor)
         };
         return this;
     }
