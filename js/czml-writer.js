@@ -1,5 +1,3 @@
-
-
 function copyEntityField(entity, packet, field) {
     let val = entity[field];
 
@@ -34,7 +32,7 @@ function encodePosition (pos) {
 }
 
 function writeConstantProperty(val, packet, property, adapter) {
-    if (val !== undefined && val instanceof Cesium.ConstantProperty) {
+    if (val !== undefined && val.isConstant) {
         const v = val.valueOf();
         if (adapter) {
             const adapted = adapter(v);
@@ -113,7 +111,7 @@ function encodeDistanceDisplayCondition(v) {
     };
 }
 
-function encodePositions (hierarchy) {
+function encodePolygonPositions (hierarchy) {
     return {
         cartographicDegrees: hierarchy.positions.reduce((arr, p) => {
             return [...arr, ...cartesianAsCartographicDegrees(p)];
@@ -123,7 +121,7 @@ function encodePositions (hierarchy) {
 
 function encodeHoles (hierarchy) {
     if (hierarchy.holes) {
-        return hierarchy.holes.map(encodePositions);
+        return hierarchy.holes.map(encodePolygonPositions);
     }
 
     return undefined;
@@ -138,6 +136,14 @@ function encodeCartesian2(v) {
 function encodeCartesian3(v) {
     return {
         "cartesian": [v.x, v.y, v.z]
+    };
+}
+
+function encodePositions(v) {
+    return {
+        cartographicDegrees: v.getValue().reduce((arr, p) => {
+            return [...arr, ...cartesianAsCartographicDegrees(p)];
+        }, [])
     };
 }
 
@@ -167,15 +173,11 @@ function writeBillboard(billboard) {
     return result;
 }
 
-function writePath(path) {
-    return {};
-}
-
 function writePolygon(polygon) {
 
     const result = {};
 
-    writeConstantProperty(polygon.hierarchy, result, 'positions', encodePositions);
+    writeConstantProperty(polygon.hierarchy, result, 'positions', encodePolygonPositions);
     writeConstantProperty(polygon.hierarchy, result, 'holes', encodeHoles);
 
     writeConstantProperty(polygon.arcType, result, 'arcType', enumEncoder(Cesium.ArcType));
@@ -210,16 +212,23 @@ function writePolygon(polygon) {
     return result;
 }
 
-function writeLabel(label) {
+function writePolyline(polyline) {
+    const result = {};
 
-}
+    writeConstantProperty(polyline.positions, result, 'positions', encodePositions);
+    writeConstantProperty(polyline.arcType, result, 'arcType', enumEncoder(Cesium.ArcType));
+    writeConstantProperty(polyline.width, result, 'width');
+    writeConstantProperty(polyline.granularity, result, 'granularity');
+    writeMaterialProperty(polyline.material, result, 'material');
+    writeConstantProperty(polyline.followSurface, result, 'followSurface');
+    writeConstantProperty(polyline.shadows, result, 'shadows', enumEncoder(Cesium.ShadowMode));
+    writeMaterialProperty(polyline.depthFailMaterial, result, 'depthFailMaterial');
+    writeConstantProperty(polyline.distanceDisplayCondition, result, 'distanceDisplayCondition', encodeDistanceDisplayCondition);
+    writeConstantProperty(polyline.clampToGround, result, 'clampToGround');
+    writeConstantProperty(polyline.classificationType, result, 'classificationType', enumEncoder(Cesium.ClassificationType));
+    writeConstantProperty(polyline.zIndex, result, 'zIndex');
 
-function writeModel(model) {
-
-}
-
-function writePoint(point) {
-
+    return result;
 }
 
 export default class DocumentWriter {
@@ -264,24 +273,12 @@ export default class DocumentWriter {
             packet.billboard = writeBillboard(entity.billboard);
         }
 
-        if (entity.path) {
-            packet.path = writePath(entity.path);
+        if (entity.polyline) {
+            packet.polyline = writePolyline(entity.polyline);
         }
 
         if (entity.polygon) {
             packet.polygon = writePolygon(entity.polygon);
-        }
-
-        if (entity.label) {
-            packet.label = writeLabel(entity.label);
-        }
-
-        if (entity.model) {
-            packet.model = writeModel(entity.model);
-        }
-
-        if (entity.point) {
-            packet.point = writePoint(entity.point);
         }
 
         if (entity.parent) {
