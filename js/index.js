@@ -1,5 +1,7 @@
 import './field-editors/billboard.js'
 import './field-editors/polygon.js'
+import './entity.js'
+
 import DocumentWriter from './czml-writer.js'
 
 const viewer = new Cesium.Viewer('viewer');
@@ -20,6 +22,11 @@ const editor = new Vue({
             if (this.entity) {
                 viewer.flyTo(this.entity);
             }
+        },
+        isFolder: function(entity) {
+            return entity.position === undefined && this.entities.some(e => {
+                return e.parent && e.parent.id === entity.id;
+            });
         },
         toCZML: function() {
             const w = new DocumentWriter();

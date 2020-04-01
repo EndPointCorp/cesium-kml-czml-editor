@@ -17,10 +17,10 @@
     <div class="sidebar">
         <input type="file" id="file" accept=".kml, .kmz, .json, .czml"/>
         <div id="editor">
-          <button v-if="entities" v-on:click="toCZML">as CZML</button>
-          <a v-if="czml" :href="czml" :download="filename">Download</a>
+          <button v-if="filename" v-on:click="toCZML">as CZML</button>
+          <a class="download-link" v-if="czml" :href="czml" :download="filename">Download</a>
           <div v-if="entity">
-            <h4>{{ entity.name }}</h4>
+            <h4 class="entity-name">{{ entity.name }}</h4>
             <button v-on:click="flyToEntity();">FlyTo</button>
 
             <billboard-editor v-if="entity.billboard"
@@ -29,8 +29,13 @@
             <polygon-editor v-if="entity.polygon"
               v-bind:polygon="entity.polygon" ></polygon-editor>
           </div>
-          <h4>Entities:</h4>
-          <div v-for="e in entities" :key="e.id" v-on:click="selectEntity(e);">{{e.name}}</div>
+          <div class="entities-list">
+            <h4>Entities:</h4>
+            <entity v-for="e in entities" :key="e.id"
+              v-bind:entity="e"
+              v-bind:select="selectEntity"
+              v-bind:is-folder="isFolder"></entity>
+          </div>
         </div>
     </div>
     <div id="viewer"></div>

@@ -39,8 +39,8 @@ export default class EditorFieldsBuilder {
             return templateFunction(fieldsTemplate);
         }
 
-        return `<div>
-            <div>${this.subjectAlias.replace(/./, c => {return c.toUpperCase()})}</div>
+        return `<div class="editor ${this.subjectAlias}-editor" >
+            <div class="editor-name">${this.subjectAlias.replace(/./, c => {return c.toUpperCase()})}</div>
             ${fieldsTemplate}
         </div>`;
     }
@@ -82,13 +82,11 @@ function createEnumUpdateFunction(subjectAlias, subjectType, fieldName, aEnum) {
     return function () {
         if (this[fieldName] === 'undefined') {
             Object.getOwnPropertyDescriptor(subjectType.prototype, fieldName).set.call(this[subjectAlias], null);
-            //this[subjectAlias][fieldName] = null;
         }
         else {
             const value = aEnum[this[fieldName]];
             if (value !== undefined) {
                 Object.getOwnPropertyDescriptor(subjectType.prototype, fieldName).set.call(this[subjectAlias], value);
-                //this[subjectAlias][fieldName] = origin;
             }
         }
     };
@@ -99,7 +97,7 @@ function createEnumFieldInitFunction(subjectAlias, subjectType, fieldName, aEnum
         const value = subject[fieldName] && subject[fieldName].valueOf();
         if (value !== undefined) {
             this[fieldName] = Object.keys(aEnum).find(k => {
-                return aEnum[k] === origin;
+                return aEnum[k] === value;
             });
         }
         else {
@@ -111,8 +109,8 @@ function createEnumFieldInitFunction(subjectAlias, subjectType, fieldName, aEnum
 function createEnumFieldTemplate(subjectAlias, fieldName, cesiumEnum) {
     const camelCaseFieldName = fieldName.replace(/./, c => {return c.toUpperCase()});
     return `\
-    <div><label>${fieldName}:</label>
-        <select v-model="${fieldName}" v-on:change="update${camelCaseFieldName}();">
+    <div class="editor-field"><label>${fieldName}:</label>
+        <select class="enum-field" v-model="${fieldName}" v-on:change="update${camelCaseFieldName}();">
             <option>undefined</option>
             ${ Object.keys(cesiumEnum).map(k => '<option>' + k + '</option>').join('\n') }
         </select>
@@ -120,7 +118,9 @@ function createEnumFieldTemplate(subjectAlias, fieldName, cesiumEnum) {
 }
 
 function createDirectPropertyTemplate(subjectAlias, fieldName) {
-    return `<div><label>${fieldName}:</label> <input v-model="${subjectAlias}.${fieldName}"></input></div>`
+    return `<div class="editor-field"><label>${fieldName}:</label>
+        <input class="direct-property-field" v-model="${subjectAlias}.${fieldName}"></input>
+    </div>`;
 }
 
 function createUpdateFunction(subjectAlias, subjectType, fieldName, components, constructor) {
@@ -166,10 +166,12 @@ function createComponentsFieldTemplate(subjectAlias, fieldName, components) {
     const camelCaseFieldName = fieldName.replace(/./, c => {return c.toUpperCase()});
 
     const componentsString = components.map(c => {
-        return `<input v-model="${fieldName}.${c}" v-on:change="update${camelCaseFieldName}();"></input>`
+        return `<input class="component-field-component ${fieldName}-${c}"
+            v-model="${fieldName}.${c}"
+            v-on:change="update${camelCaseFieldName}();"></input>`
     });
 
-    const template = `<div>
+    const template = `<div class="editor-field">
         <label>${fieldName}</label>
         <div v-if="${subjectAlias}.${fieldName}">
             ${componentsString.join('\n')}
