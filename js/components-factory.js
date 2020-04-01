@@ -25,10 +25,18 @@ export default class EditorFieldsBuilder {
         return this;
     }
 
-    addDirectPropertyField(fieldName) {
-        this.fields[fieldName] = {
-            template: createDirectPropertyTemplate(this.subjectAlias, fieldName)
-        };
+    addDirectPropertyField(fieldName, type) {
+        if (type === Boolean) {
+            this.fields[fieldName] = {
+                template: createDirectPropertyTemplate(this.subjectAlias, fieldName, 'checkbox'),
+            };
+        }
+        else {
+            this.fields[fieldName] = {
+                template: createDirectPropertyTemplate(this.subjectAlias, fieldName)
+            };
+        }
+
         return this;
     }
 
@@ -117,9 +125,23 @@ function createEnumFieldTemplate(subjectAlias, fieldName, cesiumEnum) {
     </div>`;
 }
 
-function createDirectPropertyTemplate(subjectAlias, fieldName) {
+function createDirectPropertyTemplate(subjectAlias, fieldName, type='text') {
+    // v-model="${subjectAlias}.${fieldName}"
+    let input = `<input type="${type}"
+        class="direct-property-field"
+        v-model="${subjectAlias}.${fieldName}"></input>`;
+
+    if (type === 'checkbox') {
+        input = `\
+        <input type="checkbox" class="direct-property-field" \
+            v-bind:checked="\
+                ${subjectAlias}.${fieldName} ? ${subjectAlias}.${fieldName}.valueOf() : undefined" \
+            v-on:change="${subjectAlias}.${fieldName} = $event.target.checked;"></input>
+        `;
+    }
+
     return `<div class="editor-field"><label>${fieldName}:</label>
-        <input class="direct-property-field" v-model="${subjectAlias}.${fieldName}"></input>
+        ${input}
     </div>`;
 }
 
@@ -168,7 +190,7 @@ function createComponentsFieldTemplate(subjectAlias, fieldName, components) {
     const componentsString = components.map(c => {
         return `<input class="component-field-component ${fieldName}-${c}"
             v-model="${fieldName}.${c}"
-            v-on:change="update${camelCaseFieldName}();"></input>`
+            v-on:input="update${camelCaseFieldName}();"></input>`
     });
 
     const template = `<div class="editor-field">

@@ -8,6 +8,10 @@ editorBuilder.addEnumField('heightReference', Cesium.HeightReference);
 editorBuilder.addDirectPropertyField('extrudedHeight');
 editorBuilder.addEnumField('extrudedHeightReference', Cesium.HeightReference);
 
+editorBuilder.addDirectPropertyField('perPositionHeight', Boolean);
+editorBuilder.addDirectPropertyField('closeTop', Boolean);
+editorBuilder.addDirectPropertyField('closeBottom', Boolean);
+
 const initModel = editorBuilder.getInitFunction();
 
 Vue.component('polygon-editor', {
