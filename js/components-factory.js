@@ -194,7 +194,7 @@ function createComponentsFieldTemplate(subjectAlias, fieldName, components) {
     });
 
     const template = `<div class="editor-field">
-        <label>${fieldName}</label>
+        <label>${fieldName}:</label>
         <div v-if="${subjectAlias}.${fieldName}">
             ${componentsString.join('\n')}
         </div>

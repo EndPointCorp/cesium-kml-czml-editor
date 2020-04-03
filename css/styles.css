@@ -10,6 +10,11 @@ body {
     flex-direction: row;
 }
 
+h4 {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
 #viewer {
     height: 100%;
     min-width: 0px;
@@ -19,4 +24,51 @@ body {
     height: 100%;
     flex: 0 1 auto;
     width: 25%;
+
+    min-height: 0;
+    overflow-y: auto;
+}
+.sidebar {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+input#file {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+.editor-field {
+    display: table-row;
+}
+.editor-field > * {
+    display: table-cell;
+    margin: 0.125em;
+}
+.entity-flyto {
+    margin-bottom: 0.25em;
+}
+.editor-name {
+    font-weight: bold;
+    margin-bottom: 0.25em;
+}
+.editor-field:nth-child(even) > label {
+    background-color: #ececec;
+}
+.editor-field:nth-child(odd) > label {
+    background-color: #fafafa;
+}
+
+.editor-field button, .editor-field select {
+    width: 100px;
+}
+.editor-field input {
+    width: 96px;
+}
+.editor-field .component-field-component {
+    /* width: 43px; */
+    margin-left: 2px;
+}
+
+.entities-list {
+    margin-top: 0.5em;
+    border-top: 1px solid #666;
 }

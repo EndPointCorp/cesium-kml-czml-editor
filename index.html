@@ -21,7 +21,7 @@
           <a class="download-link" v-if="czml" :href="czml" :download="filename">Download</a>
           <div v-if="entity">
             <h4 class="entity-name">{{ entity.name }}</h4>
-            <button v-on:click="flyToEntity();">FlyTo</button>
+            <button class="entity-flyto" v-on:click="flyToEntity();">FlyTo</button>
 
             <billboard-editor v-if="entity.billboard"
               v-bind:billboard="entity.billboard" ></billboard-editor>
@@ -29,7 +29,7 @@
             <polygon-editor v-if="entity.polygon"
               v-bind:polygon="entity.polygon" ></polygon-editor>
           </div>
-          <div class="entities-list">
+          <div v-if="entities.length > 0" class="entities-list">
             <h4>Entities:</h4>
             <entity v-for="e in entities" :key="e.id"
               v-bind:entity="e"
