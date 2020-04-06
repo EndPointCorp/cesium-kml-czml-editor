@@ -72,3 +72,10 @@ input#file {
     margin-top: 0.5em;
     border-top: 1px solid #666;
 }
+
+.entities-list div.selected {
+    background-color: rgb(156, 221, 154);
+}
+.entities-list .appended {
+    background-color: rgb(200, 219, 199);
+}

@@ -44,12 +44,13 @@ export default class EditorFieldsBuilder {
         const fieldsTemplate = Object.keys(this.fields).map(k => this.fields[k].template).join('\n');
 
         if (templateFunction) {
-            return templateFunction(fieldsTemplate);
+            return templateFunction(fieldsTemplate, '<slot></slot>');
         }
 
         return `<div class="editor ${this.subjectAlias}-editor" >
             <div class="editor-name">${this.subjectAlias.replace(/./, c => {return c.toUpperCase()})}</div>
             ${fieldsTemplate}
+            <slot></slot>
         </div>`;
     }
 

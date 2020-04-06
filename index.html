@@ -23,17 +23,30 @@
             <h4 class="entity-name">{{ entity.name }}</h4>
             <button class="entity-flyto" v-on:click="flyToEntity();">FlyTo</button>
 
-            <billboard-editor v-if="entity.billboard"
-              v-bind:billboard="entity.billboard" ></billboard-editor>
+            <billboard-editor v-if="entity.billboard" v-bind:copy="copyStyle"
+              v-bind:paste="pasteStyle" v-bind:billboard="entity.billboard"
+              v-bind:selection-length="selection.length" >
+              <button v-on:click="copyStyle('billboard')">Copy style</button>
+              <button v-if="selection.length > 0" v-on:click="pasteStyle">Apply to {{selection.length}} objects</button>
+            </billboard-editor>
 
-            <polygon-editor v-if="entity.polygon"
-              v-bind:polygon="entity.polygon" ></polygon-editor>
+            <polygon-editor v-if="entity.polygon" v-bind:copy="copyStyle"
+              v-bind:paste="pasteStyle" v-bind:polygon="entity.polygon"
+              v-bind:selection-length="selection.length" >
+              <button v-on:click="copyStyle('polygon')">Copy style</button>
+              <button v-if="selection.length > 0" v-on:click="pasteStyle">Apply to {{selection.length}} objects</button>
+            </polygon-editor>
           </div>
           <div v-if="entities.length > 0" class="entities-list">
             <h4>Entities:</h4>
             <entity v-for="e in entities" :key="e.id"
+              v-bind:class="{selected: e === entity}"
+              v-bind:selected="e === entity"
+              v-bind:in-selection="selection.indexOf(e) >= 0"
               v-bind:entity="e"
+              v-bind:copy-type="copyType"
               v-bind:select="selectEntity"
+              v-bind:append="appendToSelection"
               v-bind:is-folder="isFolder"></entity>
           </div>
         </div>

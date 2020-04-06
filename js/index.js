@@ -12,11 +12,40 @@ const editor = new Vue({
         czml: null,
         filename: null,
         entity: null,
+        copySubject: false,
+        copyType: null,
+        selection: [],
         entities: []
     },
     methods: {
         selectEntity: function(entity) {
             viewer.selectedEntity = entity;
+        },
+        appendToSelection: function(entity, selected) {
+            if (entity) {
+                if (selected) {
+                    this.selection.push(entity);
+                }
+                else {
+                    const i = this.selection.indexOf(entity);
+                    if (i >= 0) {
+                        this.selection.splice(i, 1);
+                    }
+                }
+            }
+            else {
+                this.selection.splice(0, this.selection.length);
+            }
+        },
+        copyStyle: function(type) {
+            this.copySubject = this.entity[type];
+            this.copyType = type;
+            this.appendToSelection(this.entity, true);
+        },
+        pasteStyle: function() {
+            this.selection.forEach(e => {
+
+            });
         },
         flyToEntity: function() {
             if (this.entity) {
@@ -70,6 +99,11 @@ document.getElementById('file').addEventListener('change', handleFileSelect, fal
 
 viewer.selectedEntityChanged.addEventListener((selection) => {
     editor.entity = selection;
+
+    if (!selection) {
+        editor.selectEntity(null);
+    }
+
     console.log(selection);
 });
 
