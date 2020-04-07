@@ -70,6 +70,22 @@ export default class EditorFieldsBuilder {
             }
         });
 
+        methods.propertyChangeHandler = function (property, checked) {
+            if (checked) {
+                this.copyFields.push(property);
+            }
+            else {
+                const propIndex = this.copyFields.indexOf(property);
+                if (propIndex >= 0) {
+                    this.copyFields.splice(propIndex, 1);
+                }
+            }
+
+            if (this.onCopyPropertiesChange) {
+                this.onCopyPropertiesChange(this.copyFields);
+            }
+        }
+
         return methods;
     }
 
@@ -82,7 +98,15 @@ export default class EditorFieldsBuilder {
                     initF.call(component, subject);
                 }
             });
+
+            if (component.onCopyPropertiesChange) {
+                component.onCopyPropertiesChange(component.copyFields);
+            }
         }
+    }
+
+    getFieldNames() {
+        return Object.keys(this.fields);
     }
 
 }
@@ -115,6 +139,16 @@ function createEnumFieldInitFunction(subjectAlias, subjectType, fieldName, aEnum
     };
 }
 
+function createCopyFieldCheckBox(fieldName) {
+    return `\
+        <span v-if="copyMode">
+            <label class="copy-property-label">Copy</label>
+            <input v-on:change="propertyChangeHandler('${fieldName}', $event.target.checked)" \
+                :checked="copyFields.indexOf('${fieldName}') >= 0"
+                type="checkbox" class="copy-property"></input>
+        </span>`;
+}
+
 function createEnumFieldTemplate(subjectAlias, fieldName, cesiumEnum) {
     const camelCaseFieldName = fieldName.replace(/./, c => {return c.toUpperCase()});
     return `\
@@ -123,6 +157,7 @@ function createEnumFieldTemplate(subjectAlias, fieldName, cesiumEnum) {
             <option>undefined</option>
             ${ Object.keys(cesiumEnum).map(k => '<option>' + k + '</option>').join('\n') }
         </select>
+        ${createCopyFieldCheckBox(fieldName)}
     </div>`;
 }
 
@@ -143,6 +178,7 @@ function createDirectPropertyTemplate(subjectAlias, fieldName, type='text') {
 
     return `<div class="editor-field"><label>${fieldName}:</label>
         ${input}
+        ${createCopyFieldCheckBox(fieldName)}
     </div>`;
 }
 
@@ -200,6 +236,7 @@ function createComponentsFieldTemplate(subjectAlias, fieldName, components) {
             ${componentsString.join('\n')}
         </div>
         <button v-if="!${subjectAlias}.${fieldName}" v-on:click="new${camelCaseFieldName}();">set new</button>
+        ${createCopyFieldCheckBox(fieldName)}
     </div>`
 
     return template;

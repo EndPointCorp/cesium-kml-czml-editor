@@ -63,9 +63,16 @@ input#file {
 .editor-field input {
     width: 96px;
 }
+.editor-field input.copy-property {
+    width: auto;
+    vertical-align: middle;
+}
 .editor-field .component-field-component {
     /* width: 43px; */
     margin-left: 2px;
+}
+.editor-field .copy-property-label {
+    margin-left: 0.75em;
 }
 
 .entities-list {

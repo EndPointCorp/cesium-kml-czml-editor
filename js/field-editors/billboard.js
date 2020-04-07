@@ -37,10 +37,11 @@ const methods = billboardEditorBuilder.addComponentMethods({
 const initModel = billboardEditorBuilder.getInitFunction();
 
 Vue.component('billboard-editor', {
-    props: ['billboard'],
+    props: ['billboard', 'copyMode', 'onCopyPropertiesChange'],
     data: () => {
         return {
-            iconSize: {}
+            iconSize: {},
+            copyFields: billboardEditorBuilder.getFieldNames()
         };
     },
     template: billboardTemplate,

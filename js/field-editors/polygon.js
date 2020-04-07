@@ -15,7 +15,12 @@ editorBuilder.addDirectPropertyField('closeBottom', Boolean);
 const initModel = editorBuilder.getInitFunction();
 
 Vue.component('polygon-editor', {
-    props: ['polygon'],
+    props: ['polygon', 'copyMode', 'onCopyPropertiesChange'],
+    data: () => {
+        return {
+            copyFields: editorBuilder.getFieldNames()
+        };
+    },
     template: editorBuilder.getTemplate(),
     methods: editorBuilder.addComponentMethods(),
     created: function() {
@@ -24,6 +29,11 @@ Vue.component('polygon-editor', {
     watch: {
         polygon: function(newVal) {
             initModel(newVal, this);
+
+            this.copyFields = editorBuilder.getFieldNames();
+            if (this.onCopyPropertiesChange) {
+                this.onCopyPropertiesChange(this.copyFields);
+            }
         }
     }
 });

@@ -6,6 +6,15 @@ import DocumentWriter from './czml-writer.js'
 
 const viewer = new Cesium.Viewer('viewer');
 
+function applyProperties(src, dst, properties) {
+    const source = src.clone();
+
+    properties.forEach(p => {
+        // console.log(dst[p], source[p]);
+        dst[p] = source[p];
+    });
+}
+
 const editor = new Vue({
     el: '#editor',
     data: {
@@ -14,6 +23,7 @@ const editor = new Vue({
         entity: null,
         copySubject: false,
         copyType: null,
+        copyProperties: [],
         selection: [],
         entities: []
     },
@@ -24,7 +34,9 @@ const editor = new Vue({
         appendToSelection: function(entity, selected) {
             if (entity) {
                 if (selected) {
-                    this.selection.push(entity);
+                    if (this.selection.indexOf(entity) < 0) {
+                        this.selection.push(entity);
+                    }
                 }
                 else {
                     const i = this.selection.indexOf(entity);
@@ -44,7 +56,7 @@ const editor = new Vue({
         },
         pasteStyle: function() {
             this.selection.forEach(e => {
-
+                applyProperties(this.copySubject, e[this.copyType], this.copyProperties);
             });
         },
         flyToEntity: function() {
@@ -66,6 +78,9 @@ const editor = new Vue({
             console.log(czmlObj);
 
             this.czml = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(czmlObj));
+        },
+        onCopyPropertiesChange: function(properties) {
+            this.copyProperties = properties;
         }
     }
 });
