@@ -1,6 +1,7 @@
 import './field-editors/billboard.js'
 import './field-editors/polygon.js'
 import './entity.js'
+import request3DTilesetDialog from './tileset-dialog.js'
 
 import DocumentWriter from './czml-writer.js'
 
@@ -49,6 +50,14 @@ const editor = new Vue({
                 this.selection.splice(0, this.selection.length);
             }
         },
+        request3DTileset: function() {
+            request3DTilesetDialog((tileset)=>{
+                if (tileset) {
+                    console.log(tileset);
+                    //viewer.scene.primitives.add(tileset);
+                }
+            });
+        },
         copyStyle: function(type) {
             this.copySubject = this.entity[type];
             this.copyType = type;
@@ -84,6 +93,8 @@ const editor = new Vue({
         }
     }
 });
+
+document.getElementById('add-tileset').onclick = editor.request3DTileset.bind(editor);
 
 function loadDataSourcePromise(dsPromise) {
     viewer.dataSources.add(dsPromise);

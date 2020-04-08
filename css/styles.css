@@ -91,3 +91,58 @@ input#file {
     font-size: 10pt;
     font-family: Arial, Helvetica, sans-serif;
 }
+
+#dialog-container {
+    display: none;
+    position: absolute;
+
+    top: 0px;
+    left: 0px;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 10;
+
+    background-color: rgba(0,0,0, 0.7);
+}
+
+#dialog-container.active {
+    display: block;
+    text-align: center;
+}
+
+#dialog-container .dialog {
+    display: inline-block;
+    position: relative;
+    top: 50%;
+    margin-top: -50%;
+
+    border-radius: 5px;
+
+    opacity: 1;
+    background-color: white;
+}
+
+.dialog .tr {
+    display: table-row;
+}
+.dialog .tr > * {
+    display: table-cell;
+}
+.dialog .tr {
+    text-align: center;
+}
+.dialog .tr label {
+    text-align: left;
+}
+.dialog .tr input {
+    width: 600px;
+    margin-left: 1em;
+}
+.dialog {
+    padding: 10px;
+}
+.dialog .controls {
+    margin-top: 1.5em;
+}
