@@ -15,7 +15,8 @@
 
 <body>
     <div class="sidebar">
-        <input type="file" id="file" accept=".kml, .kmz, .json, .czml"/>
+        <label class="description" for="file">Load KML (KMZ) or CZML or Geojson</label>
+        <input type="file" id="file" accept=".kml, .kmz, .json, .czml"></input>
         <div id="editor">
           <button v-if="filename" v-on:click="toCZML">as CZML</button>
           <a class="download-link" v-if="czml" :href="czml" :download="filename">Download</a>
