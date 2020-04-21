@@ -1,9 +1,11 @@
 import './field-editors/billboard.js'
 import './field-editors/polygon.js'
 import './entity.js'
-import request3DTilesetDialog from './tileset-dialog.js'
 
+import request3DTilesetDialog from './tileset-dialog.js'
 import DocumentWriter from './czml-writer.js'
+
+import MarkersEditor from './CesiumMarkers.js'
 
 const viewer = new Cesium.Viewer('viewer');
 
@@ -77,6 +79,11 @@ const editor = new Vue({
             return entity.position === undefined && this.entities.some(e => {
                 return e.parent && e.parent.id === entity.id;
             });
+        },
+        selectApplicable: function() {
+            this.entities
+                .filter(e => e[this.copyType] !== undefined)
+                .forEach(e => this.appendToSelection(e, true));
         },
         toCZML: function() {
             const w = new DocumentWriter();

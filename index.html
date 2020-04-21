@@ -49,6 +49,7 @@
           </div>
           <div v-if="entities.length > 0" class="entities-list">
             <h4>Entities:</h4>
+            <button v-if="selection.length > 1" @click="selectApplicable">Select all applicable</button>
             <entity v-for="e in entities" :key="e.id"
               v-bind:class="{selected: e === entity}"
               v-bind:selected="e === entity"
