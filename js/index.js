@@ -5,9 +5,13 @@ import './entity.js'
 import request3DTilesetDialog from './tileset-dialog.js'
 import DocumentWriter from './czml-writer.js'
 
-import MarkersEditor from './CesiumMarkers.js'
-
 const viewer = new Cesium.Viewer('viewer');
+
+const esriImagery = viewer.baseLayerPicker.viewModel
+    .imageryProviderViewModels.find(m => m.name === 'ESRI World Imagery');
+if (esriImagery) {
+    viewer.baseLayerPicker.viewModel.selectedImagery = esriImagery;
+}
 
 function applyProperties(src, dst, properties) {
     const source = src.clone();
