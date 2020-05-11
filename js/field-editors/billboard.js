@@ -25,7 +25,7 @@ const billboardTemplate = billboardEditorBuilder.getTemplate((...templates) => {
             Icon image size: {{ iconSize && iconSize.width }}, {{ iconSize && iconSize.height }}
         </div>
         ${templates.join('\n')}
-    </div>`
+    </div>`;
 });
 
 const methods = billboardEditorBuilder.addComponentMethods({
