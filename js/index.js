@@ -1,5 +1,7 @@
 import './field-editors/billboard.js'
 import './field-editors/polygon.js'
+import './field-editors/polyline.js'
+import './entity-info.js'
 import './entity.js'
 
 import request3DTilesetDialog from './tileset-dialog.js'

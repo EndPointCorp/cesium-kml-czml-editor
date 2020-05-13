@@ -32,6 +32,8 @@ Vue.component('polygon-editor', {
 
             ${fields}
 
+            ${controls}
+
             <div v-if="avgHeight && avgHeight > 0.1">
                 <div class="description">
                     This polygon height/extrusion is encoded as per
@@ -41,7 +43,6 @@ Vue.component('polygon-editor', {
                 <button @click="toExtrude">Convert</button>
             </div>
 
-            ${controls}
         </div>`;
     }),
     methods: editorBuilder.addComponentMethods({

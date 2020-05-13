@@ -29,6 +29,8 @@
             <h4 class="entity-name">{{ entity.name }}</h4>
             <button class="entity-flyto" v-on:click="flyToEntity();">FlyTo</button>
 
+            <entity-info :entity="entity"></entity-info>
+
             <billboard-editor v-if="entity.billboard" v-bind:billboard="entity.billboard"
               v-bind:copy-mode="copyType === 'billboard'"
               v-bind:on-copy-properties-change="onCopyPropertiesChange" >
@@ -46,6 +48,10 @@
                 Apply to {{selection.length}} objects
               </button>
             </polygon-editor>
+
+            <polyline-editor :entity="entity">
+            </polyline-editor>
+
           </div>
           <div v-if="entities.length > 0" class="entities-list">
             <h4>Entities:</h4>

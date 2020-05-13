@@ -18,13 +18,16 @@ billboardEditorBuilder.addDirectPropertyField('width');
 billboardEditorBuilder.addDirectPropertyField('height');
 billboardEditorBuilder.addDirectPropertyField('scale');
 
-const billboardTemplate = billboardEditorBuilder.getTemplate((...templates) => {
+const billboardTemplate = billboardEditorBuilder.getTemplate((fields, controls) => {
     return `<div class="editor billboard-editor">
         <div class="editor-name">Billboard</div>
         <div v-if="iconSize">
             Icon image size: {{ iconSize && iconSize.width }}, {{ iconSize && iconSize.height }}
         </div>
-        ${templates.join('\n')}
+
+        ${fields}
+
+        ${controls}
     </div>`;
 });
 
