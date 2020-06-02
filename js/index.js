@@ -26,7 +26,7 @@ function applyProperties(src, dst, properties) {
 
 const editor = new Vue({
     el: '#editor',
-    data: {
+    data: () => ({
         czml: null,
         filename: null,
         entity: null,
@@ -35,7 +35,7 @@ const editor = new Vue({
         copyProperties: [],
         selection: [],
         entities: []
-    },
+    }),
     methods: {
         selectEntity: function(entity) {
             viewer.selectedEntity = entity;
@@ -112,12 +112,20 @@ document.getElementById('add-tileset').onclick = editor.request3DTileset.bind(ed
 function loadDataSourcePromise(dsPromise) {
     viewer.dataSources.add(dsPromise);
     dsPromise.then(ds => {
-        editor.entities = ds.entities.values;
+        editor.entities = [
+            ...editor.entities,
+            ...ds.entities.values
+        ];
     });
 }
 
 function handleFileSelect(evt) {
-    const file = evt.target.files[0]; // FileList object
+    for (let f of evt.target.files) {
+        loadFile(f);
+    }
+}
+
+function loadFile(file) {
     editor.filename = file.name.replace('.kml', '.czml').replace('.kmz', '.czml');
 
     console.log('load', file);
@@ -145,4 +153,3 @@ viewer.selectedEntityChanged.addEventListener((selection) => {
 
     console.log(selection);
 });
-
