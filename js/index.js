@@ -153,3 +153,23 @@ viewer.selectedEntityChanged.addEventListener((selection) => {
 
     console.log(selection);
 });
+
+document.getElementById('file-area').addEventListener('drop', ev => {
+    ev.preventDefault();
+    document.getElementById('file-area').classList.remove('active');
+    for (let i = 0; i < ev.dataTransfer.items.length; i++) {
+        // If dropped items aren't files, reject them
+        if (ev.dataTransfer.items[i].kind === 'file') {
+            let file = ev.dataTransfer.items[i].getAsFile();
+            loadFile(file);
+        }
+    }
+});
+document.getElementById('file-area').addEventListener('dragover', ev => {
+    ev.preventDefault();
+    document.getElementById('file-area').classList.add('active');
+});
+document.getElementById('file-area').addEventListener('dragleave', ev => {
+    ev.preventDefault();
+    document.getElementById('file-area').classList.remove('active');
+});

@@ -146,3 +146,12 @@ input#file {
 .dialog .controls {
     margin-top: 1.5em;
 }
+#file-area.active {
+    border: 1px dashed #666;
+}
+#file-area.active input {
+    visibility: hidden;
+}
+#file-area {
+    margin-bottom: 5px;
+}
