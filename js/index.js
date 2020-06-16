@@ -62,7 +62,7 @@ const editor = new Vue({
             request3DTilesetDialog((tileset)=>{
                 if (tileset) {
                     console.log(tileset);
-                    //viewer.scene.primitives.add(tileset);
+                    viewer.scene.primitives.add(tileset);
                 }
             });
         },
@@ -133,12 +133,19 @@ function loadFile(file) {
     if (/vnd.google-earth/.test(file.type)) {
         loadDataSourcePromise(Cesium.KmlDataSource.load(file));
     }
-    else if (/.czml/.test(file.name)) {
+    else if (/\.czml/.test(file.name)) {
         const reader = new FileReader();
         reader.onload = function() {
             loadDataSourcePromise(Cesium.CzmlDataSource.load(JSON.parse(reader.result)));
         };
-        reader.readAsText(file)
+        reader.readAsText(file);
+    }
+    else if (/\.json|\.geojson/.test(file.name)) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            loadDataSourcePromise(Cesium.GeoJsonDataSource.load(JSON.parse(reader.result)));
+        };
+        reader.readAsText(file);
     }
 }
 
