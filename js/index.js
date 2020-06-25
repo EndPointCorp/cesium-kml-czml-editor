@@ -4,10 +4,15 @@ import './field-editors/polyline.js'
 import './entity-info.js'
 import './entity.js'
 
+// import CitiesDataSource from './cities/CitiesDataSource.js'
+
 import request3DTilesetDialog from './tileset-dialog.js'
 import DocumentWriter from './czml-writer.js'
 
 const viewer = new Cesium.Viewer('viewer');
+window.viewer = viewer;
+
+// CitiesDataSource(viewer);
 
 const esriImagery = viewer.baseLayerPicker.viewModel
     .imageryProviderViewModels.find(m => m.name === 'ESRI World Imagery');
