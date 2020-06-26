@@ -80,7 +80,7 @@ const editor = new Vue({
             this.selection.forEach(e => {
                 applyProperties(this.copySubject, e[this.copyType], this.copyProperties);
             });
-            this.selection = [];
+            this.selection = [this.entity];
 
             this.copySubject = null;
             this.copyType = null;

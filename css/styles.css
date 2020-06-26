@@ -20,6 +20,9 @@ h4 {
     min-width: 0px;
     flex: 1 0 auto;
 }
+#add-tileset-wrapper {
+    margin-bottom: 0.5em;
+}
 .sidebar {
     height: 100%;
     flex: 0 1 auto;
