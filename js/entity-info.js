@@ -20,9 +20,13 @@ function getLonLatHeight(entity) {
 const template = `
     <div v-if="entity && position">
         <h4>Position</h4>
-        Latitude: {{ round(position.latitude, 0.0001) }}
-        Longitude: {{ round(position.longitude, 0.0001) }}
-        Altitude: {{ round(position.height) }}
+        <div>
+            Latitude: {{ round(position.latitude, 0.0001) }}
+            Longitude: {{ round(position.longitude, 0.0001) }}
+        </div><div>
+            Altitude: <input :value="round(position.height)"
+                         v-on:input="updateAltitude($event.target.value)"></input>
+        </div>
     </div>
 `;
 
@@ -45,6 +49,11 @@ Vue.component('entity-info', {
         }
     },
     methods: {
-        round
+        round,
+        updateAltitude: function(altitude) {
+            let c = Cesium.Cartographic.fromCartesian(this.entity.position.getValue());
+            c.height = parseFloat(altitude) || 0.0;
+            this.entity.position = Cesium.Cartographic.toCartesian(c);
+        }
     }
 });

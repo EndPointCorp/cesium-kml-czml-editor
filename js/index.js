@@ -24,7 +24,6 @@ function applyProperties(src, dst, properties) {
     const source = src.clone();
 
     properties.forEach(p => {
-        // console.log(dst[p], source[p]);
         dst[p] = source[p];
     });
 }

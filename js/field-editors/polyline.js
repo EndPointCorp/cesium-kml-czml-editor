@@ -4,10 +4,10 @@ const polylineEditorBuilder = new EditorFieldsBuilder('polyline', Cesium.Polylin
 
 const template = polylineEditorBuilder.getTemplate((fields, controls) => {
     return `<div class="editor polyline-editor">
-        <div class="editor-name">Polyline</div>
+        <div class="editor-name">Lines</div>
         <div v-if="entity.billboard">
-            <button v-if="!entity.polyline" @click="createDropLine">Create drop line</button>
-            <button v-if="entity.polyline" @click="removeDropLine">Remove drop line</button>
+            <label for="extend">Extend to ground</label>
+            <input id="extend" type="checkbox" v-model="extend" v-on:change="handleChange">
         </div>
 
         ${fields}
@@ -18,8 +18,21 @@ const template = polylineEditorBuilder.getTemplate((fields, controls) => {
 
 Vue.component('polyline-editor', {
     props: ['entity'],
+    data: function() {
+        return {
+            extend: !!this.entity.polyline
+        }
+    },
     template: template,
     methods: {
+        handleChange() {
+            if (this.extend) {
+                this.createDropLine();
+            }
+            else {
+                this.removeDropLine();
+            }
+        },
         createDropLine() {
             const position = this.entity.position.getValue();
             const cartographic = Cesium.Cartographic.fromCartesian(position);
