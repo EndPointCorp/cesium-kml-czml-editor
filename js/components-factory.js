@@ -70,6 +70,12 @@ export default class EditorFieldsBuilder {
             }
         });
 
+        methods.fieldChangeHandler = function (fieldName) {
+            if (this.copyFields.indexOf(fieldName) < 0) {
+                this.copyFields.push(fieldName);
+            }
+        };
+
         methods.propertyChangeHandler = function (property, checked) {
             if (checked) {
                 this.copyFields.push(property);
@@ -113,6 +119,8 @@ export default class EditorFieldsBuilder {
 
 function createEnumUpdateFunction(subjectAlias, subjectType, fieldName, aEnum) {
     return function () {
+        this.fieldChangeHandler(fieldName);
+
         if (this[fieldName] === 'undefined') {
             Object.getOwnPropertyDescriptor(subjectType.prototype, fieldName).set.call(this[subjectAlias], null);
         }
@@ -165,6 +173,7 @@ function createDirectPropertyTemplate(subjectAlias, fieldName, type='text') {
     // v-model="${subjectAlias}.${fieldName}"
     let input = `<input type="${type}"
         class="direct-property-field"
+        v-on:change="fieldChangeHandler('${fieldName}');"
         v-model="${subjectAlias}.${fieldName}"></input>`;
 
     if (type === 'checkbox') {
@@ -172,7 +181,7 @@ function createDirectPropertyTemplate(subjectAlias, fieldName, type='text') {
         <input type="checkbox" class="direct-property-field" \
             v-bind:checked="\
                 ${subjectAlias}.${fieldName} ? ${subjectAlias}.${fieldName}.valueOf() : undefined" \
-            v-on:change="${subjectAlias}.${fieldName} = $event.target.checked;"></input>
+            v-on:change="${subjectAlias}.${fieldName} = $event.target.checked; fieldChangeHandler('${fieldName}');"></input>
         `;
     }
 
@@ -186,6 +195,7 @@ function createUpdateFunction(subjectAlias, subjectType, fieldName, components, 
     return function () {
         // const x = parseInt(this.pixelOffset.x);
         // const y = parseInt(this.pixelOffset.y);
+        this.fieldChangeHandler(fieldName);
 
         const values = {};
         components.forEach(c => {
@@ -216,8 +226,8 @@ function createComponentsFieldInitFunction(subjectAlias, subjectType, fieldName,
 
 function createNewFunction(subjectAlias, subjectType, fieldName, constructor) {
     return function () {
+        this.fieldChangeHandler(fieldName);
         Object.getOwnPropertyDescriptor(subjectType.prototype, fieldName).set.call(this[subjectAlias], constructor());
-        // this[subjectAlias][fieldName] = constructor();
     };
 }
 

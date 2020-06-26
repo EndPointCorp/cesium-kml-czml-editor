@@ -44,7 +44,7 @@ Vue.component('billboard-editor', {
     data: () => {
         return {
             iconSize: {},
-            copyFields: billboardEditorBuilder.getFieldNames()
+            copyFields: []
         };
     },
     template: billboardTemplate,

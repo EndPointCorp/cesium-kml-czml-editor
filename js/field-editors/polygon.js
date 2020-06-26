@@ -18,7 +18,7 @@ Vue.component('polygon-editor', {
     props: ['polygon', 'copyMode', 'onCopyPropertiesChange'],
     data: () => {
         return {
-            copyFields: editorBuilder.getFieldNames(),
+            copyFields: [],
             avgHeight: null
         };
     },
@@ -85,7 +85,6 @@ Vue.component('polygon-editor', {
         polygon: function(newVal) {
             initModel(newVal, this);
 
-            this.copyFields = editorBuilder.getFieldNames();
             if (this.onCopyPropertiesChange) {
                 this.onCopyPropertiesChange(this.copyFields);
             }
