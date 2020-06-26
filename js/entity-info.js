@@ -4,17 +4,21 @@ function round(value, step = 1.0) {
 }
 
 function getLonLatHeight(entity) {
-    const cartographic = Cesium.Cartographic.fromCartesian(entity.position.getValue());
+    if (entity.position) {
+        const cartographic = Cesium.Cartographic.fromCartesian(entity.position.getValue());
 
-    return {
-        latitude: Cesium.Math.toDegrees(cartographic.latitude),
-        longitude: Cesium.Math.toDegrees(cartographic.longitude),
-        height: cartographic.height
+        return {
+            latitude: Cesium.Math.toDegrees(cartographic.latitude),
+            longitude: Cesium.Math.toDegrees(cartographic.longitude),
+            height: cartographic.height
+        }
     }
+
+    return null;
 }
 
 const template = `
-    <div v-if="entity">
+    <div v-if="entity && position">
         <h4>Position</h4>
         Latitude: {{ round(position.latitude, 0.0001) }}
         Longitude: {{ round(position.longitude, 0.0001) }}
@@ -29,11 +33,15 @@ Vue.component('entity-info', {
         position: null
     },
     created: function() {
-        this.position = this.entity && getLonLatHeight(this.entity);
+        this.position = this.entity
+            && this.entity.position
+            && getLonLatHeight(this.entity);
     },
     watch: {
         entity: function(entity) {
-            this.position = entity && getLonLatHeight(entity);
+            this.position = entity
+                && entity.position
+                && getLonLatHeight(entity);
         }
     },
     methods: {
