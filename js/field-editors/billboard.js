@@ -39,7 +39,7 @@ const template = `
             :entity="entity"
             :feature="'billboard'"
             :field="'heightReference'"
-            :enum="'HeightReference'"
+            :enum="'HeightReference'">
         </enum-field>
 
         <label>verticalOrigin</label>
@@ -47,7 +47,7 @@ const template = `
             :entity="entity"
             :feature="'billboard'"
             :field="'verticalOrigin'"
-            :enum="'VerticalOrigin'"
+            :enum="'VerticalOrigin'">
         </enum-field>
 
         <label>scale</label>
