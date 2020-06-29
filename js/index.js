@@ -4,6 +4,7 @@ import './field-editors/polyline.js'
 import './entity-info.js'
 import './entity.js'
 
+
 // import CitiesDataSource from './cities/CitiesDataSource.js'
 
 import request3DTilesetDialog from './tileset-dialog.js'
@@ -31,6 +32,7 @@ function applyProperties(src, dst, properties) {
 const editor = new Vue({
     el: '#editor',
     data: () => ({
+        advanced: true,
         czml: null,
         filename: null,
         entity: null,

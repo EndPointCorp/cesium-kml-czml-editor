@@ -23,6 +23,8 @@
         <button id="add-tileset">Add 3D Tile set</button>
       </div>
       <div id="editor">
+          <label for="advanced">Advanced editor:</label>
+          <input type="checkbox" id="advanced" model="advanced"></input>
           <button v-if="filename" v-on:click="toCZML">Download as CZML</button>
           <a class="download-link" v-if="czml" :href="czml" :download="filename">Download</a>
           <div v-if="entity">
@@ -31,7 +33,10 @@
 
             <entity-info :entity="entity"></entity-info>
 
-            <billboard-editor v-if="entity.billboard" v-bind:billboard="entity.billboard"
+            <billboard-editor v-if="entity.billboard"
+              :entity="entity"
+              :billboard="entity.billboard"
+              :advanced="advanced"
               v-bind:copy-mode="copyType === 'billboard'"
               v-bind:on-copy-properties-change="onCopyPropertiesChange" >
               <button v-on:click="copyStyle('billboard')">Copy style</button>
