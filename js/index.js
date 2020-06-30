@@ -157,6 +157,9 @@ function loadFile(file) {
         };
         reader.readAsText(file);
     }
+    else {
+        console.warn("Can't recognize file type");
+    }
 }
 
 document.getElementById('file').addEventListener('change', handleFileSelect, false);
