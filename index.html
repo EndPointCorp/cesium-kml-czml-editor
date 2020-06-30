@@ -166,43 +166,30 @@
             <h4 class="entity-name">{{ entity.name }}</h4>
             <button class="entity-flyto" v-on:click="flyToEntity();">FlyTo</button>
 
-            <entity-info :entity="entity"></entity-info>
+          <entity-info :entity="entity"></entity-info>
 
-            <billboard-editor v-if="entity.billboard" v-bind:billboard="entity.billboard"
-              v-bind:copy-mode="copyType === 'billboard'"
-              v-bind:on-copy-properties-change="onCopyPropertiesChange" >
-              <button v-on:click="copyStyle('billboard')">Copy style</button>
-              <button v-if="selection.length > 1" v-on:click="pasteStyle">
-                Apply to {{selection.length}} objects
-              </button>
-            </billboard-editor>
+          <billboard-editor v-if="entity.billboard"
+            :entity="entity"
+            :billboard="entity.billboard"
+            :advanced="advanced"
+            :copy-mode="copyType === 'billboard'">
 
-            <polygon-editor v-if="entity.polygon" v-bind:polygon="entity.polygon"
-              v-bind:copy-mode="copyType === 'polygon'"
-              v-bind:on-copy-properties-change="onCopyPropertiesChange" >
-              <button v-on:click="copyStyle('polygon')">Copy style</button>
-              <button v-if="selection.length > 1" v-on:click="pasteStyle">
-                Apply to {{selection.length}} objects
-              </button>
-            </polygon-editor>
+            <batch-style-controls :active="false"></batch-style-controls>
 
-            <polyline-editor :entity="entity">
-            </polyline-editor>
+          </billboard-editor>
 
-          </div>
-          <div v-if="entities.length > 0" class="entities-list">
-            <h4>Entities:</h4>
-            <button v-if="copySubject" @click="selectApplicable">Select all applicable</button>
-            <entity v-for="e in entities" :key="e.id"
-              v-bind:class="{selected: e === entity}"
-              v-bind:selected="e === entity"
-              v-bind:in-selection="selection.indexOf(e) >= 0"
-              v-bind:entity="e"
-              v-bind:copy-type="copyType"
-              v-bind:select="selectEntity"
-              v-bind:append="appendToSelection"
-              v-bind:is-folder="isFolder"></entity>
-          </div>
+          <polygon-editor v-if="entity.polygon" v-bind:polygon="entity.polygon"
+            v-bind:copy-mode="copyType === 'polygon'"
+            v-bind:on-copy-properties-change="onCopyPropertiesChange" >
+            <button v-on:click="copyStyle('polygon')">Copy style</button>
+            <button v-if="selection.length > 1" v-on:click="pasteStyle">
+              Apply to {{selection.length}} objects
+            </button>
+          </polygon-editor>
+
+          <polyline-editor :entity="entity">
+          </polyline-editor>
+
         </div>
         <div v-if="entities.length > 0" class="entities-list">
           <h4>Entities:</h4>
@@ -222,6 +209,8 @@
     <div id="viewer"></div>
     <div id="dialog-container">
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="js/index.js" type="module"></script>
 </body>
 </html>

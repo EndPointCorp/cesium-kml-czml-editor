@@ -1,8 +1,6 @@
 import './field-editors/billboard.js'
 import './field-editors/polygon.js'
 import './field-editors/polyline.js'
-import './entity-info.js'
-import './entity.js'
 
 import './components/entity-info.js'
 import './components/entity.js'
@@ -11,6 +9,9 @@ import './components/batch-controls.js'
 
 import request3DTilesetDialog from './tileset-dialog.js'
 import DocumentWriter from './czml-writer.js'
+
+// import CitiesDataSource from './cities/CitiesDataSource.js'
+
 
 const viewer = new Cesium.Viewer('viewer');
 window.viewer = viewer;
@@ -33,29 +34,23 @@ function applyProperties(src, dst, properties) {
 
 const editor = new Vue({
     el: '#editor',
+
     vuetify: new Vuetify(),
-    data: () => ({
-        czml: null,
-        filename: null,
-        entity: null,
-        copySubject: false,
-        copyType: null,
-        copyProperties: [],
-        selection: [],
-        entities: [],
-        items: [
-            "1625 Mass Ave NW",
-            "1819-1801 L St NW",
-            "150 18th St NW",
-            "1800 M St NW",
-            "1133 19th St - 1899 L St NW",
-            "1850 M St NW",
-            "2100 K St NW",
-            "1133 21st St + 2055 L St NW",
-            "1155 21st St NW"
-          ],
-        item: null,
-    }),
+
+    data: function() {
+        return {
+            advanced: false,
+            czml: null,
+            filename: null,
+            entity: null,
+            copySubject: false,
+            copyType: null,
+            copyProperties: [],
+            selection: [],
+            entities: [],
+            item: null
+        };
+    },
     methods: {
         selectEntity: function(entity) {
             viewer.selectedEntity = entity;
@@ -154,7 +149,7 @@ function loadFile(file) {
 
     console.log('load', file);
 
-    if (/vnd.google-earth/.test(file.type)) {
+    if (/vnd.google-earth/.test(file.type) || /\.kmz|\.kml/.test(file.name)) {
         loadDataSourcePromise(Cesium.KmlDataSource.load(file));
     }
     else if (/\.czml/.test(file.name)) {
@@ -170,6 +165,9 @@ function loadFile(file) {
             loadDataSourcePromise(Cesium.GeoJsonDataSource.load(JSON.parse(reader.result)));
         };
         reader.readAsText(file);
+    }
+    else {
+        console.warn("Can't recognize file type");
     }
 }
 
