@@ -39,10 +39,9 @@
             :billboard="entity.billboard"
             :advanced="advanced"
             :copy-mode="copyType === 'billboard'">
-            <button v-on:click="copyStyle('billboard')">Copy style</button>
-            <button v-if="selection.length > 1" v-on:click="pasteStyle">
-              Apply to {{selection.length}} objects
-            </button>
+
+            <batch-style-controls :active="false"></batch-style-controls>
+
           </billboard-editor>
 
           <polygon-editor v-if="entity.polygon" v-bind:polygon="entity.polygon"
