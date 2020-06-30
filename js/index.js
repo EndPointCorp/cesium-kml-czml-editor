@@ -33,6 +33,9 @@ function applyProperties(src, dst, properties) {
 
 const editor = new Vue({
     el: '#editor',
+
+    vuetify: new Vuetify(),
+
     data: function() {
         return {
             advanced: false,
@@ -43,7 +46,8 @@ const editor = new Vue({
             copyType: null,
             copyProperties: [],
             selection: [],
-            entities: []
+            entities: [],
+            item: null
         };
     },
     methods: {
