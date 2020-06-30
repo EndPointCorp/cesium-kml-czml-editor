@@ -161,3 +161,7 @@ input#file {
 #file-area {
     margin-bottom: 5px;
 }
+
+.v-toolbar__extension {
+    background-color: gray;
+}

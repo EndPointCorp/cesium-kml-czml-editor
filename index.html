@@ -9,8 +9,13 @@
   <script src="js/cesium-1.67/Cesium.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
   <link rel="stylesheet" href="css/styles.css">
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 </head>
 
 <body>
@@ -23,6 +28,79 @@
         <button id="add-tileset">Add 3D Tile set</button>
       </div>
       <div id="editor">
+        <v-app>
+        <v-card color="grey lighten-1" flat class="mb-3">
+          <v-toolbar dense flat dark color="black">
+            <v-toolbar-title>Import KML/CZML/Geoson:</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text class="text-center">
+            <v-btn @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
+            <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
+          </v-card-text>
+        </v-card>
+
+        <v-card color="grey lighten-1" flat class="mb-3">
+          <v-toolbar dense flat dark color="black">
+            <v-toolbar-title>KML Entities:</v-toolbar-title>
+            <template v-slot:extension class="entites-ext">
+              Show [] polygons [x] pins
+            </template>
+          </v-toolbar>
+          <v-card-text class="pa-0">
+            <v-list
+              color="grey lighten-1"
+              dense
+              height="200"
+              class="overflow-y-auto py-0"
+            >
+              <v-list-item-group v-model="item" color="primary">
+                <v-list-item
+                  style="height: 10px;"
+                  v-for="(item, i) in items"
+                  :key="i"
+                >
+                  <v-list-item-action>
+                    <v-checkbox color="primary"></v-checkbox>
+                  </v-list-item-action>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item"></v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-card-text>
+        </v-card>
+
+        
+        <v-card color="grey lighten-1" flat class="mb-3">
+          <v-toolbar dense flat dark color="black">
+            <v-toolbar-title>Edit Pins:</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text class="text-center">
+            <v-text-field dense v-model="height" label="Height:"></v-text-field>
+            <v-text-field dense v-model="bottom" label="Bottom:"></v-text-field>
+            <v-text-field dense v-model="top" label="Top:"></v-text-field>
+            <v-text-field
+              dense
+              v-model="transparency"
+              label="Transparency:"
+            ></v-text-field>
+            <div><v-btn>Update Pin</v-btn></div>
+            <div class="mt-1"><v-btn>Copy to other pins</v-btn></div>
+          </v-card-text>
+        </v-card>
+
+        <v-card color="grey lighten-1" flat class="mb-3">
+          <v-toolbar dense flat dark color="black">
+            <v-toolbar-title>Export CZML:</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text class="text-center">
+            <v-btn>Save as ...</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+    </v-app>
           <button v-if="filename" v-on:click="toCZML">Download as CZML</button>
           <a class="download-link" v-if="czml" :href="czml" :download="filename">Download</a>
           <div v-if="entity">

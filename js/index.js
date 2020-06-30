@@ -30,6 +30,7 @@ function applyProperties(src, dst, properties) {
 
 const editor = new Vue({
     el: '#editor',
+    vuetify: new Vuetify(),
     data: () => ({
         czml: null,
         filename: null,
@@ -38,7 +39,19 @@ const editor = new Vue({
         copyType: null,
         copyProperties: [],
         selection: [],
-        entities: []
+        entities: [],
+        items: [
+            "1625 Mass Ave NW",
+            "1819-1801 L St NW",
+            "150 18th St NW",
+            "1800 M St NW",
+            "1133 19th St - 1899 L St NW",
+            "1850 M St NW",
+            "2100 K St NW",
+            "1133 21st St + 2055 L St NW",
+            "1155 21st St NW"
+          ],
+        item: null,
     }),
     methods: {
         selectEntity: function(entity) {
