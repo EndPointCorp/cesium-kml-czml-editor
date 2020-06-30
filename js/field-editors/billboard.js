@@ -96,8 +96,8 @@ Vue.component('billboard-editor', {
         updateIconImageSize(iconSize) {
             this.iconSize = iconSize;
         },
-        inputHandler(value, field) {
-            // Do nothing
+        inputHandler(...args) {
+            this.$emit('input', ...args);
         }
     },
     created: function() {
