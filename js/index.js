@@ -33,17 +33,19 @@ function applyProperties(src, dst, properties) {
 
 const editor = new Vue({
     el: '#editor',
-    data: () => ({
-        advanced: true,
-        czml: null,
-        filename: null,
-        entity: null,
-        copySubject: false,
-        copyType: null,
-        copyProperties: [],
-        selection: [],
-        entities: []
-    }),
+    data: function() {
+        return {
+            advanced: true,
+            czml: null,
+            filename: null,
+            entity: null,
+            copySubject: false,
+            copyType: null,
+            copyProperties: [],
+            selection: [],
+            entities: []
+        };
+    },
     methods: {
         selectEntity: function(entity) {
             viewer.selectedEntity = entity;
