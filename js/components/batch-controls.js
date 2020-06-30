@@ -8,7 +8,7 @@ const template = `
 `;
 
 Vue.component('batch-style-controls', {
-    props: [active],
+    props: ['active'],
     methods: {
 
     },
