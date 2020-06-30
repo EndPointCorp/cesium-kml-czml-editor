@@ -33,9 +33,9 @@ const template = `
 Vue.component('entity-info', {
     props: ['entity'],
     template: template,
-    data: {
+    data: () => ({
         position: null
-    },
+    }),
     created: function() {
         this.position = this.entity
             && this.entity.position
