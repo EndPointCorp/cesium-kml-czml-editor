@@ -9,22 +9,26 @@ const template = `
     <div v-if="iconSize">
         Icon image original size: {{ iconSize && iconSize.width }}, {{ iconSize && iconSize.height }}
     </div>
-
-    <label>width</label>
-    <direct-field
-        @input="inputHandler"
-        :entity="entity"
-        :feature="'billboard'"
-        :field="'width'">
-    </direct-field>
-
-    <label>height</label>
-    <direct-field
-        @input="inputHandler"
-        :entity="entity"
-        :feature="'billboard'"
-        :field="'height'">
-    </direct-field>
+    <v-row>
+        <v-col cols="6">
+            <direct-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'width'"
+                :label="'Width'">
+            </direct-field>
+        </v-col>
+        <v-col cols="6">
+            <direct-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'height'"
+                :label="'Height'">
+            </direct-field>
+        </v-col>
+    </v-row>
 
     <div v-if="advanced">
         <label>pixelOffset</label>
