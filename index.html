@@ -24,7 +24,7 @@
       </div>
       <div id="editor">
         <label for="advanced">Advanced editor:</label>
-        <input type="checkbox" id="advanced" model="advanced"></input>
+        <input type="checkbox" id="advanced" v-model="advanced"></input>
 
         <button v-if="filename" v-on:click="toCZML">Download as CZML</button>
         <a class="download-link" v-if="czml" :href="czml" :download="filename">Download</a>

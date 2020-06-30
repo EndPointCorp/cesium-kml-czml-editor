@@ -35,7 +35,7 @@ const editor = new Vue({
     el: '#editor',
     data: function() {
         return {
-            advanced: true,
+            advanced: false,
             czml: null,
             filename: null,
             entity: null,
