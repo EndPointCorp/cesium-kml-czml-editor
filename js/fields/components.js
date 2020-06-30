@@ -32,13 +32,23 @@ Vue.component('components-field', {
                 values[c] = parseInt(this.values[c]);
             });
 
+            let val = undefined;
+            if (this.entity[this.feature][this.field]) {
+                val = this.entity[this.feature][this.field].getValue();
+            }
+
             if (this.components.every(c => !isNaN(values[c]))) {
                 let args = this.components.map(c => values[c]);
-                this.entity[this.feature][this.field] = new Cesium[this.type](...args);
+                val = new Cesium[this.type](...args);
+                this.entity[this.feature][this.field] = val;
             }
+
+            this.$emit('input', val, this.field, this.feature, this.entity);
         },
         newValue: function() {
-            this.entity[this.feature][this.field] = new Cesium[this.type]();
+            let val = new Cesium[this.type]();
+            this.entity[this.feature][this.field] = val;
+            this.$emit('input', val, this.field, this.feature, this.entity);
         }
     },
     watch: {

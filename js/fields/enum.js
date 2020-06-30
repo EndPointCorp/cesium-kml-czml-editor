@@ -27,7 +27,10 @@ Vue.component('enum-field', {
     methods: {
         update: function() {
             // Synchronized values from local model data to Cesium
-            this.entity[this.feature][this.field] = Cesium[this.enum][this.value];
+            let val = Cesium[this.enum][this.value];
+            this.entity[this.feature][this.field] = val;
+
+            this.$emit('input', val, this.field, this.feature, this.entity);
         }
     },
     watch: {
