@@ -28,63 +28,80 @@ const template = `
                 :label="'Height'">
             </direct-field>
         </v-col>
-    </v-row>
+        </v-row>
 
-    <div v-if="advanced">
-        <label>pixelOffset</label>
-        <components-field
-            @input="inputHandler"
-            :entity="entity"
-            :feature="'billboard'"
-            :field="'pixelOffset'"
-            :type="'Cartesian2'"
-            :components="['x', 'y']">
-        </components-field>
-
-        <label>heightReference</label>
-        <enum-field
-            @input="inputHandler"
-            :entity="entity"
-            :feature="'billboard'"
-            :field="'heightReference'"
-            :enum="'HeightReference'">
-        </enum-field>
-
-        <label>verticalOrigin</label>
-        <enum-field
-            @input="inputHandler"
-            :entity="entity"
-            :feature="'billboard'"
-            :field="'verticalOrigin'"
-            :enum="'VerticalOrigin'">
-        </enum-field>
-
-        <label>scale</label>
-        <direct-field
-            @input="inputHandler"
-            :entity="entity"
-            :feature="'billboard'"
-            :field="'scale'">
-        </direct-field>
-
-        <label>rotation</label>
-        <direct-field
-            @input="inputHandler"
-            :entity="entity"
-            :feature="'billboard'"
-            :field="'rotation'">
-        </direct-field>
-
-        <label>eyeOffset</label>
-        <components-field
-            @input="inputHandler"
-            :entity="entity"
-            :feature="'billboard'"
-            :field="'eyeOffset'"
-            :type="'Cartesian3'"
-            :components="['x', 'y', 'z']">
-        </components-field>
-    </div>
+        <v-col cols="12" v-if="advanced">
+        <v-row>
+        <v-col cols="12">
+            <label>pixelOffset</label>
+            <components-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'pixelOffset'"
+                :type="'Cartesian2'"
+                :components="['x', 'y']">
+            </components-field>
+            </v-col>
+            </v-row>
+            <v-row>
+            <v-col cols="12">
+            <label>heightReference</label>
+            <enum-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'heightReference'"
+                :enum="'HeightReference'">
+            </enum-field>
+            </v-col>
+            </v-row>
+            <v-row>
+            <v-col cols="12">
+            <label>verticalOrigin</label>
+            <enum-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'verticalOrigin'"
+                :enum="'VerticalOrigin'">
+            </enum-field>
+            </v-col>
+            </v-row>
+            <v-row>
+            <v-col cols="6">
+                <direct-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="'billboard'"
+                    :field="'scale'"
+                    :label="'Scale'">
+                </direct-field>
+            </v-col>
+            <v-col cols="6">
+                <direct-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="'billboard'"
+                    :field="'rotation'"
+                    :label="'Rotation'">
+                </direct-field>
+            </v-col>
+            </v-row>
+            <v-row>
+            <v-col cols="12">
+            <label>eyeOffset</label>
+            <components-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'eyeOffset'"
+                :type="'Cartesian3'"
+                :components="['x', 'y', 'z']">
+            </components-field>
+            </v-col>
+            </v-row>
+        </v-col>
     <slot></slot>
 </div>
 `;
