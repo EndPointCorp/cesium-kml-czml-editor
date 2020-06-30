@@ -38,8 +38,7 @@
             :entity="entity"
             :billboard="entity.billboard"
             :advanced="advanced"
-            v-bind:copy-mode="copyType === 'billboard'"
-            v-bind:on-copy-properties-change="onCopyPropertiesChange" >
+            :copy-mode="copyType === 'billboard'">
             <button v-on:click="copyStyle('billboard')">Copy style</button>
             <button v-if="selection.length > 1" v-on:click="pasteStyle">
               Apply to {{selection.length}} objects
