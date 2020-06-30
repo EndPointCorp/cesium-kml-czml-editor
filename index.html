@@ -21,55 +21,114 @@
 <body>
     <div class="sidebar">
       <div id="file-area">
-        <label class="description" for="file">Load or drop KML (KMZ) or CZML or Geojson</label>
-        <input type="file" id="file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
+        <!-- <label class="description" for="file">Load or drop KML (KMZ) or CZML or Geojson</label> -->
+        <!-- <input type="file" id="file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input> -->
       </div>
       <div id="add-tileset-wrapper">
         <button id="add-tileset">Add 3D Tile set</button>
       </div>
       <div id="editor">
-        <v-app>
-        <v-card color="grey lighten-1" flat class="mb-3">
-          <v-toolbar dense flat dark color="black">
-            <v-toolbar-title>Import KML/CZML/Geoson:</v-toolbar-title>
-          </v-toolbar>
-          <v-card-text class="text-center">
-            <v-btn @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
-            <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
-          </v-card-text>
-        </v-card>
+        <!-- Vuetify application start -->
+        <v-app style="height: 90vh">
 
-        <v-card color="grey lighten-1" flat class="mb-3">
-          <v-toolbar dense flat dark color="black">
-            <v-toolbar-title>KML Entities:</v-toolbar-title>
-            <template v-slot:extension class="entites-ext">
-              Show [] polygons [x] pins
-            </template>
-          </v-toolbar>
-          <v-card-text class="pa-0">
-            <v-list
-              color="grey lighten-1"
-              dense
-              height="200"
-              class="overflow-y-auto py-0"
-            >
-              <v-list-item-group v-model="item" color="primary">
-                <v-list-item
-                  style="height: 10px;"
-                  v-for="(item, i) in items"
-                  :key="i"
-                >
-                  <v-list-item-action>
-                    <v-checkbox color="primary"></v-checkbox>
-                  </v-list-item-action>
-                  <v-list-item-content>
-                    <v-list-item-title v-text="item"></v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
-          </v-card-text>
-        </v-card>
+          <!-- File Upload Section -->
+          <v-card color="grey lighten-1" flat class="mb-3">
+            <v-toolbar dense flat dark color="black">
+              <v-toolbar-title>Import KML/CZML/Geoson:</v-toolbar-title>
+            </v-toolbar>
+            <v-card-text class="text-center">
+              <v-btn @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
+              <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
+            </v-card-text>
+          </v-card>
+
+          <!-- Entities List Section -->
+          <v-card color="grey lighten-1" flat class="mb-3" v-if="entities.length > 0">
+            <v-toolbar dense flat dark color="black">
+              <v-toolbar-title>KML Entities:</v-toolbar-title>
+              <template v-slot:extension class="entites-ext">
+                Show [ ] polygons [x] pins
+              </template>
+            </v-toolbar>
+            <v-card-text class="pa-0">
+              <v-list
+                color="grey lighten-1"
+                dense
+                height="200"
+                class="overflow-y-auto py-0"
+              >
+                <v-list-item-group v-model="item" color="primary">
+                  <entitycomponent v-for="(e, i) in entities" :key="i"
+              v-bind:class="{selected: e === entity}"
+              v-bind:selected="e === entity"
+              v-bind:in-selection="selection.indexOf(e) >= 0"
+              v-bind:entity="e"
+              v-bind:copy-type="copyType"
+              v-bind:select="selectEntity"
+              v-bind:append="appendToSelection"
+              v-bind:is-folder="isFolder"></entitycomponent>
+                </v-list-item-group>
+              </v-list>
+            </v-card-text>
+          </v-card>
+
+          <!-- Editor Section -->
+          <v-card color="grey lighten-1" flat class="mb-3" v-if="entity">
+            <v-toolbar dense flat dark color="black">
+              <v-toolbar-title>Edit Pins:</v-toolbar-title>
+            </v-toolbar>
+            <v-card-text class="text-center pt-0">
+              
+              <div v-if="entity">
+                <h4 class="entity-name">{{ entity.name }}</h4>
+                <button class="entity-flyto" v-on:click="flyToEntity();">FlyTo</button>
+
+                <entity-info :entity="entity"></entity-info>
+
+                <billboard-editor v-if="entity.billboard"
+                  :entity="entity"
+                  :billboard="entity.billboard"
+                  :advanced="advanced"
+                  :copy-mode="copyType === 'billboard'">
+
+                  <batch-style-controls :active="false"></batch-style-controls>
+
+                </billboard-editor>
+
+                <polygon-editor v-if="entity.polygon" v-bind:polygon="entity.polygon"
+                  v-bind:copy-mode="copyType === 'polygon'"
+                  v-bind:on-copy-properties-change="onCopyPropertiesChange" >
+                  <button v-on:click="copyStyle('polygon')">Copy style</button>
+                  <button v-if="selection.length > 1" v-on:click="pasteStyle">
+                    Apply to {{selection.length}} objects
+                  </button>
+                </polygon-editor>
+
+                <polyline-editor :entity="entity">
+                </polyline-editor>
+                
+                <v-checkbox id="advanced" class="v-input--reverse py-0 my-0" label="Advanced Editor:" v-model="advanced"></v-checkbox>
+              </div>
+
+              <div><v-btn>Update Pin</v-btn></div>
+              <div class="mt-1"><v-btn>Copy to other pins</v-btn></div>
+            </v-card-text>
+          </v-card>
+
+          <!-- Export Section -->
+          <v-card color="grey lighten-1" flat class="mb-3" v-if="filename">
+            <v-toolbar dense flat dark color="black">
+              <v-toolbar-title>Export CZML:</v-toolbar-title>
+            </v-toolbar>
+            <v-card-text class="text-center">
+              <v-btn @click="toCZML">Save as ...</v-btn>
+            </v-card-text>
+          </v-card>
+
+        </v-app>
+        
+        <!-- <label for="advanced">Advanced editor:</label>
+        <input type="checkbox" id="advanced" v-model="advanced"></input>
 
         
         <v-card color="grey lighten-1" flat class="mb-3">
@@ -145,6 +204,20 @@
               v-bind:is-folder="isFolder"></entity>
           </div>
         </div>
+        <div v-if="entities.length > 0" class="entities-list">
+          <h4>Entities:</h4>
+          <button v-if="copySubject" @click="selectApplicable">Select all applicable</button>
+          <entity v-for="e in entities" :key="e.id"
+            v-bind:class="{selected: e === entity}"
+            v-bind:selected="e === entity"
+            v-bind:in-selection="selection.indexOf(e) >= 0"
+            v-bind:entity="e"
+            v-bind:copy-type="copyType"
+            v-bind:select="selectEntity"
+            v-bind:append="appendToSelection"
+            v-bind:is-folder="isFolder"></entity>
+        </div> -->
+      </div>
     </div>
     <div id="viewer"></div>
     <div id="dialog-container">

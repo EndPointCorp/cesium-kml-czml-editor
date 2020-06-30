@@ -3,11 +3,10 @@ import EditorFieldsBuilder from '../components-factory.js'
 const polylineEditorBuilder = new EditorFieldsBuilder('polyline', Cesium.PolylineGraphics);
 
 const template = polylineEditorBuilder.getTemplate((fields, controls) => {
-    return `<div class="editor polyline-editor">
+    return `<div class="editor polyline-editor text-left py-0 my-0" v-if="entity.billboard">
         <div class="editor-name">Lines</div>
-        <div v-if="entity.billboard">
-            <label for="extend">Extend to ground</label>
-            <input id="extend" type="checkbox" v-model="extend" v-on:change="handleChange">
+        <div>
+            <v-switch id="extend" class="v-input--reverse" label="Extend to ground" v-model="extend" @change="handleChange"></v-switch>
         </div>
 
         ${fields}

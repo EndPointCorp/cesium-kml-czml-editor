@@ -165,3 +165,8 @@ input#file {
 .v-toolbar__extension {
     background-color: gray;
 }
+
+.v-input--reverse .v-input__slot {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }

@@ -4,7 +4,10 @@ import './field-editors/polyline.js'
 import './entity-info.js'
 import './entity.js'
 
-// import CitiesDataSource from './cities/CitiesDataSource.js'
+import './components/entity-info.js'
+import './components/entity.js'
+import './components/entitycomponent.js'
+import './components/batch-controls.js'
 
 import request3DTilesetDialog from './tileset-dialog.js'
 import DocumentWriter from './czml-writer.js'
