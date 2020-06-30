@@ -12,6 +12,7 @@ const template = `
 
     <label>width</label>
     <direct-field
+        @input="inputHandler"
         :entity="entity"
         :feature="'billboard'"
         :field="'width'">
@@ -19,6 +20,7 @@ const template = `
 
     <label>height</label>
     <direct-field
+        @input="inputHandler"
         :entity="entity"
         :feature="'billboard'"
         :field="'height'">
@@ -27,6 +29,7 @@ const template = `
     <div v-if="advanced">
         <label>pixelOffset</label>
         <components-field
+            @input="inputHandler"
             :entity="entity"
             :feature="'billboard'"
             :field="'pixelOffset'"
@@ -36,6 +39,7 @@ const template = `
 
         <label>heightReference</label>
         <enum-field
+            @input="inputHandler"
             :entity="entity"
             :feature="'billboard'"
             :field="'heightReference'"
@@ -44,6 +48,7 @@ const template = `
 
         <label>verticalOrigin</label>
         <enum-field
+            @input="inputHandler"
             :entity="entity"
             :feature="'billboard'"
             :field="'verticalOrigin'"
@@ -52,6 +57,7 @@ const template = `
 
         <label>scale</label>
         <direct-field
+            @input="inputHandler"
             :entity="entity"
             :feature="'billboard'"
             :field="'scale'">
@@ -59,6 +65,7 @@ const template = `
 
         <label>rotation</label>
         <direct-field
+            @input="inputHandler"
             :entity="entity"
             :feature="'billboard'"
             :field="'rotation'">
@@ -66,11 +73,12 @@ const template = `
 
         <label>eyeOffset</label>
         <components-field
+            @input="inputHandler"
             :entity="entity"
             :feature="'billboard'"
             :field="'eyeOffset'"
             :type="'Cartesian3'"
-            :components="['x', 'y', '3']">
+            :components="['x', 'y', 'z']">
         </components-field>
     </div>
 </div>
@@ -87,6 +95,9 @@ Vue.component('billboard-editor', {
     methods: {
         updateIconImageSize(iconSize) {
             this.iconSize = iconSize;
+        },
+        inputHandler(value, field) {
+            // Do nothing
         }
     },
     created: function() {
