@@ -81,6 +81,7 @@ const template = `
             :components="['x', 'y', 'z']">
         </components-field>
     </div>
+    <slot></slot>
 </div>
 `;
 
