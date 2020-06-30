@@ -140,7 +140,7 @@ function loadFile(file) {
 
     console.log('load', file);
 
-    if (/vnd.google-earth/.test(file.type)) {
+    if (/vnd.google-earth/.test(file.type) || /\.kmz|\.kml/.test(file.name)) {
         loadDataSourcePromise(Cesium.KmlDataSource.load(file));
     }
     else if (/\.czml/.test(file.name)) {
