@@ -5,10 +5,10 @@ import '../fields/enum.js'
 
 const template = `
 <div class="editor billboard-editor">
-    <div class="editor-name">Billboard</div>
-    <div v-if="iconSize">
+    <span class="editor-name">Billboard: </span>
+    <span v-if="iconSize">
         Icon image original size: {{ iconSize && iconSize.width }}, {{ iconSize && iconSize.height }}
-    </div>
+    </span>
     <v-row>
         <v-col cols="6">
             <direct-field

@@ -32,7 +32,7 @@
         <v-app style="height: 90vh">
 
           <!-- File Upload Section -->
-          <v-card color="grey lighten-1" flat class="mb-3">
+          <v-card color="grey lighten-1" flat class="mb-1">
             <v-toolbar dense flat dark color="black">
               <v-toolbar-title>Import KML/CZML/Geoson:</v-toolbar-title>
             </v-toolbar>
@@ -43,7 +43,7 @@
           </v-card>
 
           <!-- Entities List Section -->
-          <v-card color="grey lighten-1" flat class="mb-3" v-if="entities.length > 0">
+          <v-card color="grey lighten-1" flat class="mb-1" v-if="entities.length > 0">
             <v-toolbar dense flat dark color="black">
               <v-toolbar-title>KML Entities:</v-toolbar-title>
               <template v-slot:extension class="entites-ext">
@@ -73,16 +73,21 @@
           </v-card>
 
           <!-- Editor Section -->
-          <v-card color="grey lighten-1" flat class="mb-3" v-if="entity">
+          <v-card color="grey lighten-1" flat class="mb-1" v-if="entity">
             <v-toolbar dense flat dark color="black">
               <v-toolbar-title>Edit Pins:</v-toolbar-title>
             </v-toolbar>
-            <v-card-text class="text-center pt-0">
-              
-              <div v-if="entity">
-                <h4 class="entity-name">{{ entity.name }}</h4>
-                <button class="entity-flyto" v-on:click="flyToEntity();">FlyTo</button>
-
+            <v-card-text class="pt-0 pb-1">
+              <span class="entity-name text-subtitle-1 font-weight-medium">{{ entity.name }}</span>
+                <v-btn
+                  @click="flyToEntity();"
+                  small
+                  color="blue-grey"
+                  class="mx-2 mt-2 white--text entity-flyto"
+                >
+              FlyTo
+                <v-icon right small dark>mdi-send</v-icon>
+              </v-btn>
                 <entity-info :entity="entity"></entity-info>
 
                 <billboard-editor v-if="entity.billboard"
@@ -107,16 +112,17 @@
                 <polyline-editor :entity="entity">
                 </polyline-editor>
                 
-                <v-checkbox id="advanced" class="v-input--reverse py-0 my-0" label="Advanced Editor:" v-model="advanced"></v-checkbox>
-              </div>
+                <v-checkbox hide-details id="advanced" class="v-input--reverse py-0 my-0" label="Advanced Editor:" v-model="advanced"></v-checkbox>
 
-              <div><v-btn>Update Pin</v-btn></div>
-              <div class="mt-1"><v-btn>Copy to other pins</v-btn></div>
             </v-card-text>
+            <v-card-actions class="pt-0 pb-1">
+              <v-btn>Update Pin</v-btn>
+              <v-btn>Copy to other pins</v-btn>
+            </v-card-actions>
           </v-card>
 
           <!-- Export Section -->
-          <v-card color="grey lighten-1" flat class="mb-3" v-if="filename">
+          <v-card color="grey lighten-1" flat class="mb-1" v-if="filename">
             <v-toolbar dense flat dark color="black">
               <v-toolbar-title>Export CZML:</v-toolbar-title>
             </v-toolbar>

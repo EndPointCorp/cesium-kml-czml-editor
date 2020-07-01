@@ -18,16 +18,38 @@ function getLonLatHeight(entity) {
 }
 
 const template = `
-    <div v-if="entity && position">
-        <h4>Position</h4>
-        <div>
-            Latitude: {{ round(position.latitude, 0.0001) }}
-            Longitude: {{ round(position.longitude, 0.0001) }}
-        </div><div>
-            Altitude: <input :value="round(position.height)"
-                         v-on:input="updateAltitude($event.target.value)"></input>
-        </div>
-    </div>
+    <v-row v-if="entity && position">
+        <v-col class="py-0 my-0" cols="12"><h4>Position</h4></v-col>
+
+        <v-col class="py-0 my-0" cols="4">
+        Latitude
+        </v-col>
+
+        <v-col class="py-0 my-0" cols="4">
+        Longitude
+        </v-col>
+
+        <v-col class="py-0 my-0" cols="4">
+        Altitude
+        </v-col>
+
+        <v-col class="py-0 my-0" cols="4">
+        {{ round(position.latitude, 0.0001) }}
+        </v-col>
+
+        <v-col class="py-0 my-0" cols="4">
+        {{ round(position.longitude, 0.0001) }}
+        </v-col>
+
+        <v-col class="py-0 my-0" cols="4">
+        <v-text-field
+            dense
+            hide-details
+            :value="round(position.height)"
+            v-on:input="updateAltitude($event.target.value)">
+        </v-text-field>
+        </v-col>
+    </v-row>
 `;
 
 Vue.component('entity-info', {

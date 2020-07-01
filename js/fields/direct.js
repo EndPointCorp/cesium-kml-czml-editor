@@ -1,4 +1,6 @@
 const template = `<v-text-field
+    dense
+    hide-details
     class="direct-property-field"
     @input="handleUpdate"
     v-model="entity[feature][field]"
