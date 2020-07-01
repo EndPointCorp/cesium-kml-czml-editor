@@ -24,7 +24,7 @@
     <v-app style="height: 90vh">
 
       <!-- File Upload Section -->
-      <v-card color="grey lighten-1" flat class="mb-1">
+      <v-card color="grey lighten-1" flat class="mt-1 mb-1">
         <v-toolbar dense flat dark color="black">
           <v-toolbar-title>Import KML/CZML/Geoson:</v-toolbar-title>
         </v-toolbar>
@@ -41,7 +41,7 @@
             <v-toolbar dense flat dark color="black">
               <v-toolbar-title>KML Entities:</v-toolbar-title>
               <template v-slot:extension class="entites-ext">
-                Show <v-checkbox v-model="showPolygons"></v-checkbox> polygons, <v-checkbox v-model="showBillboards"></v-checkbox> pins
+                Show<v-spacer></v-spacer><v-checkbox hide-details v-model="showPolygons"></v-checkbox>Polygons <v-spacer></v-spacer><v-checkbox hide-details v-model="showBillboards"></v-checkbox>Pins
               </template>
             </v-toolbar>
             <v-card-text class="pa-0">
