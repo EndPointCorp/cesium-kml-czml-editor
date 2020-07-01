@@ -75,7 +75,7 @@
           <!-- Editor Section -->
           <v-card color="grey lighten-1" flat class="mb-1" v-if="entity">
             <v-toolbar dense flat dark color="black">
-              <v-toolbar-title>Edit Pins:</v-toolbar-title>
+              <v-toolbar-title>Edit <template v-if="entity.billboard">Pins:</template><template v-else>Polygons:</template></v-toolbar-title>
             </v-toolbar>
             <v-card-text class="pt-0 pb-1">
               <span class="entity-name text-subtitle-1 font-weight-medium">{{ entity.name }}</span>
@@ -116,8 +116,8 @@
 
             </v-card-text>
             <v-card-actions class="pt-0 pb-1">
-              <v-btn>Update Pin</v-btn>
-              <v-btn>Copy to other pins</v-btn>
+              <v-btn>Update <template v-if="entity.billboard">Pin</template><template v-else>Polygon</template></v-btn>
+              <v-btn>Copy to other <template v-if="entity.billboard">Pins</template><template v-else>Polygons</template></v-btn>
             </v-card-actions>
           </v-card>
 
