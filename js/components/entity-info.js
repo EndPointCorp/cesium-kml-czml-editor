@@ -46,7 +46,7 @@ const template = `
             dense
             hide-details
             :value="round(position.height)"
-            v-on:input="updateAltitude($event.target.value)">
+            v-on:input="updateAltitude">
         </v-text-field>
         </v-col>
     </v-row>
