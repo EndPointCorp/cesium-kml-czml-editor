@@ -170,3 +170,7 @@ input#file {
     flex-direction: row-reverse;
     justify-content: flex-end;
   }
+
+.v-application--wrap {
+    min-height: unset!important;
+}

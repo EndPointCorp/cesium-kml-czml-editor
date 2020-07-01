@@ -24,9 +24,6 @@
         <!-- <label class="description" for="file">Load or drop KML (KMZ) or CZML or Geojson</label> -->
         <!-- <input type="file" id="file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input> -->
       </div>
-      <div id="add-tileset-wrapper">
-        <button id="add-tileset">Add 3D Tile set</button>
-      </div>
       <div id="editor">
         <!-- Vuetify application start -->
         <v-app style="height: 90vh">
@@ -36,9 +33,11 @@
             <v-toolbar dense flat dark color="black">
               <v-toolbar-title>Import KML/CZML/Geoson:</v-toolbar-title>
             </v-toolbar>
-            <v-card-text class="text-center">
-              <v-btn @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
+            <v-card-text class="text-center pb-1 pt-2">
+              <v-btn small @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
               <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
+              <br/>
+              <v-btn small class="mt-1" id="add-tileset">Add 3D Tile set</v-btn>
             </v-card-text>
           </v-card>
 
@@ -116,8 +115,8 @@
 
             </v-card-text>
             <v-card-actions class="pt-0 pb-1">
-              <v-btn>Update <template v-if="entity.billboard">Pin</template><template v-else>Polygon</template></v-btn>
-              <v-btn>Copy to other <template v-if="entity.billboard">Pins</template><template v-else>Polygons</template></v-btn>
+              <v-btn small>Update <template v-if="entity.billboard">Pin</template><template v-else>Polygon</template></v-btn>
+              <v-btn small>Copy to other <template v-if="entity.billboard">Pins</template><template v-else>Polygons</template></v-btn>
             </v-card-actions>
           </v-card>
 
@@ -126,8 +125,8 @@
             <v-toolbar dense flat dark color="black">
               <v-toolbar-title>Export CZML:</v-toolbar-title>
             </v-toolbar>
-            <v-card-text class="text-center">
-              <v-btn @click="toCZML">Save as ...</v-btn>
+            <v-card-text class="text-center  pb-1 pt-2">
+              <v-btn small @click="toCZML">Save as ...</v-btn>
             </v-card-text>
           </v-card>
 
