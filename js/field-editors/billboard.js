@@ -30,6 +30,19 @@ const template = `
         </v-col>
         </v-row>
 
+        <v-row>
+        <v-col cols="12" class="pb-2 pt-0 pl-0 ">
+            <enum-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'verticalOrigin'"
+                :enum="'VerticalOrigin'"
+                :label="'Vertical Origin'">
+            </enum-field>
+        </v-col>
+        </v-row>
+
         <v-col cols="12" class="py-0" v-if="advanced">
         <v-row>
         <v-col cols="12" class="py-1">
@@ -53,18 +66,6 @@ const template = `
                 :field="'heightReference'"
                 :enum="'HeightReference'"
                 :label="'Height Reference'">
-            </enum-field>
-            </v-col>
-            </v-row>
-            <v-row>
-            <v-col cols="12" class="pb-2 pt-0 pl-0 ">
-            <enum-field
-                @input="inputHandler"
-                :entity="entity"
-                :feature="'billboard'"
-                :field="'verticalOrigin'"
-                :enum="'VerticalOrigin'"
-                :label="'Vertical Origin'">
             </enum-field>
             </v-col>
             </v-row>
