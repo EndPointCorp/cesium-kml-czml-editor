@@ -48,7 +48,9 @@ const editor = new Vue({
             copyProperties: [],
             selection: [],
             entities: [],
-            item: null
+            item: null,
+            showPolygons: true,
+            showBillboards: true
         };
     },
     methods: {

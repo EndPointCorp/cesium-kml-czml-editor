@@ -21,27 +21,27 @@
 <body>
   <!-- Vuetify application start -->
   <div id="editor" class="sidebar">
-        <v-app style="height: 90vh">
+    <v-app style="height: 90vh">
 
-          <!-- File Upload Section -->
-          <v-card color="grey lighten-1" flat class="mb-1">
-            <v-toolbar dense flat dark color="black">
-              <v-toolbar-title>Import KML/CZML/Geoson:</v-toolbar-title>
-            </v-toolbar>
-            <v-card-text class="text-center pb-1 pt-2">
-              <v-btn small @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
-              <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
-              <br/>
-              <v-btn small class="mt-1" id="add-tileset">Add 3D Tile set</v-btn>
-            </v-card-text>
-          </v-card>
+      <!-- File Upload Section -->
+      <v-card color="grey lighten-1" flat class="mb-1">
+        <v-toolbar dense flat dark color="black">
+          <v-toolbar-title>Import KML/CZML/Geoson:</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text class="text-center pb-1 pt-2">
+          <v-btn small @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
+          <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
+          <br/>
+          <v-btn small class="mt-1" id="add-tileset">Add 3D Tile set</v-btn>
+        </v-card-text>
+      </v-card>
 
           <!-- Entities List Section -->
           <v-card color="grey lighten-1" flat class="mb-1" v-if="entities.length > 0">
             <v-toolbar dense flat dark color="black">
               <v-toolbar-title>KML Entities:</v-toolbar-title>
               <template v-slot:extension class="entites-ext">
-                Show [ ] polygons [x] pins
+                Show <v-checkbox v-model="showPolygons"></v-checkbox> polygons, <v-checkbox v-model="showBillboards"></v-checkbox> pins
               </template>
             </v-toolbar>
             <v-card-text class="pa-0">
