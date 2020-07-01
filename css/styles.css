@@ -26,7 +26,7 @@ h4 {
 .sidebar {
     height: 100%;
     flex: 0 1 auto;
-    width: 25%;
+    width: 20%;
 
     min-height: 0;
     overflow-y: auto;
@@ -173,4 +173,8 @@ input#file {
 
 .v-application--wrap {
     min-height: unset!important;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
