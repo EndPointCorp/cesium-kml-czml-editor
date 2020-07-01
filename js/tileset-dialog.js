@@ -27,7 +27,7 @@ const template = `
         <v-card-text>
             <div class="tr">
                 <span><v-text-field
-                hide-details 
+                hide-details
                 v-model="resource"
                 id="resource"
                 label="Ion resource"></v-text-field></span>
@@ -48,18 +48,16 @@ const template = `
                 id="url"
                 label="Tileset json URL"></v-text-field></span>
             </div>
-            
+
             <br/>
             <br/>
-            URL LIST
+
+            TILESETS
+
             <v-row>
                 <template v-for="(item,index) in tilesList">
                     <v-col cols="8">
-                        <v-text-field
-                            hide-details
-                            v-model="item.url"
-                            label="URL"
-                        ></v-text-field>
+                        {{ item.url || item.resource }}
                     </v-col>
                     <v-col cols="4">
                         <v-btn @click="deleteTile(index)">Delete</v-btn>
@@ -67,7 +65,6 @@ const template = `
                 </template>
             </v-row>
             <br/>
-            <v-btn @click="addTile()">Add</v-btn>
         </v-card-text>
 
         <v-divider></v-divider>
@@ -89,7 +86,7 @@ Vue.component('dialog-container', {
             key: null,
             url: null,
             dialog: false,
-            tilesList: [{url: null}]
+            tilesList: []
         }
     },
     methods: {
@@ -104,21 +101,32 @@ Vue.component('dialog-container', {
                 });
             }
 
-            if (!url) {
-                return;
+            if (url) {
+                this.dialog = false;
+
+                let tileset = new Cesium.Cesium3DTileset({
+                    url: this.url
+                });
+
+                this.tilesList.push({
+                    resource: this.resource,
+                    key: this.key,
+                    url: this.url
+                });
+
+                this.resource = null;
+                this.key = null;
+                this.url = null;
+
+                this.$emit('addtileset', tileset);
             }
-
-            this.dialog = false;
-
-            new Cesium.Cesium3DTileset({
-                url: this.url
-            });
         },
         addTile: function() {
             this.tilesList = [...this.tilesList, {url: null}]
         },
         deleteTile: function(index) {
-            this.tilesList.splice(index,1)
+            let deleted = this.tilesList.splice(index, 1)[0];
+            this.$emit('deletetileset', deleted);
         }
     }
 });

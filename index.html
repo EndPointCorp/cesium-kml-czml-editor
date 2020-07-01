@@ -32,7 +32,7 @@
           <v-btn small @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
           <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
           <br/>
-          <dialog-container></dialog-container>
+          <dialog-container @addtileset="addTileset" @deletetileset="deleteTileset"></dialog-container>
         </v-card-text>
       </v-card>
 
@@ -129,7 +129,6 @@
       </div>
     </div>
     <div id="viewer"></div>
-    <div id="dialog-container">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="js/index.js" type="module"></script>

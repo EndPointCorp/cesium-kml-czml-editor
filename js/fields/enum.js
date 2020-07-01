@@ -35,15 +35,17 @@ Vue.component('enum-field', {
     },
     watch: {
         entity: function(newValue) {
-            const values = this.components.reduce((a, b) => (a[b] = null, a), {});
-
             if (newValue[this.feature][this.field]) {
-                this.components.forEach(c => {
-                    values[c] = parseInt(newValue[this.feature][this.field].getValue()[c]);
+                let v = newValue[this.feature][this.field].getValue();
+                Object.keys(Cesium[this.enum]).forEach(k => {
+                    if( Cesium[this.enum][k] === v ) {
+                        this.value = k;
+                    }
                 });
             }
-
-            this.values = values;
+            else {
+                this.value = 'undefined';
+            }
         }
     },
     template: template

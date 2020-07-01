@@ -75,13 +75,21 @@ const editor = new Vue({
                 this.selection.splice(0, this.selection.length);
             }
         },
-        request3DTileset: function() {
-            request3DTilesetDialog((tileset)=>{
-                if (tileset) {
-                    console.log(tileset);
-                    viewer.scene.primitives.add(tileset);
+        addTileset: function(tileset) {
+            if (tileset) {
+                console.log(tileset);
+                viewer.scene.primitives.add(tileset);
+            }
+        },
+        deleteTileset: function(tileset) {
+            for (let i = 0; i < viewer.scene.primitives.length; i++) {
+                let sceneTS = viewer.scene.primitives.get(i);
+
+                if (sceneTS.url === tileset.url || sceneTS.url.indexOf(tileset.resource) > 0) {
+                    viewer.scene.primitives.remove(sceneTS);
+                    break;
                 }
-            });
+            }
         },
         copyStyle: function(type) {
             this.copySubject = this.entity[type];
