@@ -42,13 +42,32 @@ const template = `
             </div>
 
             <div class="tr">
-                <label for="url"></label>
                 <span><v-text-field
                 hide-details
                 v-model="url"
                 id="url"
                 label="Tileset json URL"></v-text-field></span>
-            </div>  
+            </div>
+            
+            <br/>
+            <br/>
+            URL LIST
+            <v-row>
+                <template v-for="(item,index) in tilesList">
+                    <v-col cols="8">
+                        <v-text-field
+                            hide-details
+                            v-model="item.url"
+                            label="URL"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="4">
+                        <v-btn @click="deleteTile(index)">Delete</v-btn>
+                    </v-col>
+                </template>
+            </v-row>
+            <br/>
+            <v-btn @click="addTile()">Add</v-btn>
         </v-card-text>
 
         <v-divider></v-divider>
@@ -69,7 +88,8 @@ Vue.component('dialog-container', {
             resource: null,
             key: null,
             url: null,
-            dialog: false
+            dialog: false,
+            tilesList: [{url: null}]
         }
     },
     methods: {
@@ -93,6 +113,12 @@ Vue.component('dialog-container', {
             new Cesium.Cesium3DTileset({
                 url: this.url
             });
+        },
+        addTile: function() {
+            this.tilesList = [...this.tilesList, {url: null}]
+        },
+        deleteTile: function(index) {
+            this.tilesList.splice(index,1)
         }
     }
 });
