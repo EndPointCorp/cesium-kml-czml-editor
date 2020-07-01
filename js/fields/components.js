@@ -1,17 +1,30 @@
-const template = `<span class="editor-field">
-    <span v-if="entity[feature][field]">
-        <input v-for="component in components"
-            class="component-field-component"
-            v-model="values[component]"
-            v-on:input="update();"></input>
-    </span>
-    <button v-if="!entity[feature][field]"
-        v-on:click="newValue();">set new</button>
+const template = `<span >
+    <v-row>
+    <v-col cols="3" class="px-0">
+    {{ label }}
+    </v-col>
+        <template v-for="component in components" v-if="entity[feature][field]">
+        <v-col cols="3">
+            <v-text-field
+                dense
+                hide-details
+                :key="component"
+                class="component-field-component"
+                v-model="values[component]"
+                v-on:input="update();">
+            </v-text-field>
+        </v-col>
+        </template>
+    <v-col cols="3" v-if="!entity[feature][field]">
+    <v-btn small
+        v-on:click="newValue();">set new</v-btn>
+    </v-col>
+    </v-row>
 </span>
 `;
 
 Vue.component('components-field', {
-    props: ['entity', 'feature', 'field', 'type', 'components'],
+    props: ['entity', 'feature', 'field', 'type', 'components', 'label'],
     data: function() {
         const values = this.components.reduce((a, b) => (a[b] = null, a), {});
 

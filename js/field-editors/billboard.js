@@ -32,20 +32,21 @@ const template = `
 
         <v-col cols="12" v-if="advanced">
         <v-row>
-        <v-col cols="12">
-            <label>pixelOffset</label>
+        <v-col cols="12" class="py-1">
+            <label></label>
             <components-field
                 @input="inputHandler"
                 :entity="entity"
                 :feature="'billboard'"
                 :field="'pixelOffset'"
                 :type="'Cartesian2'"
-                :components="['x', 'y']">
+                :components="['x', 'y']"
+                :label="'Pixel Offset'">
             </components-field>
             </v-col>
             </v-row>
             <v-row>
-            <v-col cols="12">
+            <v-col cols="12" class="py-1">
             <label>heightReference</label>
             <enum-field
                 @input="inputHandler"
@@ -57,7 +58,7 @@ const template = `
             </v-col>
             </v-row>
             <v-row>
-            <v-col cols="12">
+            <v-col cols="12" class="py-1">
             <label>verticalOrigin</label>
             <enum-field
                 @input="inputHandler"
@@ -69,7 +70,7 @@ const template = `
             </v-col>
             </v-row>
             <v-row>
-            <v-col cols="6">
+            <v-col cols="6" class="py-1">
                 <direct-field
                     @input="inputHandler"
                     :entity="entity"
@@ -78,7 +79,7 @@ const template = `
                     :label="'Scale'">
                 </direct-field>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="6" class="py-1">
                 <direct-field
                     @input="inputHandler"
                     :entity="entity"
@@ -89,15 +90,15 @@ const template = `
             </v-col>
             </v-row>
             <v-row>
-            <v-col cols="12">
-            <label>eyeOffset</label>
+            <v-col cols="12" class="py-1">
             <components-field
                 @input="inputHandler"
                 :entity="entity"
                 :feature="'billboard'"
                 :field="'eyeOffset'"
                 :type="'Cartesian3'"
-                :components="['x', 'y', 'z']">
+                :components="['x', 'y', 'z']"
+                :label="'Eye Offset'">
             </components-field>
             </v-col>
             </v-row>
