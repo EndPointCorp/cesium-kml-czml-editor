@@ -7,7 +7,7 @@ import './components/entity.js'
 import './components/entitycomponent.js'
 import './components/batch-controls.js'
 
-import request3DTilesetDialog from './tileset-dialog.js'
+import './tileset-dialog.js'
 import DocumentWriter from './czml-writer.js'
 
 // import CitiesDataSource from './cities/CitiesDataSource.js'
@@ -128,7 +128,7 @@ const editor = new Vue({
     }
 });
 
-document.getElementById('add-tileset').onclick = editor.request3DTileset.bind(editor);
+// document.getElementById('add-tileset').onclick = editor.request3DTileset.bind(editor);
 
 function loadDataSourcePromise(dsPromise) {
     viewer.dataSources.add(dsPromise);

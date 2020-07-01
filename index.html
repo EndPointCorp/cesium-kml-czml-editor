@@ -32,7 +32,7 @@
           <v-btn small @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
           <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
           <br/>
-          <v-btn small class="mt-1" id="add-tileset">Add 3D Tile set</v-btn>
+          <dialog-container></dialog-container>
         </v-card-text>
       </v-card>
 
@@ -124,7 +124,6 @@
               <v-btn small @click="toCZML">Save as ...</v-btn>
             </v-card-text>
           </v-card>
-
         </v-app>
       </div>
     </div>
