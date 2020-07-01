@@ -1,12 +1,16 @@
 const template = `<span class="editor-field">
-    <select class="enum-field" v-model="value" v-on:change="update();">
-        <option>undefined</option>
-        <option v-for="opt in options">{{opt}}</option>'
-    </select>
+    <v-select 
+        class="enum-field" 
+        v-model="value" 
+        v-on:change="update();"
+        hide-details
+        :items="options"
+        :label="label"
+    ></v-select>
 </span>`;
 
 Vue.component('enum-field', {
-    props: ['entity', 'feature', 'field', 'enum'],
+    props: ['entity', 'feature', 'field', 'enum', 'label'],
     data: function() {
         let value = 'undefined';
 
@@ -21,7 +25,7 @@ Vue.component('enum-field', {
 
         return {
             value: value,
-            options: Object.keys(Cesium[this.enum])
+            options: [undefined, ...Object.keys(Cesium[this.enum])]
         };
     },
     methods: {

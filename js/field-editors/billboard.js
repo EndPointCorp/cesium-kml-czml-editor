@@ -30,10 +30,9 @@ const template = `
         </v-col>
         </v-row>
 
-        <v-col cols="12" v-if="advanced">
+        <v-col cols="12" class="py-0" v-if="advanced">
         <v-row>
         <v-col cols="12" class="py-1">
-            <label></label>
             <components-field
                 @input="inputHandler"
                 :entity="entity"
@@ -46,31 +45,31 @@ const template = `
             </v-col>
             </v-row>
             <v-row>
-            <v-col cols="12" class="py-1">
-            <label>heightReference</label>
+            <v-col cols="12" class="py-1 pl-0 ">
             <enum-field
                 @input="inputHandler"
                 :entity="entity"
                 :feature="'billboard'"
                 :field="'heightReference'"
-                :enum="'HeightReference'">
+                :enum="'HeightReference'"
+                :label="'Height Reference'">
             </enum-field>
             </v-col>
             </v-row>
             <v-row>
-            <v-col cols="12" class="py-1">
-            <label>verticalOrigin</label>
+            <v-col cols="12" class="pb-2 pt-0 pl-0 ">
             <enum-field
                 @input="inputHandler"
                 :entity="entity"
                 :feature="'billboard'"
                 :field="'verticalOrigin'"
-                :enum="'VerticalOrigin'">
+                :enum="'VerticalOrigin'"
+                :label="'Vertical Origin'">
             </enum-field>
             </v-col>
             </v-row>
             <v-row>
-            <v-col cols="6" class="py-1">
+            <v-col cols="6" class="pt-4 pl-0 ">
                 <direct-field
                     @input="inputHandler"
                     :entity="entity"
@@ -79,7 +78,7 @@ const template = `
                     :label="'Scale'">
                 </direct-field>
             </v-col>
-            <v-col cols="6" class="py-1">
+            <v-col cols="6" class="pt-4">
                 <direct-field
                     @input="inputHandler"
                     :entity="entity"
