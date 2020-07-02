@@ -5,10 +5,12 @@ import '../fields/enum.js'
 
 const template = `
 <div class="editor billboard-editor">
-    <span class="editor-name">Billboard: </span>
-    <span v-if="iconSize">
-        Icon image original size: {{ iconSize && iconSize.width }}, {{ iconSize && iconSize.height }}
-    </span>
+    <div class="py-1">
+        <span class="editor-name">Billboard: </span>
+        <span v-if="iconSize">
+            Icon image original size: {{ iconSize && iconSize.width }}, {{ iconSize && iconSize.height }}
+        </span>
+    </div>
     <v-row>
         <v-col cols="6">
             <direct-field
@@ -31,7 +33,7 @@ const template = `
         </v-row>
 
         <v-row>
-        <v-col cols="12" class="pb-2 pt-0 pl-0 ">
+        <v-col cols="6" class="pb-2 pt-0">
             <enum-field
                 @input="inputHandler"
                 :entity="entity"
@@ -42,9 +44,12 @@ const template = `
             </enum-field>
         </v-col>
         </v-row>
+        
         <slot name="extendline"></slot>
+        
         <slot name="advancetoggle"></slot>
-        <v-col cols="12" class="py-0" v-if="advanced">
+
+        <v-col cols="12" class="py-0 px-4 advanced" v-if="advanced">
         <v-row>
         <v-col cols="12" class="py-1">
             <components-field
@@ -59,7 +64,7 @@ const template = `
             </v-col>
             </v-row>
             <v-row>
-            <v-col cols="12" class="py-1 pl-0 ">
+            <v-col cols="6" class="py-1 pl-0 ">
             <enum-field
                 @input="inputHandler"
                 :entity="entity"
