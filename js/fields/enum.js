@@ -1,5 +1,6 @@
 const template = `<span class="editor-field">
     <v-select 
+        dense
         class="enum-field" 
         v-model="value" 
         v-on:change="update();"
