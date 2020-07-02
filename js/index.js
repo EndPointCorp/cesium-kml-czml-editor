@@ -1,13 +1,16 @@
 import './field-editors/billboard.js'
 import './field-editors/polygon.js'
-import './field-editors/polyline.js'
-import './entity-info.js'
-import './entity.js'
+
+import './components/entity-info.js'
+import './components/entity.js'
+import './components/entitycomponent.js'
+import './components/batch-controls.js'
+
+import './tileset-dialog.js'
+import DocumentWriter from './czml-writer.js'
 
 // import CitiesDataSource from './cities/CitiesDataSource.js'
 
-import request3DTilesetDialog from './tileset-dialog.js'
-import DocumentWriter from './czml-writer.js'
 
 const viewer = new Cesium.Viewer('viewer');
 window.viewer = viewer;
@@ -30,16 +33,25 @@ function applyProperties(src, dst, properties) {
 
 const editor = new Vue({
     el: '#editor',
-    data: () => ({
-        czml: null,
-        filename: null,
-        entity: null,
-        copySubject: false,
-        copyType: null,
-        copyProperties: [],
-        selection: [],
-        entities: []
-    }),
+
+    vuetify: new Vuetify(),
+
+    data: function() {
+        return {
+            advanced: false,
+            czml: null,
+            filename: null,
+            entity: null,
+            copySubject: false,
+            copyType: null,
+            copyProperties: [],
+            selection: [],
+            entities: [],
+            item: null,
+            showPolygons: true,
+            showBillboards: true
+        };
+    },
     methods: {
         selectEntity: function(entity) {
             viewer.selectedEntity = entity;
@@ -62,13 +74,21 @@ const editor = new Vue({
                 this.selection.splice(0, this.selection.length);
             }
         },
-        request3DTileset: function() {
-            request3DTilesetDialog((tileset)=>{
-                if (tileset) {
-                    console.log(tileset);
-                    viewer.scene.primitives.add(tileset);
+        addTileset: function(tileset) {
+            if (tileset) {
+                console.log(tileset);
+                viewer.scene.primitives.add(tileset);
+            }
+        },
+        deleteTileset: function(tileset) {
+            for (let i = 0; i < viewer.scene.primitives.length; i++) {
+                let sceneTS = viewer.scene.primitives.get(i);
+
+                if (sceneTS.url === tileset.url || sceneTS.url.indexOf(tileset.resource) > 0) {
+                    viewer.scene.primitives.remove(sceneTS);
+                    break;
                 }
-            });
+            }
         },
         copyStyle: function(type) {
             this.copySubject = this.entity[type];
@@ -115,7 +135,7 @@ const editor = new Vue({
     }
 });
 
-document.getElementById('add-tileset').onclick = editor.request3DTileset.bind(editor);
+// document.getElementById('add-tileset').onclick = editor.request3DTileset.bind(editor);
 
 function loadDataSourcePromise(dsPromise) {
     viewer.dataSources.add(dsPromise);
@@ -138,7 +158,7 @@ function loadFile(file) {
 
     console.log('load', file);
 
-    if (/vnd.google-earth/.test(file.type)) {
+    if (/vnd.google-earth/.test(file.type) || /\.kmz|\.kml/.test(file.name)) {
         loadDataSourcePromise(Cesium.KmlDataSource.load(file));
     }
     else if (/\.czml/.test(file.name)) {
@@ -155,6 +175,9 @@ function loadFile(file) {
         };
         reader.readAsText(file);
     }
+    else {
+        console.warn("Can't recognize file type");
+    }
 }
 
 document.getElementById('file').addEventListener('change', handleFileSelect, false);
@@ -169,22 +192,22 @@ viewer.selectedEntityChanged.addEventListener((selection) => {
     console.log(selection);
 });
 
-document.getElementById('file-area').addEventListener('drop', ev => {
-    ev.preventDefault();
-    document.getElementById('file-area').classList.remove('active');
-    for (let i = 0; i < ev.dataTransfer.items.length; i++) {
-        // If dropped items aren't files, reject them
-        if (ev.dataTransfer.items[i].kind === 'file') {
-            let file = ev.dataTransfer.items[i].getAsFile();
-            loadFile(file);
-        }
-    }
-});
-document.getElementById('file-area').addEventListener('dragover', ev => {
-    ev.preventDefault();
-    document.getElementById('file-area').classList.add('active');
-});
-document.getElementById('file-area').addEventListener('dragleave', ev => {
-    ev.preventDefault();
-    document.getElementById('file-area').classList.remove('active');
-});
+// document.getElementById('file-area').addEventListener('drop', ev => {
+//     ev.preventDefault();
+//     document.getElementById('file-area').classList.remove('active');
+//     for (let i = 0; i < ev.dataTransfer.items.length; i++) {
+//         // If dropped items aren't files, reject them
+//         if (ev.dataTransfer.items[i].kind === 'file') {
+//             let file = ev.dataTransfer.items[i].getAsFile();
+//             loadFile(file);
+//         }
+//     }
+// });
+// document.getElementById('file-area').addEventListener('dragover', ev => {
+//     ev.preventDefault();
+//     document.getElementById('file-area').classList.add('active');
+// });
+// document.getElementById('file-area').addEventListener('dragleave', ev => {
+//     ev.preventDefault();
+//     document.getElementById('file-area').classList.remove('active');
+// });

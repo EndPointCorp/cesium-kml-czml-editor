@@ -9,54 +9,50 @@
   <script src="js/cesium-1.67/Cesium.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
   <link rel="stylesheet" href="css/styles.css">
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 </head>
 
 <body>
-    <div class="sidebar">
-      <div id="file-area">
-        <label class="description" for="file">Load or drop KML (KMZ) or CZML or Geojson</label>
-        <input type="file" id="file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
-      </div>
-      <div id="add-tileset-wrapper">
-        <button id="add-tileset">Add 3D Tile set</button>
-      </div>
-      <div id="editor">
-          <button v-if="filename" v-on:click="toCZML">Download as CZML</button>
-          <a class="download-link" v-if="czml" :href="czml" :download="filename">Download</a>
-          <div v-if="entity">
-            <h4 class="entity-name">{{ entity.name }}</h4>
-            <button class="entity-flyto" v-on:click="flyToEntity();">FlyTo</button>
+  <!-- Vuetify application start -->
+  <div id="editor" class="sidebar">
+    <v-app style="height: 90vh">
 
-            <entity-info :entity="entity"></entity-info>
+      <!-- File Upload Section -->
+      <v-card color="grey lighten-1" flat class="mt-1 mb-1">
+        <v-toolbar dense flat dark color="black">
+          <v-toolbar-title>Import KML/CZML/Geoson:</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text class="text-center pb-1 pt-2">
+          <v-btn small @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
+          <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
+          <br/>
+          <dialog-container @addtileset="addTileset" @deletetileset="deleteTileset"></dialog-container>
+        </v-card-text>
+      </v-card>
 
-            <billboard-editor v-if="entity.billboard" v-bind:billboard="entity.billboard"
-              v-bind:copy-mode="copyType === 'billboard'"
-              v-bind:on-copy-properties-change="onCopyPropertiesChange" >
-              <button v-on:click="copyStyle('billboard')">Copy style</button>
-              <button v-if="selection.length > 1" v-on:click="pasteStyle">
-                Apply to {{selection.length}} objects
-              </button>
-            </billboard-editor>
-
-            <polygon-editor v-if="entity.polygon" v-bind:polygon="entity.polygon"
-              v-bind:copy-mode="copyType === 'polygon'"
-              v-bind:on-copy-properties-change="onCopyPropertiesChange" >
-              <button v-on:click="copyStyle('polygon')">Copy style</button>
-              <button v-if="selection.length > 1" v-on:click="pasteStyle">
-                Apply to {{selection.length}} objects
-              </button>
-            </polygon-editor>
-
-            <polyline-editor :entity="entity">
-            </polyline-editor>
-
-          </div>
-          <div v-if="entities.length > 0" class="entities-list">
-            <h4>Entities:</h4>
-            <button v-if="copySubject" @click="selectApplicable">Select all applicable</button>
-            <entity v-for="e in entities" :key="e.id"
+          <!-- Entities List Section -->
+          <v-card color="grey lighten-1" flat class="mb-1" v-if="entities.length > 0">
+            <v-toolbar dense flat dark color="black">
+              <v-toolbar-title>KML Entities:</v-toolbar-title>
+              <template v-slot:extension class="entites-ext">
+                Show<v-spacer></v-spacer><v-checkbox hide-details v-model="showPolygons"></v-checkbox>Polygons <v-spacer></v-spacer><v-checkbox hide-details v-model="showBillboards"></v-checkbox>Pins
+              </template>
+            </v-toolbar>
+            <v-card-text class="pa-0">
+              <v-list
+                color="grey lighten-1"
+                dense
+                height="200"
+                class="overflow-y-auto py-0"
+              >
+                <v-list-item-group v-model="item" color="primary">
+                  <entitycomponent v-for="(e, i) in entities" :key="i"
               v-bind:class="{selected: e === entity}"
               v-bind:selected="e === entity"
               v-bind:in-selection="selection.indexOf(e) >= 0"
@@ -64,13 +60,79 @@
               v-bind:copy-type="copyType"
               v-bind:select="selectEntity"
               v-bind:append="appendToSelection"
-              v-bind:is-folder="isFolder"></entity>
-          </div>
-        </div>
+              v-bind:is-folder="isFolder"></entitycomponent>
+                </v-list-item-group>
+              </v-list>
+            </v-card-text>
+          </v-card>
+
+          <!-- Editor Section -->
+          <v-card color="grey lighten-1" flat class="mb-1" v-if="entity">
+            <v-toolbar dense flat dark color="black">
+              <v-toolbar-title>Edit <template v-if="entity.billboard">Pins:</template><template v-else>Polygons:</template></v-toolbar-title>
+            </v-toolbar>
+            <v-card-text class="pt-0 pb-1">
+              <div class="mt-2">
+                <span class="entity-name text-subtitle-1 font-weight-medium">{{ entity.name }}</span>
+                  <v-btn
+                    @click="flyToEntity();"
+                    small
+                    color="blue-grey"
+                    class="mx-2 white--text entity-flyto"
+                  >
+                FlyTo
+                  <v-icon right small dark>mdi-send</v-icon>
+                </v-btn>
+            </div>
+                <entity-info :entity="entity"></entity-info>
+
+                <billboard-editor v-if="entity.billboard"
+                  :entity="entity"
+                  :billboard="entity.billboard"
+                  :advanced="advanced">
+
+                  <batch-style-controls :active="false"></batch-style-controls>
+                  <template v-slot:advancetoggle>
+                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
+                      label="Advanced Editor:" v-model="advanced"></v-switch>
+                  </template>
+                </billboard-editor>
+
+                <polygon-editor v-if="entity.polygon"
+                  :entity="entity"
+                  :polygon="entity.polygon"
+                  :advanced="advanced"
+                >
+                  <batch-style-controls :active="false"></batch-style-controls>
+                  <template v-slot:advancetoggle>
+                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
+                      label="Advanced Editor:" v-model="advanced"></v-switch>
+                  </template>
+                </polygon-editor>
+
+
+            </v-card-text>
+            <v-card-actions class="pt-0 pb-1">
+              <v-btn small>Update <template v-if="entity.billboard">Pin</template><template v-else>Polygon</template></v-btn>
+              <v-btn small>Copy to other <template v-if="entity.billboard">Pins</template><template v-else>Polygons</template></v-btn>
+            </v-card-actions>
+          </v-card>
+
+          <!-- Export Section -->
+          <v-card color="grey lighten-1" flat class="mb-1" v-if="filename">
+            <v-toolbar dense flat dark color="black">
+              <v-toolbar-title>Export CZML:</v-toolbar-title>
+            </v-toolbar>
+            <v-card-text class="text-center  pb-1 pt-2">
+              <v-btn small @click="toCZML">Save as ...</v-btn>
+            </v-card-text>
+          </v-card>
+        </v-app>
+      </div>
     </div>
     <div id="viewer"></div>
-    <div id="dialog-container">
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="js/index.js" type="module"></script>
 </body>
 </html>

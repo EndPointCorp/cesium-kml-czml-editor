@@ -1,59 +1,139 @@
-import EditorFieldsBuilder from '../components-factory.js'
+import '../fields/components.js'
+import '../fields/checkbox.js'
+import '../fields/direct.js'
+import '../fields/enum.js'
 
-const Cartesian2Constructor = (x = 0, y = 0) => {return new Cesium.Cartesian2(x, y)};
-const Cartesian3Constructor = (x = 0, y = 0, z = 0) => {return new Cesium.Cartesian3(x, y, z)};
+import '../fields/extend-to-ground.js'
 
-const billboardEditorBuilder = new EditorFieldsBuilder('billboard', Cesium.BillboardGraphics);
+const template = `
+<div class="editor billboard-editor">
+    <div class="py-1">
+        <span class="editor-name">Billboard: </span>
+        <span v-if="iconSize">
+            Icon image original size: {{ iconSize && iconSize.width }}, {{ iconSize && iconSize.height }}
+        </span>
+    </div>
+    <v-row>
+        <v-col cols="6">
+            <direct-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'width'"
+                :label="'Width'">
+            </direct-field>
+        </v-col>
+        <v-col cols="6">
+            <direct-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'height'"
+                :label="'Height'">
+            </direct-field>
+        </v-col>
+        </v-row>
 
-billboardEditorBuilder.addComponentsField('pixelOffset', ['x', 'y'], Cartesian2Constructor);
-billboardEditorBuilder.addComponentsField('eyeOffset', ['x', 'y', 'z'], Cartesian3Constructor);
+        <v-row>
+        <v-col cols="6" class="pb-2 pt-0">
+            <enum-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'verticalOrigin'"
+                :enum="'VerticalOrigin'"
+                :label="'Vertical Origin'">
+            </enum-field>
+        </v-col>
+        </v-row>
 
-billboardEditorBuilder.addComponentsField('alignedAxis', ['x', 'y', 'z'], Cartesian3Constructor);
-billboardEditorBuilder.addDirectPropertyField('rotation');
+        <extend-to-ground :entity="entity"></extend-to-ground>
 
-billboardEditorBuilder.addEnumField('verticalOrigin', Cesium.VerticalOrigin);
-billboardEditorBuilder.addEnumField('heightReference', Cesium.HeightReference);
+        <v-divider light></v-divider>
+        <slot name="advancetoggle"></slot>
 
-billboardEditorBuilder.addDirectPropertyField('width');
-billboardEditorBuilder.addDirectPropertyField('height');
-billboardEditorBuilder.addDirectPropertyField('scale');
-
-const billboardTemplate = billboardEditorBuilder.getTemplate((fields, controls) => {
-    return `<div class="editor billboard-editor">
-        <div class="editor-name">Billboard</div>
-        <div v-if="iconSize">
-            Icon image size: {{ iconSize && iconSize.width }}, {{ iconSize && iconSize.height }}
-        </div>
-
-        ${fields}
-
-        ${controls}
-    </div>`;
-});
-
-const methods = billboardEditorBuilder.addComponentMethods({
-    updateIconImageSize(iconSize) {
-        this.iconSize = iconSize;
-    }
-});
-
-const initModel = billboardEditorBuilder.getInitFunction();
+        <v-col cols="12" class="py-0 px-4 advanced" v-if="advanced">
+        <v-row>
+        <v-col cols="12" class="py-1">
+            <components-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'pixelOffset'"
+                :type="'Cartesian2'"
+                :components="['x', 'y']"
+                :label="'Pixel Offset'">
+            </components-field>
+            </v-col>
+            </v-row>
+            <v-row>
+            <v-col cols="6" class="py-1 pl-0 ">
+            <enum-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'heightReference'"
+                :enum="'HeightReference'"
+                :label="'Height Reference'">
+            </enum-field>
+            </v-col>
+            </v-row>
+            <v-row>
+            <v-col cols="6" class="pt-4 pl-0 ">
+                <direct-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="'billboard'"
+                    :field="'scale'"
+                    :label="'Scale'">
+                </direct-field>
+            </v-col>
+            <v-col cols="6" class="pt-4">
+                <direct-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="'billboard'"
+                    :field="'rotation'"
+                    :label="'Rotation'">
+                </direct-field>
+            </v-col>
+            </v-row>
+            <v-row>
+            <v-col cols="12" class="py-1">
+            <components-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'eyeOffset'"
+                :type="'Cartesian3'"
+                :components="['x', 'y', 'z']"
+                :label="'Eye Offset'">
+            </components-field>
+            </v-col>
+            </v-row>
+        </v-col>
+    <slot></slot>
+</div>
+`;
 
 Vue.component('billboard-editor', {
-    props: ['billboard', 'copyMode', 'onCopyPropertiesChange'],
+    props: ['entity', 'billboard', 'advanced'],
     data: () => {
         return {
-            iconSize: {},
-            copyFields: []
+            iconSize: {}
         };
     },
-    template: billboardTemplate,
-    methods: methods,
+    template: template,
+    methods: {
+        updateIconImageSize(iconSize) {
+            this.iconSize = iconSize;
+        },
+        inputHandler(...args) {
+            this.$emit('input', ...args);
+        }
+    },
     created: function() {
-        initModel(this.billboard, this);
-
-        this.updateModelFields = ((billboard) => {
-
+        this.updateBillboardImage = ((billboard) => {
             if (billboard.image) {
                 const self = this;
                 const resource = billboard.image.valueOf();
@@ -67,12 +147,11 @@ Vue.component('billboard-editor', {
                 i.src = resource.url;
             }
         }).bind(this);
-        this.updateModelFields(this.billboard);
+        this.updateBillboardImage(this.billboard);
     },
     watch: {
         billboard: function(newVal) {
-            this.updateModelFields && this.updateModelFields(newVal);
-            initModel(newVal, this);
+            this.updateBillboardImage && this.updateBillboardImage(newVal);
         }
     }
 });
