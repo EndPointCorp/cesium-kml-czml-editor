@@ -35,7 +35,7 @@ function applyProperties(src, dst, properties) {
 function extrudePolygons(polygons) {
     // Convert Polygons into extrusions by default
     polygons.forEach(e => {
-        if (e.polygon) {s
+        if (e.polygon) {
             let h = polygonAverageHeight(e.polygon);
             if (h > 0.1) {
                 extrudePolygon(e.polygon, h);
@@ -161,6 +161,9 @@ const editor = new Vue({
 function loadDataSourcePromise(dsPromise) {
     viewer.dataSources.add(dsPromise);
     dsPromise.then(ds => {
+
+        extrudePolygons(ds.entities.values);
+
         editor.entities = [
             ...editor.entities,
             ...ds.entities.values

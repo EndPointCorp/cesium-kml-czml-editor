@@ -16,6 +16,11 @@ const template = `
         :label="'Extruded Height'"
     >
     </direct-field>
+    <div class="description">
+        Absolute altitude of the top edge, of the polygon.
+        Top edge altitude is not relative to the bottom edge of polygon.
+        see Height in advanced section of the editor.
+    </div>
 
     <material-field
         class="pt-2"
@@ -86,7 +91,7 @@ const template = `
         </direct-field>
 
         <div class="description">
-            Height is the altitude above ground of the not extruded polygon,
+            Height is the altitude above ground of plain (not extruded) polygon,
             or altitude of the bottom for extruded polygon.
         </div>
 
@@ -122,6 +127,10 @@ const template = `
             :enum="'HeightReference'"
             :label="'Height Reference'">
         </enum-field>
+        <div class="description">
+            How the height of the polygon should be referenced.
+            This affects how polygons interacts with 3d terrain.
+        </div>
 
         <enum-field
             class="mt-6 mb-2 px-1"
