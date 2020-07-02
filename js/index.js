@@ -13,6 +13,12 @@ import DocumentWriter from './czml-writer.js'
 
 import {extrudePolygon, polygonAverageHeight} from './field-editors/polygon.js'
 
+const getParams = new URLSearchParams(window.location.search);
+Cesium.Ion.defaultAccessToken = getParams.get('ion_key') ||
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
+        'eyJqdGkiOiI0YzE4M2QwNS00NjcwLTQzZGMtYmViNC1mOWJiZjljMzY3ZDAiLCJpZCI6NzMxNCwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0ODk1MTczNX0.' +
+        'MjNWfJWsWk4lFXRoZS1EeqaFrWxEnugRqw9M3HRfAQk';
+
 const viewer = new Cesium.Viewer('viewer');
 window.viewer = viewer;
 
