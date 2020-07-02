@@ -1,6 +1,7 @@
 import '../fields/direct.js'
 import '../fields/checkbox.js'
 import '../fields/enum.js'
+import '../fields/material.js'
 
 const template = `
 <div class="editor polygon-editor">
@@ -9,6 +10,12 @@ const template = `
         <label>Polygon height:</label>
         {{ avgHeight }}
     </div>
+
+    <material-field
+        :entity="entity"
+        :feature="'polygon'"
+        :field="'material'"
+    ></material-field>
 
     <direct-field
         @input="inputHandler"
