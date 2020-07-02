@@ -1,14 +1,21 @@
 const template = `
 <div>
+<v-expansion-panels flat>
+    <v-expansion-panel>
+    <v-expansion-panel-header>Material</v-expansion-panel-header>
+      <v-expansion-panel-content>
     <v-color-picker v-if="value"
-        class="editor-field"
-        :canvas-height="50"
+        hide-inputs
+        hide-mode-switch
         v-model="value"
         @input="update">
     </v-color-picker>
     <button v-if="!entity[feature][field]" @click="setNew">
         Set new material
     </button>
+    </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-expansion-panels>
 </div>`;
 
 function cesiumToRGBA(c) {
