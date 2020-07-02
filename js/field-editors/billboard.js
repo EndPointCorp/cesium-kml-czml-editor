@@ -46,7 +46,7 @@ const template = `
         </v-row>
         
         <slot name="extendline"></slot>
-        
+        <v-divider light></v-divider>
         <slot name="advancetoggle"></slot>
 
         <v-col cols="12" class="py-0 px-4 advanced" v-if="advanced">
