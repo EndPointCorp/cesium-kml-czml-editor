@@ -6,28 +6,6 @@ import '../fields/material.js'
 const template = `
 <div class="editor polygon-editor">
     <div class="editor-name">Polygon</div>
-    <div v-if="avgHeight && avgHeight > 0.1" class="editor-field">
-        <label>Polygon height:</label>
-        {{ avgHeight }}
-    </div>
-
-    <material-field
-        class="pt-2"
-        :entity="entity"
-        :feature="'polygon'"
-        :field="'material'"
-        :label="'Material'"
-    ></material-field>
-
-    <direct-field
-        class="pt-3"
-        @input="inputHandler"
-        :entity="entity"
-        :feature="'polygon'"
-        :field="'height'"
-        :label="'Height'"
-    >
-    </direct-field>
 
     <direct-field
         class="pt-4"
@@ -38,6 +16,14 @@ const template = `
         :label="'Extruded Height'"
     >
     </direct-field>
+
+    <material-field
+        class="pt-2"
+        :entity="entity"
+        :feature="'polygon'"
+        :field="'material'"
+        :label="'Material'"
+    ></material-field>
 
     <checkbox-field
         class="mb-0"
@@ -88,6 +74,26 @@ const template = `
             :field="'outlineColor'"
             :label="'Outline Color'"
         ></color-field>
+
+        <direct-field
+            class="mt-3"
+            @input="inputHandler"
+            :entity="entity"
+            :feature="'polygon'"
+            :field="'height'"
+            :label="'Height'"
+        >
+        </direct-field>
+
+        <div class="description">
+            Height is the altitude above ground of the not extruded polygon,
+            or altitude of the bottom for extruded polygon.
+        </div>
+
+        <div v-if="avgHeight && avgHeight > 0.1" class="editor-field">
+            <label>Polygon height:</label>
+            {{ avgHeight }}
+        </div>
 
         <checkbox-field
             @input="inputHandler"
