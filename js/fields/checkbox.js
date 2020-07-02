@@ -1,4 +1,4 @@
-const template = `<v-checkbox type="checkbox" class="direct-property-field"
+const template = `<v-checkbox hide-details type="checkbox" class="direct-property-field"
     v-model="isChecked()" :indeterminate.prop="isChecked() === undefined"
     @change="change" :label="label"></v-checkbox>`;
 

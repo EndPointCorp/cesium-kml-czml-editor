@@ -12,6 +12,7 @@ const template = `
     </div>
 
     <material-field
+        class="pt-2"
         :entity="entity"
         :feature="'polygon'"
         :field="'material'"
@@ -69,13 +70,13 @@ const template = `
         >
         </checkbox-field>
 
-        <div v-if="avgHeight && avgHeight > 0.1">
+        <div class="pl-1" v-if="avgHeight && avgHeight > 0.1">
             <div class="description">
                 This polygon height/extrusion is encoded as per
                 point height, click Convert button to convert it
                 to extrusion.
             </div>
-            <button @click="toExtrude()">Convert</button>
+            <v-btn small @click="toExtrude()">Convert</v-btn>
         </div>
 
         <enum-field
