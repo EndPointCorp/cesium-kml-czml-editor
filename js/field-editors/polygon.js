@@ -16,6 +16,7 @@ const template = `
         :entity="entity"
         :feature="'polygon'"
         :field="'material'"
+        :label="'Material'"
     ></material-field>
 
     <direct-field
@@ -65,6 +66,31 @@ const template = `
             @input="inputHandler"
             :entity="entity"
             :feature="'polygon'"
+            :field="'outline'"
+            :label="'Outline'"
+        >
+        </checkbox-field>
+
+        <direct-field
+            @input="inputHandler"
+            :entity="entity"
+            :feature="'polygon'"
+            :field="'outlineWidth'"
+            :label="'Outline Width'"
+        >
+        </direct-field>
+
+        <color-field
+            :entity="entity"
+            :feature="'polygon'"
+            :field="'outlineColor'"
+            :label="'Outline Color'"
+        ></color-field>
+
+        <checkbox-field
+            @input="inputHandler"
+            :entity="entity"
+            :feature="'polygon'"
             :field="'perPositionHeight'"
             :label="'Per Position Height'"
         >
@@ -94,7 +120,7 @@ const template = `
             :feature="'polygon'"
             :field="'extrudedHeightReference'"
             :enum="'HeightReference'"
-            :label="'Height Reference'">
+            :label="'Extruded Height Reference'">
         </enum-field>
 
     </div>
@@ -141,6 +167,7 @@ Vue.component('polygon-editor', {
         toExtrude: function() {
             extrudePolygon(this.polygon, this.avgHeight);
             this.avgHeight = polygonAverageHeight(this.polygon);
+            this.$forceUpdate();
         },
         getAvgHeight: function(val) {
             this.avgHeight = polygonAverageHeight(val);

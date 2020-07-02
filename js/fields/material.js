@@ -2,7 +2,7 @@ const template = `
 <div>
 <v-expansion-panels flat>
     <v-expansion-panel>
-    <v-expansion-panel-header>Material</v-expansion-panel-header>
+    <v-expansion-panel-header>{{ label }}</v-expansion-panel-header>
       <v-expansion-panel-content>
     <v-color-picker v-if="value"
         hide-inputs
@@ -11,7 +11,7 @@ const template = `
         @input="update">
     </v-color-picker>
     <button v-if="!entity[feature][field]" @click="setNew">
-        Set new material
+        Set new {{ label }}
     </button>
     </v-expansion-panel-content>
     </v-expansion-panel>
@@ -32,7 +32,7 @@ function rgbaToCesium(c) {
 }
 
 Vue.component('material-field', {
-    props: ['entity', 'feature', 'field'],
+    props: ['entity', 'feature', 'field', 'label'],
     data: function() {
         let value = null;
 
@@ -66,6 +66,41 @@ Vue.component('material-field', {
                 if (material) {
                     this.value = cesiumToRGBA(material.color);
                 }
+            }
+        }
+    },
+    template: template
+});
+
+Vue.component('color-field', {
+    props: ['entity', 'feature', 'field'],
+    data: function() {
+        let value = null;
+
+        if (this.entity[this.feature][this.field]) {
+            value = cesiumToRGBA(this.entity[this.feature][this.field].getValue());
+        }
+
+        return {
+            value
+        };
+    },
+    methods: {
+        update: function(color) {
+            // Synchronize values from local model data to Cesium
+            let val = rgbaToCesium(color);
+            this.entity[this.feature][this.field] = val;
+            this.$emit('input', val, this.field, this.feature, this.entity);
+        },
+        setNew: function() {
+            this.entity[this.feature][this.field] = new Cesium.Color();
+        }
+    },
+    watch: {
+        entity: function(newValue) {
+            this.value = null;
+            if (newValue[this.feature][this.field]) {
+                this.value = cesiumToRGBA(newValue[this.feature][this.field].getValue());
             }
         }
     },
