@@ -1,4 +1,4 @@
-const template = `<span class="editor-field">
+const template = `
     <v-select 
         dense
         class="enum-field" 
@@ -7,8 +7,7 @@ const template = `<span class="editor-field">
         hide-details
         :items="options"
         :label="label"
-    ></v-select>
-</span>`;
+    ></v-select>`;
 
 Vue.component('enum-field', {
     props: ['entity', 'feature', 'field', 'enum', 'label'],

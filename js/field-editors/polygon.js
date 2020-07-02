@@ -72,6 +72,7 @@ const template = `
         </checkbox-field>
 
         <direct-field
+            class="mt-4 px-1"
             @input="inputHandler"
             :entity="entity"
             :feature="'polygon'"
@@ -81,6 +82,7 @@ const template = `
         </direct-field>
 
         <color-field
+            class="mt-3"
             :entity="entity"
             :feature="'polygon'"
             :field="'outlineColor'"
@@ -106,6 +108,7 @@ const template = `
         </div>
 
         <enum-field
+            class="mt-6 mb-0 px-1"
             @input="inputHandler"
             :entity="entity"
             :feature="'polygon'"
@@ -115,6 +118,7 @@ const template = `
         </enum-field>
 
         <enum-field
+            class="mt-6 mb-2 px-1"
             @input="inputHandler"
             :entity="entity"
             :feature="'polygon'"

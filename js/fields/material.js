@@ -73,7 +73,7 @@ Vue.component('material-field', {
 });
 
 Vue.component('color-field', {
-    props: ['entity', 'feature', 'field'],
+    props: ['entity', 'feature', 'field', 'label'],
     data: function() {
         let value = null;
 
