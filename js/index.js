@@ -146,6 +146,11 @@ const editor = new Vue({
             console.log(czmlObj);
 
             this.czml = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(czmlObj));
+
+            let link = document.createElement('A');
+            link.href = this.czml;
+            link.download = this.filename;
+            link.click();
         },
         onCopyPropertiesChange: function(properties) {
             this.copyProperties = properties;
