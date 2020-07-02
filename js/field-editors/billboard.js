@@ -42,7 +42,8 @@ const template = `
             </enum-field>
         </v-col>
         </v-row>
-
+        <slot name="extendline"></slot>
+        <slot name="advancetoggle"></slot>
         <v-col cols="12" class="py-0" v-if="advanced">
         <v-row>
         <v-col cols="12" class="py-1">

@@ -91,7 +91,14 @@
                   :copy-mode="copyType === 'billboard'">
 
                   <batch-style-controls :active="false"></batch-style-controls>
-
+                  <template v-slot:advancetoggle>
+                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
+                  label="Advanced Editor:" v-model="advanced"></v-switch>
+                  </template>
+                  <template v-slot:extendline>
+                    <polyline-editor :entity="entity">
+                    </polyline-editor>
+                  </template>
                 </billboard-editor>
 
                 <polygon-editor v-if="entity.polygon" v-bind:polygon="entity.polygon"
@@ -103,11 +110,7 @@
                   </button>
                 </polygon-editor>
 
-                <polyline-editor :entity="entity">
-                </polyline-editor>
 
-                <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
-                  label="Advanced Editor:" v-model="advanced"></v-switch>
 
             </v-card-text>
             <v-card-actions class="pt-0 pb-1">
