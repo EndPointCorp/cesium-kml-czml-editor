@@ -30,6 +30,12 @@ if (esriImagery) {
     viewer.baseLayerPicker.viewModel.selectedImagery = esriImagery;
 }
 
+const ionTerrain = viewer.baseLayerPicker.viewModel
+    .terrainProviderViewModels.find(m => m.name === 'Cesium World Terrain');
+if (ionTerrain) {
+    viewer.baseLayerPicker.viewModel.selectedTerrain = ionTerrain;
+}
+
 function applyProperties(src, dst, properties) {
     const source = src.clone();
 
