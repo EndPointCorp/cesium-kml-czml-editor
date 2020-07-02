@@ -4,6 +4,11 @@ const template = `
     <v-list-item-action>
       <v-checkbox color="primary" @change="appendHandler($event.target.checked)" :disabled="selected" v-model="inSelection" v-if="selectable()"></v-checkbox>
     </v-list-item-action>
+    <v-list-item-icon>
+        <v-icon small v-if="isFolder(entity)">mdi-folder</v-icon>
+        <v-icon small v-if="entity.billboard">mdi-pin</v-icon>
+        <v-icon small v-if="entity.polygon">mdi-widgets-outline</v-icon>
+    </v-list-item-icon>
     <v-list-item-content>
       <v-list-item-title v-text="entity.name"></v-list-item-title>
     </v-list-item-content>
