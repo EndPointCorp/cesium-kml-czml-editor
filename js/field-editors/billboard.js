@@ -3,6 +3,8 @@ import '../fields/checkbox.js'
 import '../fields/direct.js'
 import '../fields/enum.js'
 
+import '../fields/extend-to-ground.js'
+
 const template = `
 <div class="editor billboard-editor">
     <span class="editor-name">Billboard: </span>
@@ -42,6 +44,8 @@ const template = `
             </enum-field>
         </v-col>
         </v-row>
+
+        <extend-to-ground :entity="entity"></extend-to-ground>
 
         <v-col cols="12" class="py-0" v-if="advanced">
         <v-row>

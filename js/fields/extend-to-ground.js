@@ -1,21 +1,16 @@
-import EditorFieldsBuilder from '../components-factory.js'
+const template = `
+<div class="text-left py-0 my-0" v-if="entity.billboard">
+    <div class="editor-name">Extension line</div>
+    <div>
+        <v-switch hide-details id="extend"
+            class="v-input--reverse py-0 my-0"
+            label="Extend to ground:" v-model="extend"
+            @change="handleChange"></v-switch>
+    </div>
+    <slot></slot>
+</div>`
 
-const polylineEditorBuilder = new EditorFieldsBuilder('polyline', Cesium.PolylineGraphics);
-
-const template = polylineEditorBuilder.getTemplate((fields, controls) => {
-    return `<div class="editor polyline-editor text-left py-0 my-0" v-if="entity.billboard">
-        <div class="editor-name">Lines</div>
-        <div>
-            <v-switch hide-details id="extend" class="v-input--reverse py-0 my-0" label="Extend to ground:" v-model="extend" @change="handleChange"></v-switch>
-        </div>
-
-        ${fields}
-
-        ${controls}
-    </div>`;
-});
-
-Vue.component('polyline-editor', {
+Vue.component('extend-to-ground', {
     props: ['entity'],
     data: function() {
         return {
@@ -31,6 +26,8 @@ Vue.component('polyline-editor', {
             else {
                 this.removeDropLine();
             }
+            // This isn't a real feature and field of Cesium entity
+            this.$emit('input', this.extend, 'extend-to-ground', 'billboard', this.entity);
         },
         createDropLine() {
             const position = this.entity.position.getValue();

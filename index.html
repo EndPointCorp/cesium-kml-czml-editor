@@ -90,6 +90,8 @@
                   :advanced="advanced"
                   :copy-mode="copyType === 'billboard'">
 
+
+
                   <batch-style-controls :active="false"></batch-style-controls>
 
                 </billboard-editor>
@@ -102,9 +104,6 @@
                     Apply to {{selection.length}} objects
                   </button>
                 </polygon-editor>
-
-                <polyline-editor :entity="entity">
-                </polyline-editor>
 
                 <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
                   label="Advanced Editor:" v-model="advanced"></v-switch>

@@ -1,6 +1,5 @@
 import './field-editors/billboard.js'
 import './field-editors/polygon.js'
-import './field-editors/polyline.js'
 
 import './components/entity-info.js'
 import './components/entity.js'
