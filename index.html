@@ -72,16 +72,18 @@
               <v-toolbar-title>Edit <template v-if="entity.billboard">Pins:</template><template v-else>Polygons:</template></v-toolbar-title>
             </v-toolbar>
             <v-card-text class="pt-0 pb-1">
-              <span class="entity-name text-subtitle-1 font-weight-medium">{{ entity.name }}</span>
-                <v-btn
-                  @click="flyToEntity();"
-                  small
-                  color="blue-grey"
-                  class="mx-2 mt-2 white--text entity-flyto"
-                >
-              FlyTo
-                <v-icon right small dark>mdi-send</v-icon>
-              </v-btn>
+              <div class="mt-2">
+                <span class="entity-name text-subtitle-1 font-weight-medium">{{ entity.name }}</span>
+                  <v-btn
+                    @click="flyToEntity();"
+                    small
+                    color="blue-grey"
+                    class="mx-2 white--text entity-flyto"
+                  >
+                FlyTo
+                  <v-icon right small dark>mdi-send</v-icon>
+                </v-btn>
+            </div>
                 <entity-info :entity="entity"></entity-info>
 
                 <billboard-editor v-if="entity.billboard"
