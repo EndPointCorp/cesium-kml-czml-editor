@@ -1,94 +1,143 @@
-import EditorFieldsBuilder from '../components-factory.js'
+import '../fields/direct.js'
+import '../fields/checkbox.js'
+import '../fields/enum.js'
 
-const editorBuilder = new EditorFieldsBuilder('polygon', Cesium.PolygonGraphics);
+const template = `
+<div class="editor polygon-editor">
+    <div class="editor-name">Polygon</div>
+    <div v-if="avgHeight && avgHeight > 0.1" class="editor-field">
+        <label>Polygon height:</label>
+        {{ avgHeight }}
+    </div>
 
-editorBuilder.addDirectPropertyField('height');
-editorBuilder.addEnumField('heightReference', Cesium.HeightReference);
+    <direct-field
+        @input="inputHandler"
+        :entity="entity"
+        :feature="'polygon'"
+        :field="'height'"
+    >
+    </direct-field>
 
-editorBuilder.addDirectPropertyField('extrudedHeight');
-editorBuilder.addEnumField('extrudedHeightReference', Cesium.HeightReference);
+    <direct-field
+        @input="inputHandler"
+        :entity="entity"
+        :feature="'polygon'"
+        :field="'extrudedHeight'"
+    >
+    </direct-field>
 
-editorBuilder.addDirectPropertyField('perPositionHeight', Boolean);
-editorBuilder.addDirectPropertyField('closeTop', Boolean);
-editorBuilder.addDirectPropertyField('closeBottom', Boolean);
+    <checkbox-field
+        @input="inputHandler"
+        :entity="entity"
+        :feature="'polygon'"
+        :field="'closeTop'"
+    >
+    </checkbox-field>
 
-const initModel = editorBuilder.getInitFunction();
+    <checkbox-field
+        @input="inputHandler"
+        :entity="entity"
+        :feature="'polygon'"
+        :field="'closeBottom'"
+    >
+    </checkbox-field>
+
+    <div v-if="advanced">
+
+        <checkbox-field
+            @input="inputHandler"
+            :entity="entity"
+            :feature="'polygon'"
+            :field="'perPositionHeight'"
+        >
+        </checkbox-field>
+
+        <div v-if="avgHeight && avgHeight > 0.1">
+            <div class="description">
+                This polygon height/extrusion is encoded as per
+                point height, click Convert button to convert it
+                to extrusion.
+            </div>
+            <button @click="toExtrude()">Convert</button>
+        </div>
+
+        <enum-field
+            @input="inputHandler"
+            :entity="entity"
+            :feature="'polygon'"
+            :field="'heightReference'"
+            :enum="'HeightReference'"
+            :label="'Height Reference'">
+        </enum-field>
+
+        <enum-field
+            @input="inputHandler"
+            :entity="entity"
+            :feature="'polygon'"
+            :field="'extrudedHeightReference'"
+            :enum="'HeightReference'"
+            :label="'Height Reference'">
+        </enum-field>
+
+    </div>
+
+    <slot></slot>
+
+</div>
+`;
+
+export function extrudePolygon(polygon, avgHeight) {
+    const positions = [];
+    polygon.hierarchy.getValue().positions.forEach(p => {
+        const crtg = Cesium.Cartographic.fromCartesian(p);
+        positions.push(Cesium.Cartesian3.fromRadians(crtg.longitude, crtg.latitude, 0));
+    });
+
+    const hierarchy = new Cesium.PolygonHierarchy(positions);
+    polygon.hierarchy.setValue(hierarchy);
+
+    polygon.perPositionHeight = false;
+    polygon.extrudedHeight = true;
+    polygon.height = 0;
+    polygon.extrudedHeight = avgHeight;
+
+    polygon.heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+    polygon.extrudedHeightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+    heightReference = 'RELATIVE_TO_GROUND';
+    extrudedHeightReference = 'RELATIVE_TO_GROUND';
+}
+
+export function polygonAverageHeight(polygon) {
+    const positions = polygon.hierarchy.getValue().positions.map(v => {
+        return Cesium.Cartographic.fromCartesian(v);
+    });
+    const heights = positions.map(p => p.height);
+    return heights.reduce((acc, val) => acc + val) / heights.length;
+}
 
 Vue.component('polygon-editor', {
-    props: ['polygon', 'copyMode', 'onCopyPropertiesChange'],
-    data: () => {
-        return {
-            copyFields: [],
-            avgHeight: null
-        };
-    },
-    template: editorBuilder.getTemplate((fields, controls) => {
-        return `<div class="editor polygon-editor">
-            <div class="editor-name">Polygon</div>
-            <div v-if="avgHeight && avgHeight > 0.1" class="editor-field">
-                <label>Per position height:</label>
-                {{ avgHeight }}
-            </div>
-
-            ${fields}
-
-            ${controls}
-
-            <div v-if="avgHeight && avgHeight > 0.1">
-                <div class="description">
-                    This polygon height/extrusion is encoded as per
-                    point height, click Convert button to convert it
-                    to extrusion.
-                </div>
-                <button @click="toExtrude">Convert</button>
-            </div>
-
-        </div>`;
+    props: ['entity', 'polygon', 'advanced'],
+    data: () => ({
+        avgHeight: null
     }),
-    methods: editorBuilder.addComponentMethods({
+    template: template,
+    methods: {
         toExtrude: function() {
-
-            const positions = [];
-            this.polygon.hierarchy.getValue().positions.forEach(p => {
-                const crtg = Cesium.Cartographic.fromCartesian(p);
-                positions.push(Cesium.Cartesian3.fromRadians(crtg.longitude, crtg.latitude, 0));
-            });
-
-            const hierarchy = new Cesium.PolygonHierarchy(positions);
-            this.polygon.hierarchy.setValue(hierarchy);
-
-            this.polygon.perPositionHeight = false;
-            this.polygon.extrudedHeight = true;
-            this.polygon.height = 0;
-            this.polygon.extrudedHeight = this.avgHeight;
-
-            this.polygon.heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
-            this.polygon.extrudedHeightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
-            this.heightReference = 'RELATIVE_TO_GROUND';
-            this.extrudedHeightReference = 'RELATIVE_TO_GROUND';
-
-            this.getAvgHeight(this.polygon);
+            extrudePolygon(this.polygon, this.avgHeight);
+            this.avgHeight = polygonAverageHeight(this.polygon);
         },
         getAvgHeight: function(val) {
-            const positions = val.hierarchy.getValue().positions.map(v => {
-                return Cesium.Cartographic.fromCartesian(v);
-            });
-            const heights = positions.map(p => p.height);
-            this.avgHeight = heights.reduce((acc, val) => acc + val) / heights.length;
+            this.avgHeight = polygonAverageHeight(val);
+        },
+        inputHandler() {
+
         }
-    }),
+    },
     created: function() {
-        initModel(this.polygon, this);
         this.getAvgHeight(this.polygon);
     },
     watch: {
         polygon: function(newVal) {
-            initModel(newVal, this);
-
-            if (this.onCopyPropertiesChange) {
-                this.onCopyPropertiesChange(this.copyFields);
-            }
-
             this.getAvgHeight(newVal);
         }
     }

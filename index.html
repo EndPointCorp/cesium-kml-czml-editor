@@ -89,25 +89,25 @@
                 <billboard-editor v-if="entity.billboard"
                   :entity="entity"
                   :billboard="entity.billboard"
-                  :advanced="advanced"
-                  :copy-mode="copyType === 'billboard'">
-
-
+                  :advanced="advanced">
 
                   <batch-style-controls :active="false"></batch-style-controls>
                   <template v-slot:advancetoggle>
                     <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
-                  label="Advanced Editor:" v-model="advanced"></v-switch>
+                      label="Advanced Editor:" v-model="advanced"></v-switch>
                   </template>
                 </billboard-editor>
 
-                <polygon-editor v-if="entity.polygon" v-bind:polygon="entity.polygon"
-                  v-bind:copy-mode="copyType === 'polygon'"
-                  v-bind:on-copy-properties-change="onCopyPropertiesChange" >
-                  <button v-on:click="copyStyle('polygon')">Copy style</button>
-                  <button v-if="selection.length > 1" v-on:click="pasteStyle">
-                    Apply to {{selection.length}} objects
-                  </button>
+                <polygon-editor v-if="entity.polygon"
+                  :entity="entity"
+                  :polygon="entity.polygon"
+                  :advanced="advanced"
+                >
+                  <batch-style-controls :active="false"></batch-style-controls>
+                  <template v-slot:advancetoggle>
+                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
+                      label="Advanced Editor:" v-model="advanced"></v-switch>
+                  </template>
                 </polygon-editor>
 
 
