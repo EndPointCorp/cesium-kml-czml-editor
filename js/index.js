@@ -109,6 +109,11 @@ const editor = new Vue({
                 viewer.flyTo(this.entity);
             }
         },
+        zoomToEntity: function() {
+            if (this.entity) {
+                viewer.zoomTo(this.entity);
+            }
+        },
         isFolder: function(entity) {
             return entity.position === undefined && this.entities.some(e => {
                 return e.parent && e.parent.id === entity.id;

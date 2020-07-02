@@ -1,5 +1,5 @@
 const template = `
-    <v-list-item v-bind:class="{folder: isFolder(entity)}"
+    <v-list-item v-bind:class="{folder: isFolder(entity)}" @dblclick="doubleClick()"
     v-on:click="selectHandler">
     <v-list-item-action>
       <v-checkbox color="primary" @change="appendHandler($event.target.checked)" :disabled="selected" v-model="inSelection" v-if="selectable()"></v-checkbox>
@@ -31,6 +31,9 @@ Vue.component('entitycomponent', {
         },
         selectable: function() {
             return this.entity[this.copyType] !== undefined;
+        },
+        doubleClick: function() {
+            this.$emit('zoom-to');
         }
     },
     template: template
