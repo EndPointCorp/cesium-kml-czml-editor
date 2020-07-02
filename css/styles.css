@@ -8,6 +8,8 @@ html, body {
 body {
     display: flex;
     flex-direction: row;
+    display: -webkit-flex;
+    -webkit-flex-direction: row;
 }
 
 h4 {
@@ -19,6 +21,7 @@ h4 {
     height: 100%;
     min-width: 0px;
     flex: 1 0 auto;
+    width: 80%;
 }
 #add-tileset-wrapper {
     margin-bottom: 0.5em;
