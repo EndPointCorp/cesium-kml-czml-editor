@@ -121,8 +121,6 @@ export function extrudePolygon(polygon, avgHeight) {
 
     polygon.heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
     polygon.extrudedHeightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
-    heightReference = 'RELATIVE_TO_GROUND';
-    extrudedHeightReference = 'RELATIVE_TO_GROUND';
 }
 
 export function polygonAverageHeight(polygon) {
