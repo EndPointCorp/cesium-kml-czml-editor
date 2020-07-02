@@ -18,44 +18,54 @@ const template = `
     ></material-field>
 
     <direct-field
+        class="pt-3"
         @input="inputHandler"
         :entity="entity"
         :feature="'polygon'"
         :field="'height'"
+        :label="'Height'"
     >
     </direct-field>
 
     <direct-field
+        class="pt-4"
         @input="inputHandler"
         :entity="entity"
         :feature="'polygon'"
         :field="'extrudedHeight'"
+        :label="'Extruded Height'"
     >
     </direct-field>
 
     <checkbox-field
+        class="mb-0"
         @input="inputHandler"
         :entity="entity"
         :feature="'polygon'"
         :field="'closeTop'"
+        :label="'Close Top'"
     >
     </checkbox-field>
 
     <checkbox-field
+        class="my-0"
         @input="inputHandler"
         :entity="entity"
         :feature="'polygon'"
         :field="'closeBottom'"
+        :label="'Close Bottom'"
     >
     </checkbox-field>
+    <slot name="advancetoggle"></slot>
 
-    <div v-if="advanced">
+    <div class="advanced" v-if="advanced">
 
         <checkbox-field
             @input="inputHandler"
             :entity="entity"
             :feature="'polygon'"
             :field="'perPositionHeight'"
+            :label="'Per Position Height'"
         >
         </checkbox-field>
 

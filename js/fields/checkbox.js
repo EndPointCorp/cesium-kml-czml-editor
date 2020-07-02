@@ -1,9 +1,9 @@
 const template = `<v-checkbox type="checkbox" class="direct-property-field"
     v-model="isChecked()" :indeterminate.prop="isChecked() === undefined"
-    @change="change"></v-checkbox>`;
+    @change="change" :label="label"></v-checkbox>`;
 
 Vue.component('checkbox-field', {
-    props: ['entity', 'feature', 'field'],
+    props: ['entity', 'feature', 'field', 'label'],
     template: template,
     methods: {
         change: function($event) {
