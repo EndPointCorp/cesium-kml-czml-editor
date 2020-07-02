@@ -11,6 +11,7 @@ import DocumentWriter from './czml-writer.js'
 
 // import CitiesDataSource from './cities/CitiesDataSource.js'
 
+import {extrudePolygon, polygonAverageHeight} from './field-editors/polygon.js'
 
 const viewer = new Cesium.Viewer('viewer');
 window.viewer = viewer;
@@ -28,6 +29,18 @@ function applyProperties(src, dst, properties) {
 
     properties.forEach(p => {
         dst[p] = source[p];
+    });
+}
+
+function extrudePolygons(polygons) {
+    // Convert Polygons into extrusions by default
+    polygons.forEach(e => {
+        if (e.polygon) {s
+            let h = polygonAverageHeight(e.polygon);
+            if (h > 0.1) {
+                extrudePolygon(e.polygon, h);
+            }
+        }
     });
 }
 
@@ -140,8 +153,6 @@ const editor = new Vue({
     }
 });
 
-// document.getElementById('add-tileset').onclick = editor.request3DTileset.bind(editor);
-
 function loadDataSourcePromise(dsPromise) {
     viewer.dataSources.add(dsPromise);
     dsPromise.then(ds => {
@@ -196,23 +207,3 @@ viewer.selectedEntityChanged.addEventListener((selection) => {
 
     console.log(selection);
 });
-
-// document.getElementById('file-area').addEventListener('drop', ev => {
-//     ev.preventDefault();
-//     document.getElementById('file-area').classList.remove('active');
-//     for (let i = 0; i < ev.dataTransfer.items.length; i++) {
-//         // If dropped items aren't files, reject them
-//         if (ev.dataTransfer.items[i].kind === 'file') {
-//             let file = ev.dataTransfer.items[i].getAsFile();
-//             loadFile(file);
-//         }
-//     }
-// });
-// document.getElementById('file-area').addEventListener('dragover', ev => {
-//     ev.preventDefault();
-//     document.getElementById('file-area').classList.add('active');
-// });
-// document.getElementById('file-area').addEventListener('dragleave', ev => {
-//     ev.preventDefault();
-//     document.getElementById('file-area').classList.remove('active');
-// });
