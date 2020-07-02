@@ -6,7 +6,7 @@ const template = `
     @input="update">
 </v-color-picker>`;
 
-Vue.component('color-field', {
+Vue.component('material-field', {
     props: ['entity', 'feature', 'field'],
     data: function() {
         let value = 'undefined';
