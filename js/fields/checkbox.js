@@ -6,9 +6,9 @@ Vue.component('checkbox-field', {
     props: ['entity', 'feature', 'field', 'label'],
     template: template,
     methods: {
-        change: function($event) {
-            this.entity[this.feature][this.field] = $event.target.checked;
-            this.$emit('input', $event.target.checked, this.field, this.feature, this.entity);
+        change: function(checked) {
+            this.entity[this.feature][this.field] = checked;
+            this.$emit('input', checked, this.field, this.feature, this.entity);
         },
         isChecked: function() {
             let fld = this.entity[this.feature][this.field];
