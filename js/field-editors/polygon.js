@@ -176,7 +176,7 @@ export function polygonAverageHeight(polygon) {
 Vue.component('polygon-editor', {
     props: ['entity', 'polygon', 'advanced'],
     data: () => ({
-        avgHeight: null
+        avgHeight: null,
     }),
     template: template,
     methods: {
@@ -188,8 +188,8 @@ Vue.component('polygon-editor', {
         getAvgHeight: function(val) {
             this.avgHeight = polygonAverageHeight(val);
         },
-        inputHandler() {
-
+        inputHandler(...args) {
+            this.$emit('update', ...args);
         }
     },
     created: function() {

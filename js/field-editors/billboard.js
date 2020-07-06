@@ -117,18 +117,16 @@ const template = `
 
 Vue.component('billboard-editor', {
     props: ['entity', 'billboard', 'advanced'],
-    data: () => {
-        return {
-            iconSize: {}
-        };
-    },
+    data: () => ({
+        iconSize: {},
+    }),
     template: template,
     methods: {
         updateIconImageSize(iconSize) {
             this.iconSize = iconSize;
         },
         inputHandler(...args) {
-            this.$emit('input', ...args);
+            this.$emit('update', ...args);
         }
     },
     created: function() {

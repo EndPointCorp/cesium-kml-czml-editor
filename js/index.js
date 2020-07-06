@@ -2,7 +2,6 @@ import './field-editors/billboard.js'
 import './field-editors/polygon.js'
 
 import './components/entity-info.js'
-import './components/entity.js'
 import './components/entitycomponent.js'
 
 import './dialogues/tileset-dialog.js'
@@ -64,41 +63,22 @@ const editor = new Vue({
 
     data: function() {
         return {
-            advanced: false,
             czml: null,
             filename: null,
-            entity: null,
-            copySubject: false,
-            copyType: null,
-            copyProperties: [],
-            selection: [],
             entities: [],
-            item: null,
+            entity: null,
+            advanced: false,
+
             showPolygons: true,
-            showBillboards: true
+            showBillboards: true,
+
+            copyType: null,
+            changes: {},
         };
     },
     methods: {
         selectEntity: function(entity) {
             viewer.selectedEntity = entity;
-        },
-        appendToSelection: function(entity, selected) {
-            if (entity) {
-                if (selected) {
-                    if (this.selection.indexOf(entity) < 0) {
-                        this.selection.push(entity);
-                    }
-                }
-                else {
-                    const i = this.selection.indexOf(entity);
-                    if (i >= 0) {
-                        this.selection.splice(i, 1);
-                    }
-                }
-            }
-            else {
-                this.selection.splice(0, this.selection.length);
-            }
         },
         addTileset: function(tileset) {
             if (tileset) {
@@ -116,22 +96,9 @@ const editor = new Vue({
                 }
             }
         },
-        propagateStyles: function() {
-            console.log(this.entity);
-        },
-        copyStyle: function(type) {
-            this.copySubject = this.entity[type];
-            this.copyType = type;
-            this.appendToSelection(this.entity, true);
-        },
-        pasteStyle: function() {
-            this.selection.forEach(e => {
-                applyProperties(this.copySubject, e[this.copyType], this.copyProperties);
-            });
-            this.selection = [this.entity];
-
-            this.copySubject = null;
-            this.copyType = null;
+        updateHandler: function(value, field, feature) {
+            this.changes[field] = value;
+            this.copyType = feature;
         },
         flyToEntity: function() {
             if (this.entity) {
@@ -147,11 +114,6 @@ const editor = new Vue({
             return entity.position === undefined && this.entities.some(e => {
                 return e.parent && e.parent.id === entity.id;
             });
-        },
-        selectApplicable: function() {
-            this.entities
-                .filter(e => e[this.copyType] !== undefined)
-                .forEach(e => this.appendToSelection(e, true));
         },
         toCZML: function() {
             const w = new DocumentWriter();

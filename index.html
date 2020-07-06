@@ -51,16 +51,13 @@
                 height="200"
                 class="overflow-y-auto py-0"
               >
-                <v-list-item-group v-model="item" color="primary">
+                <v-list-item-group color="primary">
                   <entitycomponent v-for="(e, i) in entities" :key="i"
                     v-bind:entity="e"
                     v-bind:select="selectEntity"
                     v-bind:selected="e === entity"
                     v-bind:class="{selected: e === entity}"
                     v-bind:is-folder="isFolder"
-                    v-bind:in-selection="selection.indexOf(e) >= 0"
-                    v-bind:copy-type="copyType"
-                    v-bind:append="appendToSelection"
                     @zoom-to="zoomToEntity"></entitycomponent>
                 </v-list-item-group>
               </v-list>
@@ -90,7 +87,8 @@
                 <billboard-editor v-if="entity.billboard"
                   :entity="entity"
                   :billboard="entity.billboard"
-                  :advanced="advanced">
+                  :advanced="advanced"
+                  @update="updateHandler">
 
                   <template v-slot:advancetoggle>
                     <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
@@ -102,6 +100,7 @@
                   :entity="entity"
                   :polygon="entity.polygon"
                   :advanced="advanced"
+                  @update="updateHandler"
                 >
                   <template v-slot:advancetoggle>
                     <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
@@ -114,7 +113,11 @@
             <v-card-actions class="pt-0 pb-1">
               <v-btn small>Update <template v-if="entity.billboard">Pin</template><template v-else>Polygon</template></v-btn>
 
-              <styles-dialog-container :entity="entity" :entities="entities">
+              <styles-dialog-container
+                :entity="entity"
+                :entities="entities"
+                :changes="changes"
+              >
                 <template v-slot:buttonlabel>
                   Copy to other <template v-if="entity.billboard">Pins</template><template v-else>Polygons</template>
                 </template>

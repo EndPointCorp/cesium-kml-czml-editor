@@ -16,7 +16,7 @@ const template = `
 `;
 
 Vue.component('entitycomponent', {
-    props: ['entity', 'select', 'isFolder', 'copyType', 'append', 'selected', 'inSelection'],
+    props: ['entity', 'select', 'isFolder', 'selected'],
     methods: {
         selectHandler: function() {
             if (this.selectable()) {

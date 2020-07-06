@@ -39,7 +39,7 @@ const template = `
                         <template v-for="(entity, index) in applicableEntities">
                             <v-list-item>
                                 <v-list-item-action>
-                                <v-checkbox color="primary" @change="console.log('checked')"  v-model="inSelection"></v-checkbox>
+                                <v-checkbox color="primary" @change=""  v-model="inSelection"></v-checkbox>
                                 </v-list-item-action>
                                 <v-list-item-content>
                                 <v-list-item-title v-text="entity.name"></v-list-item-title>
@@ -53,7 +53,7 @@ const template = `
         <v-col cols="6">
             <v-card class="mx-auto">
                 <v-toolbar color="gray" dark>
-                    <v-toolbar-title>Applicable Entities</v-toolbar-title>
+                    <v-toolbar-title>Properties</v-toolbar-title>
                 </v-toolbar>
                 <v-list
                 color="grey lighten-1"
@@ -62,13 +62,14 @@ const template = `
                 class="overflow-y-auto py-0"
                 >
                     <v-list-item-group v-model="item" color="primary">
-                        <template v-for="(entity, index) in applicableEntities">
+                        <template v-for="(value, property) in changes">
                             <v-list-item>
                                 <v-list-item-action>
-                                <v-checkbox color="primary" @change="console.log('checked')"  v-model="inSelection"></v-checkbox>
+                                <v-checkbox color="primary" @change="" v-model="inSelection"></v-checkbox>
                                 </v-list-item-action>
                                 <v-list-item-content>
-                                <v-list-item-title v-text="entity.name"></v-list-item-title>
+                                    <v-list-item-title v-text="property"></v-list-item-title>
+                                    <v-list-item-title v-text="value"></v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
                         </template>
@@ -88,10 +89,11 @@ const template = `
 
 Vue.component('styles-dialog-container', {
     template: template,
-    props: ['entity', 'entities'],
+    props: ['entity', 'entities', 'changes'],
     data: () => ({
         dialog: false,
-        featureType: null
+        featureType: null,
+        item: null
     }),
     watch: {
         dialog: function(active) {
@@ -116,6 +118,15 @@ Vue.component('styles-dialog-container', {
             this.dialog = false;
         },
         submit: function () {
-        }
+        },
+        // pasteStyle: function() {
+        //     this.selection.forEach(e => {
+        //         applyProperties(this.copySubject, e[this.copyType], this.copyProperties);
+        //     });
+        //     this.selection = [this.entity];
+
+        //     this.copySubject = null;
+        //     this.copyType = null;
+        // },
     }
 });
