@@ -35,15 +35,17 @@ const template = `
                 height="200"
                 class="overflow-y-auto py-0"
                 >
-                    <v-list-item-group v-model="item" color="primary">
+                    <v-list-item-group multiple v-model="selectedEntities" color="primary">
                         <template v-for="(entity, index) in applicableEntities">
                             <v-list-item>
-                                <v-list-item-action>
-                                <v-checkbox color="primary" @change=""  v-model="inSelection"></v-checkbox>
-                                </v-list-item-action>
-                                <v-list-item-content>
-                                <v-list-item-title v-text="entity.name"></v-list-item-title>
-                                </v-list-item-content>
+                                <template v-slot:default="{ active, toggle }">
+                                    <v-list-item-action>
+                                    <v-checkbox color="primary" @click="toggle" v-model="active"></v-checkbox>
+                                    </v-list-item-action>
+                                    <v-list-item-content>
+                                    <v-list-item-title v-text="entity.name"></v-list-item-title>
+                                    </v-list-item-content>
+                                </template>
                             </v-list-item>
                         </template>
                     </v-list-item-group>
@@ -61,16 +63,18 @@ const template = `
                 height="200"
                 class="overflow-y-auto py-0"
                 >
-                    <v-list-item-group v-model="item" color="primary">
+                    <v-list-item-group multiple v-model="selectedEntities" color="primary">
                         <template v-for="(value, property) in changes">
                             <v-list-item>
+                            <template v-slot:default="{ active, toggle }">
                                 <v-list-item-action>
-                                <v-checkbox color="primary" @change="" v-model="inSelection"></v-checkbox>
+                                <v-checkbox color="primary" @click="toggle" v-model="active"></v-checkbox>
                                 </v-list-item-action>
                                 <v-list-item-content>
                                     <v-list-item-title v-text="property"></v-list-item-title>
                                     <v-list-item-title v-text="value"></v-list-item-title>
                                 </v-list-item-content>
+                                </template>
                             </v-list-item>
                         </template>
                     </v-list-item-group>
@@ -93,7 +97,7 @@ Vue.component('styles-dialog-container', {
     data: () => ({
         dialog: false,
         featureType: null,
-        item: null
+        selectedEntities: []
     }),
     watch: {
         dialog: function(active) {
@@ -118,6 +122,7 @@ Vue.component('styles-dialog-container', {
             this.dialog = false;
         },
         submit: function () {
+            console.log(this.selectedEntities)
         },
         // pasteStyle: function() {
         //     this.selection.forEach(e => {
