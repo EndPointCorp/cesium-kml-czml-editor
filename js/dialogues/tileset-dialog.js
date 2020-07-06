@@ -78,7 +78,7 @@ const template = `
     </v-dialog>
 `;
 
-Vue.component('dialog-container', {
+Vue.component('tileset-dialog-container', {
     template: template,
     data: function () {
         return {

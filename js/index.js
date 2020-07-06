@@ -4,9 +4,10 @@ import './field-editors/polygon.js'
 import './components/entity-info.js'
 import './components/entity.js'
 import './components/entitycomponent.js'
-import './components/batch-controls.js'
 
-import './tileset-dialog.js'
+import './dialogues/tileset-dialog.js'
+import './dialogues/styles-dialog.js'
+
 import DocumentWriter from './czml-writer.js'
 
 // import CitiesDataSource from './cities/CitiesDataSource.js'
@@ -114,6 +115,9 @@ const editor = new Vue({
                     break;
                 }
             }
+        },
+        propagateStyles: function() {
+            console.log(this.entity);
         },
         copyStyle: function(type) {
             this.copySubject = this.entity[type];

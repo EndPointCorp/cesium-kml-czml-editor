@@ -32,7 +32,7 @@
           <v-btn small @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
           <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
           <br/>
-          <dialog-container @addtileset="addTileset" @deletetileset="deleteTileset"></dialog-container>
+          <tileset-dialog-container @addtileset="addTileset" @deletetileset="deleteTileset"></tileset-dialog-container>
         </v-card-text>
       </v-card>
 
@@ -53,15 +53,15 @@
               >
                 <v-list-item-group v-model="item" color="primary">
                   <entitycomponent v-for="(e, i) in entities" :key="i"
-              v-bind:class="{selected: e === entity}"
-              v-bind:selected="e === entity"
-              v-bind:in-selection="selection.indexOf(e) >= 0"
-              v-bind:entity="e"
-              v-bind:copy-type="copyType"
-              v-bind:select="selectEntity"
-              v-bind:append="appendToSelection"
-              v-bind:is-folder="isFolder"
-              @zoom-to="zoomToEntity"></entitycomponent>
+                    v-bind:entity="e"
+                    v-bind:select="selectEntity"
+                    v-bind:selected="e === entity"
+                    v-bind:class="{selected: e === entity}"
+                    v-bind:is-folder="isFolder"
+                    v-bind:in-selection="selection.indexOf(e) >= 0"
+                    v-bind:copy-type="copyType"
+                    v-bind:append="appendToSelection"
+                    @zoom-to="zoomToEntity"></entitycomponent>
                 </v-list-item-group>
               </v-list>
             </v-card-text>
@@ -92,7 +92,6 @@
                   :billboard="entity.billboard"
                   :advanced="advanced">
 
-                  <batch-style-controls :active="false"></batch-style-controls>
                   <template v-slot:advancetoggle>
                     <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
                       label="Advanced Editor:" v-model="advanced"></v-switch>
@@ -104,7 +103,6 @@
                   :polygon="entity.polygon"
                   :advanced="advanced"
                 >
-                  <batch-style-controls :active="false"></batch-style-controls>
                   <template v-slot:advancetoggle>
                     <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
                       label="Advanced Editor:" v-model="advanced"></v-switch>
@@ -115,7 +113,12 @@
             </v-card-text>
             <v-card-actions class="pt-0 pb-1">
               <v-btn small>Update <template v-if="entity.billboard">Pin</template><template v-else>Polygon</template></v-btn>
-              <v-btn small>Copy to other <template v-if="entity.billboard">Pins</template><template v-else>Polygons</template></v-btn>
+
+              <styles-dialog-container :entity="entity" :entities="entities">
+                <template v-slot:buttonlabel>
+                  Copy to other <template v-if="entity.billboard">Pins</template><template v-else>Polygons</template>
+                </template>
+              </styles-dialog-container>
             </v-card-actions>
           </v-card>
 

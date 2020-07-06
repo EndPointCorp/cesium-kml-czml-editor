@@ -143,9 +143,6 @@ const template = `
         </enum-field>
 
     </div>
-
-    <slot></slot>
-
 </div>
 `;
 

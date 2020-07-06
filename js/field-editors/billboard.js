@@ -112,7 +112,6 @@ const template = `
             </v-col>
             </v-row>
         </v-col>
-    <slot></slot>
 </div>
 `;
 
