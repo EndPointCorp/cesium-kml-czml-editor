@@ -1,7 +1,7 @@
 const template = `
     <v-dialog
       v-model="dialog"
-      width="600"
+      width="700"
       persistent
     >
       <template v-slot:activator="{ on, attrs }">
@@ -23,50 +23,58 @@ const template = `
         Apply styles
         </v-card-title>
 
-        <v-row>
+        <v-row class="ma-1">
         <v-col cols="6">
-            <v-list
-            color="grey lighten-1"
-            dense
-            height="200"
-            class="overflow-y-auto py-0"
-            >
-                <v-subheader>Applicable Entities</v-subheader>
-                <v-list-item-group v-model="item" color="primary">
-                    <template v-for="(entity, index) in applicableEntities">
-                        <v-list-item>
-                            <v-list-item-action>
-                            <v-checkbox color="primary" @change="console.log('checked')"  v-model="inSelection"></v-checkbox>
-                            </v-list-item-action>
-                            <v-list-item-content>
-                            <v-list-item-title v-text="entity.name"></v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </template>
-                </v-list-item-group>
-            </v-list>
+            <v-card class="mx-auto">
+                <v-toolbar color="gray" dark>
+                    <v-toolbar-title>Applicable Entities</v-toolbar-title>
+                </v-toolbar>
+                <v-list
+                color="grey lighten-1"
+                dense
+                height="200"
+                class="overflow-y-auto py-0"
+                >
+                    <v-list-item-group v-model="item" color="primary">
+                        <template v-for="(entity, index) in applicableEntities">
+                            <v-list-item>
+                                <v-list-item-action>
+                                <v-checkbox color="primary" @change="console.log('checked')"  v-model="inSelection"></v-checkbox>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                <v-list-item-title v-text="entity.name"></v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </template>
+                    </v-list-item-group>
+                </v-list>
+            </v-card>
         </v-col>
         <v-col cols="6">
-        <v-list
-        color="grey lighten-1"
-        dense
-        height="200"
-        class="overflow-y-auto py-0"
-        >
-            <v-subheader>Properties</v-subheader>
-            <v-list-item-group v-model="item" color="primary">
-                <template v-for="(entity, index) in applicableEntities">
-                    <v-list-item>
-                        <v-list-item-action>
-                        <v-checkbox color="primary" @change="console.log('checked')"  v-model="inSelection"></v-checkbox>
-                        </v-list-item-action>
-                        <v-list-item-content>
-                        <v-list-item-title v-text="entity.name"></v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                </template>
-            </v-list-item-group>
-        </v-list>
+            <v-card class="mx-auto">
+                <v-toolbar color="gray" dark>
+                    <v-toolbar-title>Applicable Entities</v-toolbar-title>
+                </v-toolbar>
+                <v-list
+                color="grey lighten-1"
+                dense
+                height="200"
+                class="overflow-y-auto py-0"
+                >
+                    <v-list-item-group v-model="item" color="primary">
+                        <template v-for="(entity, index) in applicableEntities">
+                            <v-list-item>
+                                <v-list-item-action>
+                                <v-checkbox color="primary" @change="console.log('checked')"  v-model="inSelection"></v-checkbox>
+                                </v-list-item-action>
+                                <v-list-item-content>
+                                <v-list-item-title v-text="entity.name"></v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </template>
+                    </v-list-item-group>
+                </v-list>
+            </v-card>
     </v-col>
       </v-row>
         <v-card-actions>
