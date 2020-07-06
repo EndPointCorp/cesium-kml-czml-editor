@@ -23,20 +23,52 @@ const template = `
         Apply styles
         </v-card-title>
 
-        <v-card-text>
-            Apply to:
-        </v-card-text>
-        <template v-for="(entity, index) in applicableEntities">
-            <v-row>
-                <v-col cols="4">
-                    <v-checkbox></v-checkbox>
-                </v-col>
-                <v-col cols="8">
-                    {{ entity.name }}
-                </v-col>
-            </v-row>
-        </template>
-
+        <v-row>
+        <v-col cols="6">
+            <v-list
+            color="grey lighten-1"
+            dense
+            height="200"
+            class="overflow-y-auto py-0"
+            >
+                <v-subheader>Applicable Entities</v-subheader>
+                <v-list-item-group v-model="item" color="primary">
+                    <template v-for="(entity, index) in applicableEntities">
+                        <v-list-item>
+                            <v-list-item-action>
+                            <v-checkbox color="primary" @change="console.log('checked')"  v-model="inSelection"></v-checkbox>
+                            </v-list-item-action>
+                            <v-list-item-content>
+                            <v-list-item-title v-text="entity.name"></v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </template>
+                </v-list-item-group>
+            </v-list>
+        </v-col>
+        <v-col cols="6">
+        <v-list
+        color="grey lighten-1"
+        dense
+        height="200"
+        class="overflow-y-auto py-0"
+        >
+            <v-subheader>Properties</v-subheader>
+            <v-list-item-group v-model="item" color="primary">
+                <template v-for="(entity, index) in applicableEntities">
+                    <v-list-item>
+                        <v-list-item-action>
+                        <v-checkbox color="primary" @change="console.log('checked')"  v-model="inSelection"></v-checkbox>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                        <v-list-item-title v-text="entity.name"></v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </template>
+            </v-list-item-group>
+        </v-list>
+    </v-col>
+      </v-row>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="submit">Submit</v-btn>
