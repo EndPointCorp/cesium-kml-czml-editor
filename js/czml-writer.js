@@ -140,11 +140,21 @@ function encodeCartesian3(v) {
 }
 
 function encodePositions(v) {
-    return {
-        cartographicDegrees: v.getValue().reduce((arr, p) => {
-            return [...arr, ...cartesianAsCartographicDegrees(p)];
-        }, [])
-    };
+    if(v.getValue) {
+        return {
+            cartographicDegrees: v.getValue().reduce((arr, p) => {
+                return [...arr, ...cartesianAsCartographicDegrees(p)];
+            }, [])
+        };
+    }
+    else if (v.reduce) {
+        return {
+            cartographicDegrees: v.reduce((arr, p) => {
+                return [...arr, ...cartesianAsCartographicDegrees(p)];
+            }, [])
+        };
+    }
+    console.warn('Failed to write positions', v);
 }
 
 function writeBillboard(billboard) {
