@@ -63,7 +63,7 @@ const template = `
                 height="200"
                 class="overflow-y-auto py-0"
                 >
-                    <v-list-item-group multiple v-model="selectedEntities" color="primary">
+                    <v-list-item-group multiple v-model="selectedProperties" color="primary">
                         <template v-for="(value, property) in changes">
                             <v-list-item>
                             <template v-slot:default="{ active, toggle }">
@@ -91,14 +91,25 @@ const template = `
     </v-dialog>
 `;
 
+export function applyProperties(src, dst, properties) {
+    const source = src.clone();
+
+    properties.forEach(p => {
+        dst[p] = source[p];
+    });
+}
+
 Vue.component('styles-dialog-container', {
     template: template,
     props: ['entity', 'entities', 'changes'],
-    data: () => ({
-        dialog: false,
-        featureType: null,
-        selectedEntities: []
-    }),
+    data: function() {
+        return {
+            dialog: false,
+            featureType: null,
+            selectedEntities: [],
+            selectedProperties: []
+        };
+    },
     watch: {
         dialog: function(active) {
             if (active) {
@@ -109,6 +120,8 @@ Vue.component('styles-dialog-container', {
                 else if (this.entity.polygon) {
                     this.featureType = 'polygon';
                 }
+                this.selectedEntities = this.applicableEntities.map((_, i) => i);
+                this.selectedProperties = Object.keys(this.changes).map((_, i) => i);
             }
         }
     },
@@ -122,16 +135,14 @@ Vue.component('styles-dialog-container', {
             this.dialog = false;
         },
         submit: function () {
-            console.log(this.selectedEntities)
-        },
-        // pasteStyle: function() {
-        //     this.selection.forEach(e => {
-        //         applyProperties(this.copySubject, e[this.copyType], this.copyProperties);
-        //     });
-        //     this.selection = [this.entity];
+            let changesKeys = Object.keys(this.changes);
+            let propsForChanges = this.selectedProperties.map(i => changesKeys[i]);
+            let entities = this.selectedEntities.map(i => this.applicableEntities[i]);
 
-        //     this.copySubject = null;
-        //     this.copyType = null;
-        // },
+            entities.forEach(e => {
+                applyProperties(this.entity[this.featureType], e[this.featureType], propsForChanges);
+            });
+            this.dialog = false;
+        }
     }
 });

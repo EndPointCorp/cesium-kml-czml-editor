@@ -36,14 +36,6 @@ if (ionTerrain) {
     viewer.baseLayerPicker.viewModel.selectedTerrain = ionTerrain;
 }
 
-function applyProperties(src, dst, properties) {
-    const source = src.clone();
-
-    properties.forEach(p => {
-        dst[p] = source[p];
-    });
-}
-
 function extrudePolygons(polygons) {
     // Convert Polygons into extrusions by default
     polygons.forEach(e => {
