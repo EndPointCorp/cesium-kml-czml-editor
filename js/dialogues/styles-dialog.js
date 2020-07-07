@@ -10,6 +10,7 @@ const template = `
             id="copy-styles"
             v-bind="attrs"
             v-on="on"
+            class="mt-2"
         >
         <slot name="buttonlabel"></slot>
         </v-btn>

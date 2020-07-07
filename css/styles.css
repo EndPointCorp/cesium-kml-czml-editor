@@ -118,7 +118,3 @@ input#file {
 body::-webkit-scrollbar {
     display: none;
 }
-
-.advanced {
-    border: 1px solid gray;
-}

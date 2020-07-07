@@ -91,7 +91,7 @@
                   @update="updateHandler">
 
                   <template v-slot:advancetoggle>
-                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
+                    <v-switch hide-details id="advanced" class="v-input--reverse py-2 my-0"
                       label="Advanced Editor:" v-model="advanced"></v-switch>
                   </template>
                 </billboard-editor>
@@ -115,7 +115,7 @@
                   @update="updateHandler"
                 >
                   <template v-slot:advancetoggle>
-                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
+                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0 mt-2"
                       label="Advanced Editor:" v-model="advanced"></v-switch>
                   </template>
                 </polyline-editor>
@@ -130,7 +130,7 @@
                 :entities="entities"
                 :changes="changes"
               >
-                <template v-slot:buttonlabel>
+                <template v-slot:buttonlabel class="pt-2">
                   Copy to other <template v-if="entity.billboard">Pins</template><template v-else>Polygons</template>
                 </template>
               </styles-dialog-container>

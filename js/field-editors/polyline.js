@@ -7,7 +7,7 @@ const template = `
 <div class="editor polyline-editor">
     <div class="editor-name">Polyline</div>
 
-    <direct-field
+    <direct-field class="pt-4 pl-0"
         @input="inputHandler"
         :entity="entity"
         :feature="'polyline'"
@@ -40,7 +40,7 @@ const template = `
             :label="'Clamp To Ground'">
         </checkbox-field>
 
-        <direct-field
+        <direct-field class="pt-4 pl-0"
             @input="inputHandler"
             :entity="entity"
             :feature="'polyline'"
