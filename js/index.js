@@ -207,9 +207,11 @@ document.getElementById('file').addEventListener('change', handleFileSelect, fal
 viewer.selectedEntityChanged.addEventListener((selection) => {
     editor.entity = selection;
 
-    if (!selection) {
+    if (selection) {
+        window.selectedEntity = selection;
+        console.log(selection);
+    }
+    else {
         editor.selectEntity(null);
     }
-
-    console.log(selection);
 });
