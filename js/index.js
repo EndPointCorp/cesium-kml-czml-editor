@@ -4,6 +4,7 @@ import './field-editors/polyline.js'
 
 import './components/entity-info.js'
 import './components/entitycomponent.js'
+import './components/entities-list-type-filter.js'
 
 import './dialogues/tileset-dialog.js'
 import './dialogues/styles-dialog.js'
@@ -102,6 +103,7 @@ const editor = new Vue({
 
             showPolygons: true,
             showBillboards: true,
+            showPolylines: true,
 
             copyType: null,
             changes: {},
@@ -163,6 +165,17 @@ const editor = new Vue({
         },
         onCopyPropertiesChange: function(properties) {
             this.copyProperties = properties;
+        }
+    },
+    computed: {
+        filteredEntities() {
+            return this.entities.filter(e => {
+                let billboard = this.showBillboards && e.billboard;
+                let polygon =  this.showPolygons && e.polygon;
+                let polyline = this.showPolylines && e.polyline && !e.billboard;
+
+                return this.isFolder(e) || billboard || polygon || polyline;
+            });
         }
     }
 });

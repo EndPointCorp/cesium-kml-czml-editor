@@ -41,7 +41,11 @@
             <v-toolbar dense flat dark color="black">
               <v-toolbar-title>KML Entities:</v-toolbar-title>
               <template v-slot:extension class="entites-ext">
-                Show<v-spacer></v-spacer><v-checkbox hide-details v-model="showPolygons"></v-checkbox>Polygons <v-spacer></v-spacer><v-checkbox hide-details v-model="showBillboards"></v-checkbox>Pins
+                <v-checkbox hide-details v-model="showBillboards"></v-checkbox>Pins
+                <v-spacer></v-spacer>
+                <v-checkbox hide-details v-model="showPolygons"></v-checkbox>Polygons
+                <v-spacer></v-spacer>
+                <v-checkbox hide-details v-model="showPolylines"></v-checkbox>Lines
               </template>
             </v-toolbar>
             <v-card-text class="pa-0">
@@ -52,7 +56,7 @@
                 class="overflow-y-auto py-0"
               >
                 <v-list-item-group color="primary">
-                  <entitycomponent v-for="(e, i) in entities" :key="i"
+                  <entitycomponent v-for="(e, i) in filteredEntities" :key="i"
                     v-bind:entity="e"
                     v-bind:select="selectEntity"
                     v-bind:selected="e === entity"
