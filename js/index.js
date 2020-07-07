@@ -13,6 +13,7 @@ import DocumentWriter from './czml-writer.js'
 // import CitiesDataSource from './cities/CitiesDataSource.js'
 
 import {extrudePolygon, polygonAverageHeight} from './field-editors/polygon.js'
+import {polylineAverageHeight} from './field-editors/polyline.js'
 
 const getParams = new URLSearchParams(window.location.search);
 Cesium.Ion.defaultAccessToken = getParams.get('ion_key') ||
@@ -37,9 +38,35 @@ if (ionTerrain) {
     viewer.baseLayerPicker.viewModel.selectedTerrain = ionTerrain;
 }
 
-function extrudePolygons(polygons) {
+function applyDefaults(entities) {
+    billboardDefaults(entities);
+    polylineDefaults(entities);
+    polygonDefaults(entities);
+}
+
+function billboardDefaults(entities) {
+    entities.forEach(e => {
+        if (e.billboard) {
+            e.billboard.verticalOrigin = Cesium.VerticalOrigin.BOTTOM;
+            e.billboard.heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+        }
+    });
+}
+
+function polylineDefaults(entities) {
+    entities.forEach(e => {
+        if (e.polyline && !e.billboard) {
+            let h = polylineAverageHeight(e.polyline);
+            if (h < 0.1) {
+                e.polyline.clampToGround = true;
+            }
+        }
+    });
+}
+
+function polygonDefaults(entities) {
     // Convert Polygons into extrusions by default
-    polygons.forEach(e => {
+    entities.forEach(e => {
         if (e.polygon) {
             let h = polygonAverageHeight(e.polygon);
             if (h > 0.1) {
@@ -133,7 +160,7 @@ function loadDataSourcePromise(dsPromise) {
     viewer.dataSources.add(dsPromise);
     dsPromise.then(ds => {
 
-        extrudePolygons(ds.entities.values);
+        applyDefaults(ds.entities.values);
 
         editor.entities = [
             ...editor.entities,
