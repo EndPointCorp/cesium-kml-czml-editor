@@ -56,6 +56,7 @@ Vue.component('material-field', {
         },
         setNew: function() {
             this.entity[this.feature][this.field] = new Cesium.ColorMaterialProperty();
+            this.value = cesiumToRGBA(Cesium.Color.WHITE);
         }
     },
     watch: {
@@ -94,6 +95,7 @@ Vue.component('color-field', {
         },
         setNew: function() {
             this.entity[this.feature][this.field] = new Cesium.Color();
+            this.value = cesiumToRGBA(new Cesium.Color());
         }
     },
     watch: {

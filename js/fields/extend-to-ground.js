@@ -7,7 +7,22 @@ const template = `
             label="Extend to ground:" v-model="extend"
             @change="handleChange"></v-switch>
     </div>
-    <slot></slot>
+    <div v-if="entity.polyline">
+        <direct-field
+            :entity="entity"
+            :feature="'polyline'"
+            :field="'width'"
+            :label="'Extension Line Width'">
+        </direct-field>
+
+        <material-field
+            class="pt-2"
+            :entity="entity"
+            :feature="'polyline'"
+            :field="'material'"
+            :label="'Extension Line Color'"
+        ></material-field>
+    </div>
 </div>`
 
 Vue.component('extend-to-ground', {
