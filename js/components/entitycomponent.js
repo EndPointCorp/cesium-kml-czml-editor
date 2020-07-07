@@ -8,6 +8,7 @@ const template = `
         <v-icon small v-if="isFolder(entity)">mdi-folder</v-icon>
         <v-icon small v-if="entity.billboard">mdi-pin</v-icon>
         <v-icon small v-if="entity.polygon">mdi-widgets-outline</v-icon>
+        <v-icon small v-if="entity.polyline && !entity.billboard">mdi-vector-polyline</v-icon>
     </v-list-item-icon>
     <v-list-item-content>
       <v-list-item-title v-text="entity.name"></v-list-item-title>
