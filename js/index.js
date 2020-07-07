@@ -48,7 +48,18 @@ function billboardDefaults(entities) {
     entities.forEach(e => {
         if (e.billboard) {
             e.billboard.verticalOrigin = Cesium.VerticalOrigin.BOTTOM;
-            e.billboard.heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+
+            // Don't use relative height measure for Billboards with extension
+            // bc. polylines doesn't have rELATIVE_TO_GROUND reference mode
+            if (!e.polyline) {
+                let height = Cesium.Cartographic.fromCartesian(e.position.getValue()).height;
+                if (height > 0.1) {
+                    e.billboard.heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
+                }
+                else {
+                    e.billboard.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+                }
+            }
         }
     });
 }
