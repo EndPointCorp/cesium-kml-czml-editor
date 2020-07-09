@@ -112,6 +112,18 @@
                   </template>
                 </polygon-editor>
 
+                <rectangle-editor v-if="entity.rectangle"
+                  :entity="entity"
+                  :polygon="entity.rectangle"
+                  :advanced="advanced"
+                  @update="updateHandler"
+                >
+                  <template v-slot:advancetoggle>
+                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
+                      label="Advanced Editor:" v-model="advanced"></v-switch>
+                  </template>
+                </rectangle-editor>
+
                 <polyline-editor v-if="entity.polyline && !entity.billboard"
                   :entity="entity"
                   :polyline="entity.polyline"

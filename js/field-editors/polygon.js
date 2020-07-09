@@ -49,6 +49,17 @@ const template = `
         :label="'Close Bottom'"
     >
     </checkbox-field>
+
+    <checkbox-field
+        class="my-0"
+        @input="inputHandler"
+        :entity="entity"
+        :feature="'polygon'"
+        :field="'fill'"
+        :label="'Fill'"
+    >
+    </checkbox-field>
+
     <slot name="advancetoggle"></slot>
 
     <div class="advanced" v-if="advanced">
