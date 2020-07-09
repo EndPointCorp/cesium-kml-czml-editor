@@ -1,8 +1,10 @@
 const template = `
     <v-list-item v-bind:class="{folder: isFolder(entity)}" @dblclick="doubleClick()"
     v-on:click="selectHandler">
+    <template v-slot:default="{ active, toggle }">
+
     <v-list-item-action>
-      <v-checkbox color="primary" @change="appendHandler($event.target.checked)" :disabled="selected" v-model="inSelection" v-if="selectable()"></v-checkbox>
+      <v-checkbox color="primary" :input-value="active" @change="appendHandler($event.target.checked)" @click="toggle" :disabled="selected" v-model="entity.show"></v-checkbox>
     </v-list-item-action>
     <v-list-item-icon>
         <v-icon small v-if="isFolder(entity)">mdi-folder</v-icon>
@@ -13,6 +15,7 @@ const template = `
     <v-list-item-content>
       <v-list-item-title v-text="entity.name"></v-list-item-title>
     </v-list-item-content>
+    </template>
   </v-list-item>
 `;
 
