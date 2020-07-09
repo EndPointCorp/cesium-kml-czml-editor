@@ -63,6 +63,7 @@ function writeMaterialProperty(val, packet, property) {
             writeConstantProperty(material.color, imageDef, 'color', encodeColor);
             writeConstantProperty(material.repeat, imageDef, 'repeat', encodeCartesian2);
             writeConstantProperty(material.color, imageDef, 'color', encodeColor);
+            writeConstantProperty(material.transparent, imageDef, 'transparent', encodeColor);
 
             packet[property] = {
                 image: imageDef
