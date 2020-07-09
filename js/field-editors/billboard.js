@@ -2,6 +2,7 @@ import '../fields/components.js'
 import '../fields/checkbox.js'
 import '../fields/direct.js'
 import '../fields/enum.js'
+import '../fields/image.js'
 
 import '../fields/extend-to-ground.js'
 
@@ -9,32 +10,16 @@ const template = `
 <div class="editor billboard-editor">
     <div class="py-1">
         <span class="editor-name">Billboard: </span>
-        <span v-if="iconSize">
-            Icon image original size: {{ iconSize && iconSize.width }}, {{ iconSize && iconSize.height }}
-        </span>
+        <image-field
+            @input="inputHandler"
+            :entity="entity"
+            :feature="'billboard'"
+            :field="'image'"
+            :label="'Icon'">
+        </image-field>
     </div>
-    <v-row>
-        <v-col cols="6">
-            <direct-field
-                @input="inputHandler"
-                :entity="entity"
-                :feature="'billboard'"
-                :field="'width'"
-                :label="'Width'">
-            </direct-field>
-        </v-col>
-        <v-col cols="6">
-            <direct-field
-                @input="inputHandler"
-                :entity="entity"
-                :feature="'billboard'"
-                :field="'height'"
-                :label="'Height'">
-            </direct-field>
-        </v-col>
-        </v-row>
 
-        <v-row>
+    <v-row>
         <v-col cols="6" class="pb-2 pt-0">
             <enum-field
                 @input="inputHandler"
