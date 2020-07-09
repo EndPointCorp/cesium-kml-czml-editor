@@ -38,26 +38,6 @@ const template = `
     </div>
 
     <checkbox-field
-        class="mb-0"
-        @input="inputHandler"
-        :entity="entity"
-        :feature="'rectangle'"
-        :field="'closeTop'"
-        :label="'Close Top'"
-    >
-    </checkbox-field>
-
-    <checkbox-field
-        class="my-0"
-        @input="inputHandler"
-        :entity="entity"
-        :feature="'rectangle'"
-        :field="'closeBottom'"
-        :label="'Close Bottom'"
-    >
-    </checkbox-field>
-
-    <checkbox-field
         class="my-0"
         @input="inputHandler"
         :entity="entity"

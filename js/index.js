@@ -152,7 +152,9 @@ const editor = new Vue({
         toCZML: function() {
             const w = new DocumentWriter();
             this.entities.forEach(e => {
-                w.addEntity(e);
+                if (e.show) {
+                    w.addEntity(e);
+                }
             });
             const czmlObj = w.toJSON();
             console.log(czmlObj);

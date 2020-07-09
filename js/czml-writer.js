@@ -157,6 +157,12 @@ function encodePositions(v) {
     console.warn('Failed to write positions', v);
 }
 
+function encodeRectanglePositions(v) {
+    return {
+        wsen: [v.west, v.south, v.east, v.north]
+    };
+}
+
 function writeBillboard(billboard) {
     const result = {};
 
@@ -218,6 +224,39 @@ function writePolygon(polygon) {
     writeConstantProperty(polygon.classificationType, result, 'classificationType', enumEncoder(Cesium.ClassificationType));
 
     writeConstantProperty(polygon.zIndex, result, 'zIndex');
+
+    return result;
+}
+
+function writeRectangle(rectangle) {
+
+    const result = {};
+
+    writeConstantProperty(rectangle.coordinates, result, 'coordinates', encodeRectanglePositions);
+
+    writeConstantProperty(rectangle.height, result, 'height');
+    writeConstantProperty(rectangle.heightReference, result, 'heightReference', enumEncoder(Cesium.HeightReference));
+
+    writeConstantProperty(rectangle.extrudedHeight, result, 'extrudedHeight');
+    writeConstantProperty(rectangle.extrudedHeightReference, result, 'extrudedHeightReference', enumEncoder(Cesium.HeightReference));
+
+    writeConstantProperty(rectangle.rotation, result, 'rotation');
+    writeConstantProperty(rectangle.stRotation, result, 'stRotation');
+    writeConstantProperty(rectangle.granularity, result, 'granularity');
+    writeConstantProperty(rectangle.fill, result, 'fill');
+
+    writeMaterialProperty(rectangle.material, result, 'material');
+
+    writeConstantProperty(rectangle.outline, result, 'outline');
+    writeConstantProperty(rectangle.outlineColor, result, 'outlineColor', encodeColor);
+    writeConstantProperty(rectangle.outlineWidth, result, 'outlineWidth');
+
+    writeConstantProperty(rectangle.shadows, result, 'shadows', enumEncoder(Cesium.ShadowMode));
+
+    writeConstantProperty(rectangle.distanceDisplayCondition, result, 'distanceDisplayCondition', encodeDistanceDisplayCondition);
+    writeConstantProperty(rectangle.classificationType, result, 'classificationType', enumEncoder(Cesium.ClassificationType));
+
+    writeConstantProperty(rectangle.zIndex, result, 'zIndex');
 
     return result;
 }
@@ -289,6 +328,10 @@ export default class DocumentWriter {
 
         if (entity.polygon) {
             packet.polygon = writePolygon(entity.polygon);
+        }
+
+        if (entity.rectangle) {
+            packet.rectangle = writeRectangle(entity.rectangle);
         }
 
         if (entity.parent) {
