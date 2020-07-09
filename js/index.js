@@ -172,7 +172,7 @@ const editor = new Vue({
         filteredEntities() {
             return this.entities.filter(e => {
                 let billboard = this.showBillboards && e.billboard;
-                let polygon =  this.showPolygons && e.polygon;
+                let polygon =  this.showPolygons && (e.polygon || e.rectangle);
                 let polyline = this.showPolylines && e.polyline && !e.billboard;
 
                 return this.isFolder(e) || billboard || polygon || polyline;
