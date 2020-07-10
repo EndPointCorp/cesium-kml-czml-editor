@@ -58,14 +58,14 @@
               >
                 <v-list-item-group color="primary" :mandatory="true"
                   v-model="entity" active-class="highlight">
-                  <entitycomponent v-for="(e, i) in filteredEntities" :key="i"
+                  <entity-list-item v-for="(e, i) in filteredEntities" :key="i"
                     :entity="e"
                     @select="selectEntity"
                     :selected="e === entity"
                     :is-folder="isFolder"
                     @zoom-to="zoomToEntity"
                     :id="getTargetId(e)"
-                  ></entitycomponent>
+                  ></entity-list-item>
                 </v-list-item-group>
               </v-list>
             </v-card-text>

@@ -4,7 +4,7 @@ import './field-editors/polyline.js'
 import './field-editors/rectangle.js'
 
 import './components/entity-info.js'
-import './components/entitycomponent.js'
+import './components/entity-list-item.js'
 import './components/entities-list-type-filter.js'
 
 import './dialogues/tileset-dialog.js'

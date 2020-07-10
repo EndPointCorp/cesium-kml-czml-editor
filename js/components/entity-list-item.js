@@ -18,7 +18,7 @@ const template = `
   </v-list-item>
 `;
 
-Vue.component('entitycomponent', {
+Vue.component('entity-list-item', {
     props: ['entity', 'isFolder'],
     methods: {
         selectHandler: function() {
