@@ -1,10 +1,9 @@
 const template = `
     <v-list-item v-bind:class="{folder: isFolder(entity)}" @dblclick="doubleClick()"
     v-on:click="selectHandler">
-    <template v-slot:default="{ active, toggle }">
 
     <v-list-item-action>
-      <v-checkbox color="primary" :input-value="active" @change="appendHandler($event.target.checked)" @click="toggle" :disabled="selected" v-model="entity.show"></v-checkbox>
+      <v-checkbox color="primary" v-model="entity.show"></v-checkbox>
     </v-list-item-action>
     <v-list-item-icon>
         <v-icon small v-if="isFolder(entity)">mdi-folder</v-icon>
@@ -20,21 +19,10 @@ const template = `
 `;
 
 Vue.component('entitycomponent', {
-    props: ['entity', 'select', 'isFolder', 'selected'],
+    props: ['entity', 'isFolder'],
     methods: {
         selectHandler: function() {
-            if (this.selectable()) {
-                !this.selected && this.appendHandler(!this.inSelection)
-            }
-            else {
-                this.select && this.select(this.entity);
-            }
-        },
-        appendHandler: function(selected) {
-            this.append && this.append(this.entity, selected);
-        },
-        selectable: function() {
-            return this.entity[this.copyType] !== undefined;
+            this.$emit('select', this.entity);
         },
         doubleClick: function() {
             this.$emit('zoom-to');

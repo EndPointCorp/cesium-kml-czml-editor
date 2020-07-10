@@ -57,11 +57,10 @@
               >
                 <v-list-item-group color="primary">
                   <entitycomponent v-for="(e, i) in filteredEntities" :key="i"
-                    v-bind:entity="e"
-                    v-bind:select="selectEntity"
-                    v-bind:selected="e === entity"
-                    v-bind:class="{selected: e === entity}"
-                    v-bind:is-folder="isFolder"
+                    :entity="e"
+                    @select="selectEntity"
+                    :selected="e === entity"
+                    :is-folder="isFolder"
                     @zoom-to="zoomToEntity"></entitycomponent>
                 </v-list-item-group>
               </v-list>
