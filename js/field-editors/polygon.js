@@ -8,6 +8,16 @@ const template = `
     <div class="editor-name">Polygon</div>
 
     <direct-field
+        class="mt-3"
+        @input="inputHandler"
+        :entity="entity"
+        :feature="'polygon'"
+        :field="'height'"
+        :label="'Height'"
+    >
+    </direct-field>
+
+    <direct-field
         class="pt-4"
         @input="inputHandler"
         :entity="entity"
@@ -90,16 +100,6 @@ const template = `
             :field="'outlineColor'"
             :label="'Outline Color'"
         ></color-field>
-
-        <direct-field
-            class="mt-3"
-            @input="inputHandler"
-            :entity="entity"
-            :feature="'polygon'"
-            :field="'height'"
-            :label="'Height'"
-        >
-        </direct-field>
 
         <div class="description">
             Height is the altitude above ground of plain (not extruded) polygon,
