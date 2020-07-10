@@ -30,7 +30,8 @@
         </v-toolbar>
         <v-card-text class="text-center pb-1 pt-2">
           <v-btn small @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
-          <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file" multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
+          <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file"
+            multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
           <br/>
           <tileset-dialog-container @addtileset="addTileset" @deletetileset="deleteTileset"></tileset-dialog-container>
         </v-card-text>
