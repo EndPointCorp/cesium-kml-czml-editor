@@ -24,12 +24,12 @@ function cesiumToRGBA(c) {
         r: c.red * 255,
         g: c.green * 255,
         b: c.blue * 255,
-        a: c.alpha || 1
+        a: c.alpha
     };
 }
 
 function rgbaToCesium(c) {
-    return new Cesium.Color(c.r / 255, c.g / 255, c.b / 255, c.a || 1);
+    return new Cesium.Color(c.r / 255, c.g / 255, c.b / 255, c.a);
 }
 
 Vue.component('material-field', {
