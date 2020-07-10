@@ -72,7 +72,7 @@
           </v-card>
 
           <!-- Editor Section -->
-          <v-card color="grey lighten-1" flat class="mb-1" v-if="entity">
+          <v-card color="grey lighten-1" flat class="mb-1" v-if="entity && !isFolder(entity)">
             <v-toolbar dense flat dark color="black">
               <v-toolbar-title>Edit <entity-type-label :entity="entity"></entity-type-label></v-toolbar-title>
             </v-toolbar>
