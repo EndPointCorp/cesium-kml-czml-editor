@@ -8,6 +8,7 @@ const template = `
         hide-inputs
         hide-mode-switch
         v-model="value"
+        :mode="'rgba'"
         @input="update">
     </v-color-picker>
     <button v-if="!entity[feature][field]" @click="setNew">
@@ -23,29 +24,34 @@ function cesiumToRGBA(c) {
         r: c.red * 255,
         g: c.green * 255,
         b: c.blue * 255,
-        a: c.alpha
+        a: c.alpha || 1
     };
 }
 
 function rgbaToCesium(c) {
-    return new Cesium.Color(c.r / 255, c.g / 255, c.b / 255, c.a);
+    return new Cesium.Color(c.r / 255, c.g / 255, c.b / 255, c.a || 1);
 }
 
 Vue.component('material-field', {
     props: ['entity', 'feature', 'field', 'label'],
-    data: function() {
-        let value = null;
+    computed: {
+        value:{
+            get() {
+                let value = null;
 
-        if (this.entity[this.feature][this.field]) {
-            let material = this.entity[this.feature][this.field].getValue();
-            if (material.color) {
-                value = cesiumToRGBA(material.color);
+                if (this.entity[this.feature][this.field]) {
+                    let material = this.entity[this.feature][this.field].getValue();
+                    if (material.color) {
+                        value = cesiumToRGBA(material.color);
+                    }
+                }
+
+                return value
+            },
+            set(v){
+                // console.log(v)
             }
         }
-
-        return {
-            value
-        };
     },
     methods: {
         update: function(color) {
