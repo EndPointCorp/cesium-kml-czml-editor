@@ -14,11 +14,9 @@ const template = `
     <v-list-item-content>
       <v-list-item-title v-text="entity.name"></v-list-item-title>
     </v-list-item-content>
-    <v-list-item-action>
-          <v-btn icon @click="$emit('zoom-to')">
-            <v-icon>mdi-map-marker</v-icon>
-          </v-btn>
-        </v-list-item-action>
+      <v-btn sm icon @click="$emit('zoom-to')">
+        <v-icon sm>mdi-map-marker</v-icon>
+      </v-btn>
     </template>
   </v-list-item>
 `;
