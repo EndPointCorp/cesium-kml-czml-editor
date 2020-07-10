@@ -23,16 +23,20 @@ const template = `
         </v-text-field>
     </div>
 
-    <div v-if="nativeWidth && nativeHeight">
+    <div v-if="nativeWidth && nativeHeight" class="mb-2">
         Image dimensions: {{nativeWidth}}, {{nativeHeight}}
-        <div>
-            Size of native image used for an icon is bigger than
-            the icon displayed by Cesium. You can resize it down
-            to reduce czml file size and speedup the loading.
-        </div>
-        <v-btn v-if="nativeHeight > height * 0.9" @click="resize" small class="mx-2 white--text" color="blue-grey">
+
+        <v-tooltip bottom>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn v-bind="attrs"
+        v-on="on" v-if="nativeHeight > height * 0.9" @click="resize" small class="mx-2 white--text" color="blue-grey">
             Resize
         </v-btn>
+        </template>
+      <span>Size of native image used for an icon is bigger than<br>
+      the icon displayed by Cesium. You can resize it down<br>
+      to reduce czml file size and speedup the loading.</span>
+    </v-tooltip>
     </div>
 
     <v-row>
