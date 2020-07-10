@@ -1,13 +1,17 @@
 const template = `
 <div class="text-left py-0 my-0">
+<v-row align="center">
+<v-col cols="3" d-flex>
     <v-img :src="imgUrl" :contain="true" :width="50" :height="50"></v-img>
-
+</v-col>
+<v-col cols="6">
     <v-btn small @click="$refs.uploadimg.click()" small class="mx-2 white--text" color="blue-grey">Upload new</v-btn>
     <input v-show="false" type="file" ref="uploadimg"
         class="input-file" accept=".png, .jpg, .jpeg, .bmp"
         @change="fileChangeEvent($event)"
     ></input>
-
+    </v-col>
+</v-row>
     <div v-if="!dataUrl">
         <v-text-field
             dense
