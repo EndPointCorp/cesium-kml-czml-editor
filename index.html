@@ -74,7 +74,7 @@
           <!-- Editor Section -->
           <v-card color="grey lighten-1" flat class="mb-1" v-if="entity">
             <v-toolbar dense flat dark color="black">
-              <v-toolbar-title>Edit <template v-if="entity.billboard">Pins:</template><template v-else>Polygons:</template></v-toolbar-title>
+              <v-toolbar-title>Edit <entity-type-label :entity="entity"></entity-type-label></v-toolbar-title>
             </v-toolbar>
             <v-card-text class="pt-0 pb-1">
               <div class="mt-2">
@@ -148,9 +148,10 @@
                 :entity="entity"
                 :entities="entities"
                 :changes="changes"
+                v-if="!isFolder(entity)"
               >
                 <template v-slot:buttonlabel class="pt-2">
-                  Copy to other <template v-if="entity.billboard">Pins</template><template v-else>Polygons</template>
+                  Copy to other &nbsp;<entity-type-label :entity="entity"></entity-type-label>
                 </template>
               </styles-dialog-container>
             </v-card-actions>
