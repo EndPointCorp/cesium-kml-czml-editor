@@ -5,6 +5,7 @@ import './field-editors/rectangle.js'
 
 import './components/entity-info.js'
 import './components/entity-list-item.js'
+import './components/entity-type-label.js'
 import './components/entities-list-type-filter.js'
 
 import './dialogues/tileset-dialog.js'
