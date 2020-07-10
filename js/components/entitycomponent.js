@@ -1,5 +1,5 @@
 const template = `
-    <v-list-item v-bind:class="{folder: isFolder(entity)}" @dblclick="doubleClick()"
+    <v-list-item :value="entity" v-bind:class="{folder: isFolder(entity)}" @dblclick="doubleClick()"
     v-on:click="selectHandler">
 
     <v-list-item-action>

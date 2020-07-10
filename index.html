@@ -55,7 +55,7 @@
                 height="200"
                 class="overflow-y-auto py-0"
               >
-                <v-list-item-group color="primary">
+                <v-list-item-group color="primary" v-model="entity" active-class="highlight">
                   <entitycomponent v-for="(e, i) in filteredEntities" :key="i"
                     :entity="e"
                     @select="selectEntity"

@@ -118,3 +118,7 @@ input#file {
 body::-webkit-scrollbar {
     display: none;
 }
+
+.highlight {
+  border: 1px dashed gray;
+}
