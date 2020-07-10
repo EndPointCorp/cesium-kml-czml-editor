@@ -54,6 +54,7 @@
                 dense
                 height="200"
                 class="overflow-y-auto py-0"
+                id="scrollable-list"
               >
                 <v-list-item-group color="primary" v-model="entity" active-class="highlight">
                   <entitycomponent v-for="(e, i) in filteredEntities" :key="i"
@@ -61,7 +62,8 @@
                     @select="selectEntity"
                     :selected="e === entity"
                     :is-folder="isFolder"
-                    @zoom-to="zoomToEntity"></entitycomponent>
+                    @zoom-to="zoomToEntity"
+                    :id="getTargetId(e)"></entitycomponent>
                 </v-list-item-group>
               </v-list>
             </v-card-text>

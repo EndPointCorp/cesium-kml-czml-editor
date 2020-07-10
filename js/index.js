@@ -166,6 +166,10 @@ const editor = new Vue({
         },
         onCopyPropertiesChange: function(properties) {
             this.copyProperties = properties;
+        },
+        getTargetId(entity){
+            let target = 's'+entity.id.replace(/-/gi,'');
+            return target;
         }
     },
     computed: {
@@ -239,4 +243,11 @@ viewer.selectedEntityChanged.addEventListener((selection) => {
     else {
         editor.selectEntity(null);
     }
+    let target = '#s'+selection.id.replace(/-/gi,'');
+    editor.$vuetify.goTo(target, {
+        container:'#scrollable-list',
+        duration: 300,
+        offset: 0,
+        easing: 'easeInOutCubic',
+      });
 });
