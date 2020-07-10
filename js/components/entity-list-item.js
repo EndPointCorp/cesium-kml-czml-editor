@@ -1,5 +1,5 @@
 const template = `
-    <v-list-item :value="entity" v-bind:class="{folder: isFolder(entity)}" @dblclick="doubleClick()"
+    <v-list-item :value="entity" v-bind:class="{folder: isFolder(entity)}"
     v-on:click="selectHandler">
 
     <v-list-item-action>
@@ -14,6 +14,11 @@ const template = `
     <v-list-item-content>
       <v-list-item-title v-text="entity.name"></v-list-item-title>
     </v-list-item-content>
+    <v-list-item-action>
+          <v-btn icon @click="$emit('zoom-to')">
+            <v-icon>mdi-map-marker</v-icon>
+          </v-btn>
+        </v-list-item-action>
     </template>
   </v-list-item>
 `;
@@ -25,7 +30,7 @@ Vue.component('entity-list-item', {
             this.$emit('select', this.entity);
         },
         doubleClick: function() {
-            this.$emit('zoom-to');
+            ;
         }
     },
     template: template
