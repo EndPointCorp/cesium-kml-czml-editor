@@ -1,9 +1,11 @@
+import './position.js'
+
 function round(value, step = 1.0) {
     const inv = 1.0 / step;
     return Math.round(value * inv) / inv;
 }
 
-function getLonLatHeight(entity) {
+export function getLonLatHeight(entity) {
     if (entity.position) {
         const cartographic = Cesium.Cartographic.fromCartesian(entity.position.getValue());
 
@@ -19,7 +21,10 @@ function getLonLatHeight(entity) {
 
 const template = `
     <v-row v-if="entity && position">
-        <v-col class="py-0 my-0" cols="12"><h4>Position</h4></v-col>
+        <v-col class="py-0 my-0" cols="12">
+            <h4>Position</h4>
+            <position-editor :entity="entity"></position-editor>
+        </v-col>
 
         <v-col class="py-0 my-0" cols="4">
         Latitude
