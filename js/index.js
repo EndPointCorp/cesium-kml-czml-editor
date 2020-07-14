@@ -27,43 +27,6 @@ Cesium.Ion.defaultAccessToken = getParams.get('ion_key') ||
 const viewer = new Cesium.Viewer('viewer');
 window.viewer = viewer;
 
-
-var primitive = new Cesium.Primitive({
-    geometryInstances : new Cesium.GeometryInstance({
-      geometry : new Cesium.PolygonGeometry({
-        polygonHierarchy : new Cesium.PolygonHierarchy(
-            Cesium.Cartesian3.fromDegreesArrayHeights([
-              -72.0, 40.0, -10,
-              -70.0, 35.0, -10,
-              -75.0, 30.0, -10,
-              -70.0, 30.0, -10,
-              -68.0, 40.0, -10
-            ])
-          )
-      })
-    }),
-    appearance : new Cesium.MaterialAppearance({
-      material : new Cesium.Material({
-        fabric: {
-            type: "Color",
-                uniforms: {
-                  color: (() => {
-                    return new Cesium.Color(0.0, 1.0, 0.0, 1.0);
-                  })()
-                }
-        }
-      }),
-      renderState: {
-        depthTest: {
-          enabled: false  // shut off depth test
-        }
-      }
-    })
-
-  });
-
-  viewer.scene.primitives.add(primitive);
-
 // CitiesDataSource(viewer);
 
 const esriImagery = viewer.baseLayerPicker.viewModel
