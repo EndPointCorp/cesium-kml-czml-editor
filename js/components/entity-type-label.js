@@ -29,6 +29,10 @@ export function entityType(entity) {
     });
 }
 
+export function labelForType(type, plural = true) {
+    return plural ? PLURALS[type] : LABELS[type];
+}
+
 Vue.component('entity-type-label', {
     template,
     props: {

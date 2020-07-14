@@ -7,6 +7,7 @@ import './components/entity-info.js'
 import './components/entity-list-item.js'
 import './components/entity-type-label.js'
 import './components/entities-list-type-filter.js'
+import {labelForType, entityType} from './components/entity-type-label.js'
 
 import './dialogues/tileset-dialog.js'
 import './dialogues/styles-dialog.js'
@@ -103,9 +104,8 @@ const editor = new Vue({
             entity: null,
             advanced: false,
 
-            showPolygons: true,
-            showBillboards: true,
-            showPolylines: true,
+            typeFilters: {
+            },
 
             copyType: null,
             changes: {},
@@ -150,6 +150,9 @@ const editor = new Vue({
                 return e.parent && e.parent.id === entity.id;
             });
         },
+        typeLabel: function(type) {
+            return labelForType(type);
+        },
         toCZML: function() {
             const w = new DocumentWriter();
             this.entities.forEach(e => {
@@ -177,12 +180,31 @@ const editor = new Vue({
     },
     computed: {
         filteredEntities() {
-            return this.entities.filter(e => {
-                let billboard = this.showBillboards && e.billboard;
-                let polygon =  this.showPolygons && (e.polygon || e.rectangle);
-                let polyline = this.showPolylines && e.polyline && !e.billboard;
+            const visibleTypes = Object.keys(this.typeFilters).filter(type => this.typeFilters[type]);
 
-                return this.isFolder(e) || billboard || polygon || polyline;
+            // If all the filters checked, don't filter the list at all
+            if (visibleTypes.length === this.supportedTypeFilters.length) {
+                return this.entities;
+            }
+
+            return this.entities.filter(e => {
+                return this.isFolder(e) || visibleTypes.indexOf[entityType(e)];
+            });
+        },
+        supportedTypeFilters() {
+            return Object.keys(this.typeFilters);
+        },
+        supportedTypeFiltersShortList() {
+            return this.supportedTypeFilters.slice(0, 3);
+        }
+    },
+    watch: {
+        entities: function(newValue) {
+            newValue.forEach(e => {
+                const t = entityType(e);
+                if (t) {
+                    this.typeFilters[t] = true;
+                }
             });
         }
     }
