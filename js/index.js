@@ -4,10 +4,8 @@ import './editors/polyline.js'
 import './editors/rectangle.js'
 
 import './components/entity-info.js'
-import './components/entity-list-item.js'
 import './components/entity-type-label.js'
-import './components/entities-list-type-filter.js'
-import {labelForType, entityType} from './components/entity-type-label.js'
+import './components/entities-list.js'
 
 import './dialogues/tileset-dialog.js'
 import './dialogues/styles-dialog.js'
@@ -140,18 +138,10 @@ const editor = new Vue({
                 viewer.flyTo(this.entity);
             }
         },
-        zoomToEntity: function() {
-            if (this.entity) {
-                viewer.zoomTo(this.entity);
-            }
-        },
         isFolder: function(entity) {
             return entity.position === undefined && this.entities.some(e => {
                 return e.parent && e.parent.id === entity.id;
             });
-        },
-        typeLabel: function(type) {
-            return labelForType(type);
         },
         toCZML: function() {
             const w = new DocumentWriter();
@@ -172,40 +162,6 @@ const editor = new Vue({
         },
         onCopyPropertiesChange: function(properties) {
             this.copyProperties = properties;
-        },
-        getTargetId(entity){
-            let target = 's'+entity.id.replace(/-/gi,'');
-            return target;
-        }
-    },
-    computed: {
-        filteredEntities() {
-            const visibleTypes = Object.keys(this.typeFilters).filter(type => this.typeFilters[type]);
-
-            // If all the filters checked, don't filter the list at all
-            if (visibleTypes.length === this.supportedTypeFilters.length) {
-                return this.entities;
-            }
-
-            return this.entities.filter(e => {
-                return this.isFolder(e) || visibleTypes.indexOf[entityType(e)];
-            });
-        },
-        supportedTypeFilters() {
-            return Object.keys(this.typeFilters);
-        },
-        supportedTypeFiltersShortList() {
-            return this.supportedTypeFilters.slice(0, 3);
-        }
-    },
-    watch: {
-        entities: function(newValue) {
-            newValue.forEach(e => {
-                const t = entityType(e);
-                if (t) {
-                    this.typeFilters[t] = true;
-                }
-            });
         }
     }
 });
@@ -274,5 +230,5 @@ viewer.selectedEntityChanged.addEventListener((selection) => {
         duration: 300,
         offset: 0,
         easing: 'easeInOutCubic',
-      });
+    });
 });
