@@ -1,7 +1,8 @@
 const template = `
-<span>
-  Alow drag to move <v-switch v-model="active"></v-switch>
-</span>
+<v-row>
+    <v-col cols="6" class="pb-0 mt-2 ml-3">Alow drag to move</v-col> 
+    <v-col cols="4" class="pt-0 pb-0"><v-switch v-model="active"></v-switch></v-col>
+</v-row>
 `;
 
 const hprNorth = new Cesium.HeadingPitchRoll(0, -Math.PI / 2, -Math.PI / 2);
