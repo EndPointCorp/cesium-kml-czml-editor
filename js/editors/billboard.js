@@ -38,6 +38,19 @@ const template = `
         <slot name="advancetoggle"></slot>
 
         <v-col cols="12" class="py-0 px-4 advanced" v-if="advanced">
+
+        <v-row>
+        <v-col cols="12" class="py-1">
+            <direct-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="'billboard'"
+                :field="'disableDepthTestDistance'"
+                :label="'Disable Depth Test Distance'">
+            </direct-field>
+        </v-col>
+        </v-row>
+
         <v-row>
         <v-col cols="12" class="py-1">
             <components-field
@@ -49,10 +62,10 @@ const template = `
                 :components="['x', 'y']"
                 :label="'Pixel Offset'">
             </components-field>
-            </v-col>
-            </v-row>
-            <v-row>
-            <v-col cols="6" class="py-1 pl-0 ">
+        </v-col>
+        </v-row>
+        <v-row>
+        <v-col cols="6" class="py-1 pl-0 ">
             <enum-field
                 @input="inputHandler"
                 :entity="entity"
