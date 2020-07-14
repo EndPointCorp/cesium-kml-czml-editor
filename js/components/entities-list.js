@@ -20,7 +20,7 @@ const template = `
             </template>
 
             <v-list dense>
-            <v-list-item v-for="(_, key) in typeFilters">
+            <v-list-item v-for="(_, key) in typeFilters" :key="key">
                 <v-list-item-content>
                 <v-list-item-title>{{typeLabel(key)}}</v-list-item-title>
                 </v-list-item-content>
@@ -102,6 +102,16 @@ Vue.component('entities-list', {
                 return this.entity;
             },
             set: function(e) {
+                this.$nextTick(() => {
+                    let target = '#s'+e.id.replace(/-/gi,'');
+                    this.$vuetify.goTo(target, {
+                        container:'#scrollable-list',
+                        duration: 300,
+                        offset: 0,
+                        easing: 'easeInOutCubic',
+                    });
+                })
+
                 this.$emit('select', e);
             }
         }

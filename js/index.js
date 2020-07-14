@@ -224,11 +224,4 @@ viewer.selectedEntityChanged.addEventListener((selection) => {
     else {
         editor.selectEntity(null);
     }
-    let target = '#s'+selection.id.replace(/-/gi,'');
-    editor.$vuetify.goTo(target, {
-        container:'#scrollable-list',
-        duration: 300,
-        offset: 0,
-        easing: 'easeInOutCubic',
-    });
 });
