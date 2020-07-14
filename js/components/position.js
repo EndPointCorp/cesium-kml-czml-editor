@@ -1,6 +1,6 @@
 const template = `
 <span>
-  Move <v-switch v-model="active"></v-switch>
+  Alow drag to move <v-switch v-model="active"></v-switch>
 </span>
 `;
 
@@ -35,7 +35,7 @@ function mouseMove(movement) {
             mouseDownEntityPosition.height
         );
 
-        controller.newPosition(entityNewPosition);
+        controller.newPosition(entityNewPosition, deltaLon, deltaLat);
     }
 }
 
@@ -65,11 +65,74 @@ function bindScreenSpaceEvents(viewer) {
     }
 }
 
+function toCartographic(p) {
+    return Cesium.Cartographic.fromCartesian(p);
+}
+
+function toCartesian(p) {
+    return Cesium.Cartographic.toCartesian(p);
+}
+
+function offsetCartographic(p, deltaLon, deltaLat) {
+    return new Cesium.Cartographic(p.longitude + deltaLon, p.latitude + deltaLat, p.height);
+}
+
+function moveHierarchy(h, deltaLon, deltaLat) {
+    let newPositions = h.positions
+        .map(toCartographic)
+        .map(p => offsetCartographic(p, deltaLon, deltaLat))
+        .map(toCartesian);
+
+    let newHoles = null;
+    if (h.holes) {
+        newHoles = h.holes.map(hh => moveHierarchy(hh, deltaLon, deltaLat));
+    }
+
+    return new Cesium.PolygonHierarchy(newPositions, newHoles);
+}
+
 function attachController(entity, onUpdate) {
+    let getter, setter;
+
+    // Billboards, Labels, Models should have position
+    if (entity.position) {
+        getter = () => {
+            return entity.position.getValue();
+        };
+        setter = positionC3 => {
+            entity.position = positionC3;
+        };
+    }
+    else if (entity.polygon) {
+        const hierarchy = entity.polygon.hierarchy.getValue();
+
+        getter = () => {
+            return entity.polygon.hierarchy.getValue().positions[0];
+        };
+        setter = (pc3, p, deltaLon, deltaLat) => {
+            entity.polygon.hierarchy.setValue(moveHierarchy(hierarchy, deltaLon, deltaLat));
+        };
+    }
+    else {
+        const positions = entity.polyline.positions.getValue().map(toCartographic);
+        getter = () => {
+            return entity.polyline.positions.getValue()[0];
+        };
+        setter = (pc3, p, deltaLon, deltaLat) => {
+            entity.polyline.positions = positions
+                .map(p => offsetCartographic(p, deltaLon, deltaLat))
+                .map(toCartesian);
+        };
+    }
+
+    return _attachController(entity, getter, setter, onUpdate);
+}
+
+function _attachController(entity, getter, setter, onUpdate) {
     controller = {
         active: false,
         entity: entity,
-        initialPosition: Cesium.Cartographic.fromCartesian(entity.position.getValue()),
+        initialPosition: Cesium.Cartographic.fromCartesian(getter(entity)),
         pick: function(pick) {
             if (this.active) {
                 return pick.id == entity;
@@ -78,8 +141,8 @@ function attachController(entity, onUpdate) {
         getEntityPosition: function() {
             return this.initialPosition;
         },
-        newPosition: function(newPosition) {
-            entity.position = Cesium.Cartographic.toCartesian(newPosition);
+        newPosition: function(newPosition, ...lonlat) {
+            setter(Cesium.Cartographic.toCartesian(newPosition), newPosition, ...lonlat);
             onUpdate && onUpdate();
         }
     }
@@ -102,7 +165,7 @@ Vue.component('position-editor', {
     watch: {
         entity: function(newEntity) {
             this.active = false;
-            this.controller = attachController(newEntity);
+            this.controller = attachController(newEntity, this.onInput);
         },
         active: function(active) {
             this.controller.active = active;
@@ -113,26 +176,3 @@ Vue.component('position-editor', {
         this.controller = attachController(this.entity, this.onInput)
     }
 });
-
-
-// let position = this.entity.position.getValue();
-// var modelMatrixNorth = Cesium.Transforms.headingPitchRollToFixedFrame(position, hprNorth);
-
-// this.arrowNorth = viewer.scene.primitives.add(Cesium.Model.fromGltf({
-//     url : 'assets/arrow.glb',
-//     modelMatrix : modelMatrixNorth,
-//     color: Cesium.Color.RED,
-//     shadows: Cesium.ShadowMode.DISABLED,
-//     colorBlendMode: Cesium.ColorBlendMode.REPLACE,
-//     scale : 10.0
-// }));
-
-// var modelMatrixEast = Cesium.Transforms.headingPitchRollToFixedFrame(position, hprEast);
-// this.arrowEast = viewer.scene.primitives.add(Cesium.Model.fromGltf({
-//     url : 'assets/arrow.glb',
-//     modelMatrix : modelMatrixEast,
-//     color: Cesium.Color.BLUE,
-//     shadows: Cesium.ShadowMode.DISABLED,
-//     colorBlendMode: Cesium.ColorBlendMode.REPLACE,
-//     scale : 10.0
-// }));

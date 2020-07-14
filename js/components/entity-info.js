@@ -20,10 +20,10 @@ export function getLonLatHeight(entity) {
 }
 
 const template = `
+<div>
     <v-row v-if="entity && position">
         <v-col class="py-0 my-0" cols="12">
             <h4>Position</h4>
-            <position-editor :entity="entity"></position-editor>
         </v-col>
 
         <v-col class="py-0 my-0" cols="4">
@@ -55,6 +55,10 @@ const template = `
         </v-text-field>
         </v-col>
     </v-row>
+    <v-row v-if="entity">
+        <position-editor :entity="entity"></position-editor>
+    </v-row>
+</div>
 `;
 
 Vue.component('entity-info', {
