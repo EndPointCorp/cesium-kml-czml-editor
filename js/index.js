@@ -1,7 +1,7 @@
-import './field-editors/billboard.js'
-import './field-editors/polygon.js'
-import './field-editors/polyline.js'
-import './field-editors/rectangle.js'
+import './editors/billboard.js'
+import './editors/polygon.js'
+import './editors/polyline.js'
+import './editors/rectangle.js'
 
 import './components/entity-info.js'
 import './components/entity-list-item.js'
@@ -15,8 +15,8 @@ import DocumentWriter from './czml-writer.js'
 
 // import CitiesDataSource from './cities/CitiesDataSource.js'
 
-import {extrudePolygon, polygonAverageHeight} from './field-editors/polygon.js'
-import {polylineAverageHeight} from './field-editors/polyline.js'
+import {extrudePolygon, polygonAverageHeight} from './editors/polygon.js'
+import {polylineAverageHeight} from './editors/polyline.js'
 
 const getParams = new URLSearchParams(window.location.search);
 Cesium.Ion.defaultAccessToken = getParams.get('ion_key') ||
