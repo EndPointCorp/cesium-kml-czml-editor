@@ -34,7 +34,7 @@ const template = `
     </v-toolbar>
     <v-card-text class="pa-0">
         <v-list color="grey lighten-1" dense height="200" class="overflow-y-auto py-0" id="scrollable-list">
-        <v-list-item-group color="primary" :mandatory="true" :value="entity" active-class="highlight">
+        <v-list-item-group color="primary" :mandatory="true" v-model="listEntity" active-class="highlight">
             <entity-list-item v-for="(e, i) in filteredEntities" :key="i" :entity="e"
                 @select="selectEntity"
                 :selected="e === entity"
@@ -96,6 +96,14 @@ Vue.component('entities-list', {
         },
         supportedTypeFiltersShortList() {
             return this.supportedTypeFilters.slice(0, 3);
+        },
+        listEntity: {
+            get: function() {
+                return this.entity;
+            },
+            set: function(e) {
+                this.$emit('select', e);
+            }
         }
     },
     watch: {
