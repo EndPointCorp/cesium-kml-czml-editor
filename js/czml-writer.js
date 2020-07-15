@@ -32,7 +32,7 @@ function encodePosition (pos) {
 }
 
 function encodeOrientation (orientation) {
-    if (orientation && orientation instanceof Cesium.UnitQuaternion) {
+    if (orientation && orientation instanceof Cesium.Quaternion) {
         return {
             unitQuaternion: Cesium.Quaternion.pack(orientation, [], 0)
         }
@@ -331,7 +331,7 @@ function writePolyline(polyline) {
 function writeModel(model) {
     const result = {};
 
-    writeConstantProperty(model.gltf, result, 'gltf', resourceEncoder('model.gltf'));
+    writeConstantProperty(model.uri, result, 'gltf', resourceEncoder('model.gltf'));
     writeConstantProperty(model.scale, result, 'scale');
     writeConstantProperty(model.minimumPixelSize, result, 'minimumPixelSize');
     writeConstantProperty(model.maximumScale, result, 'maximumScale');
