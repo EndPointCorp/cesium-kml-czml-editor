@@ -1,20 +1,26 @@
 const template = `
-    <v-row>
+    <v-row class="px-4">
+    <v-col cols="4">
         <v-text-field
             v-model="heading"
             type="number"
             label="Heading"
         ></v-text-field>
+        </v-col>
+        <v-col cols="4">
         <v-text-field
             v-model="pitch"
             type="number"
             label="Pitch"
         ></v-text-field>
+        </v-col>
+        <v-col cols="4">
         <v-text-field
             v-model="roll"
             type="number"
             label="Roll"
         ></v-text-field>
+        </v-col>
     </v-row>
 `;
 
