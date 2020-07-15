@@ -31,6 +31,15 @@ function encodePosition (pos) {
     return null;
 }
 
+function encodeOrientation (orientation) {
+    if (orientation && orientation instanceof Cesium.Quaternion) {
+        return {
+            unitQuaternion: Cesium.Quaternion.pack(orientation, [], 0)
+        }
+    }
+    return null;
+}
+
 function writeConstantProperty(val, packet, property, adapter) {
     if (val !== undefined && val.isConstant) {
         const v = val.valueOf();
@@ -59,7 +68,7 @@ function writeMaterialProperty(val, packet, property) {
             const material = val.valueOf();
             const imageDef = {};
 
-            writeConstantProperty(material.image, imageDef, 'image', encodeResource);
+            writeConstantProperty(material.image, imageDef, 'image', resourceEncoder());
             writeConstantProperty(material.color, imageDef, 'color', encodeColor);
             writeConstantProperty(material.repeat, imageDef, 'repeat', encodeCartesian2);
             writeConstantProperty(material.color, imageDef, 'color', encodeColor);
@@ -75,11 +84,39 @@ function writeMaterialProperty(val, packet, property) {
     }
 }
 
-function encodeResource(resource) {
-    if (resource.isDataUri) {
+function stringHash(str) {
+    var hash = 0, i, chr;
+    for (i = 0; i < str.length; i++) {
+      chr   = str.charCodeAt(i);
+      hash  = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
+
+function throughCache(url, resourceCache, ref) {
+    let hash = stringHash(url);
+
+    let existingRef = resourceCache[hash];
+    if (existingRef) {
+        return {
+            reference: existingRef
+        };
+    }
+
+    resourceCache[hash] = ref;
+    return url;
+}
+
+function resourceEncoder(ref) {
+    const resourceCache = this && this.resourceCache;
+    const id = this && this.id;
+    return (resource) => {
+        if (resource.isDataUri && resourceCache && ref) {
+            return throughCache(resource.url, resourceCache, `${id}#${ref}`);
+        }
         return resource.url;
     }
-    return resource;
 }
 
 function enumEncoder(enm) {
@@ -164,10 +201,20 @@ function encodeRectanglePositions(v) {
     };
 }
 
+function encodeNodeTransformations(v) {
+    console.warn("Node transformations are not supported");
+    return null;
+}
+
+function encodeArticulations(v) {
+    console.warn("Articulations are not supported");
+    return null;
+}
+
 function writeBillboard(billboard) {
     const result = {};
 
-    writeConstantProperty(billboard.image, result, 'image', encodeResource);
+    writeConstantProperty(billboard.image, result, 'image', resourceEncoder('billboard.image'));
     writeConstantProperty(billboard.scale, result, 'scale');
     writeConstantProperty(billboard.pixelOffset, result, 'pixelOffset', encodeCartesian2);
     writeConstantProperty(billboard.eyeOffset, result, 'eyeOffset', encodeCartesian3);
@@ -209,7 +256,7 @@ function writePolygon(polygon) {
     writeConstantProperty(polygon.granularity, result, 'granularity');
     writeConstantProperty(polygon.fill, result, 'fill');
 
-    writeMaterialProperty(polygon.material, result, 'material');
+    writeMaterialProperty(polygon.material, result, 'material', 'polygon');
 
     writeConstantProperty(polygon.outline, result, 'outline');
     writeConstantProperty(polygon.outlineColor, result, 'outlineColor', encodeColor);
@@ -246,7 +293,7 @@ function writeRectangle(rectangle) {
     writeConstantProperty(rectangle.granularity, result, 'granularity');
     writeConstantProperty(rectangle.fill, result, 'fill');
 
-    writeMaterialProperty(rectangle.material, result, 'material');
+    writeMaterialProperty(rectangle.material, result, 'material', 'rectangle');
 
     writeConstantProperty(rectangle.outline, result, 'outline');
     writeConstantProperty(rectangle.outlineColor, result, 'outlineColor', encodeColor);
@@ -269,10 +316,10 @@ function writePolyline(polyline) {
     writeConstantProperty(polyline.arcType, result, 'arcType', enumEncoder(Cesium.ArcType));
     writeConstantProperty(polyline.width, result, 'width');
     writeConstantProperty(polyline.granularity, result, 'granularity');
-    writeMaterialProperty(polyline.material, result, 'material');
+    writeMaterialProperty(polyline.material, result, 'material', 'polyline');
     writeConstantProperty(polyline.followSurface, result, 'followSurface');
     writeConstantProperty(polyline.shadows, result, 'shadows', enumEncoder(Cesium.ShadowMode));
-    writeMaterialProperty(polyline.depthFailMaterial, result, 'depthFailMaterial');
+    writeMaterialProperty(polyline.depthFailMaterial, result, 'depthFailMaterial', 'polyline');
     writeConstantProperty(polyline.distanceDisplayCondition, result, 'distanceDisplayCondition', encodeDistanceDisplayCondition);
     writeConstantProperty(polyline.clampToGround, result, 'clampToGround');
     writeConstantProperty(polyline.classificationType, result, 'classificationType', enumEncoder(Cesium.ClassificationType));
@@ -281,9 +328,35 @@ function writePolyline(polyline) {
     return result;
 }
 
+function writeModel(model) {
+    const result = {};
+
+    writeConstantProperty(model.uri, result, 'gltf', resourceEncoder('model.gltf'));
+    writeConstantProperty(model.scale, result, 'scale');
+    writeConstantProperty(model.minimumPixelSize, result, 'minimumPixelSize');
+    writeConstantProperty(model.maximumScale, result, 'maximumScale');
+    writeConstantProperty(model.incrementallyLoadTextures, result, 'incrementallyLoadTextures');
+    writeConstantProperty(model.runAnimations, result, 'runAnimations');
+    writeConstantProperty(model.shadows, result, 'shadows', enumEncoder(Cesium.ShadowMode));
+    writeConstantProperty(model.heightReference, result, 'heightReference', enumEncoder(Cesium.HeightReference));
+    writeConstantProperty(model.silhouetteColor, result, 'silhouetteColor', encodeColor);
+    writeConstantProperty(model.silhouetteSize, result, 'silhouetteSize');
+    writeConstantProperty(model.color, result, 'color', encodeColor);
+    writeConstantProperty(model.colorBlendMode, result, 'colorBlendMode', enumEncoder(Cesium.ColorBlendMode));
+    writeConstantProperty(model.colorBlendAmount, result, 'colorBlendAmount');
+    writeConstantProperty(model.distanceDisplayCondition, result, 'distanceDisplayCondition', encodeDistanceDisplayCondition);
+
+    writeConstantProperty(model.nodeTransformations, result, 'nodeTransformations', encodeNodeTransformations);
+    writeConstantProperty(model.articulations, result, 'articulations', encodeArticulations);
+
+    return result;
+}
+
 export default class DocumentWriter {
 
     constructor () {
+        this.resourceCache = {};
+        this.counter = 0;
         this.document = {
             "id": "document",
             "version": "1.0"
@@ -292,9 +365,12 @@ export default class DocumentWriter {
     }
 
     addEntity (entity) {
+        this.id = entity.id || `object${this.counter++}`
         let packet = {
-            id: entity.id
+            id: this.id
         };
+
+        this.entity = entity;
 
         packet = copyEntityField(entity, packet, 'name');
         packet = copyEntityField(entity, packet, 'description');
@@ -319,6 +395,21 @@ export default class DocumentWriter {
             }
         }
 
+        if (entity.orientation) {
+            const orientation = entity.orientation;
+            if (orientation.isConstant) {
+                packet = {
+                    ...packet,
+                    orientation: encodeOrientation(orientation.getValue())
+                }
+            }
+            else {
+                console.warn('Not Supported');
+            }
+        }
+
+        resourceEncoder = resourceEncoder.bind(this);
+
         if (entity.billboard) {
             packet.billboard = writeBillboard(entity.billboard);
         }
@@ -333,6 +424,10 @@ export default class DocumentWriter {
 
         if (entity.rectangle) {
             packet.rectangle = writeRectangle(entity.rectangle);
+        }
+
+        if (entity.model) {
+            packet.model = writeModel(entity.model);
         }
 
         if (entity.parent) {

@@ -2,6 +2,7 @@ import './editors/billboard.js'
 import './editors/polygon.js'
 import './editors/polyline.js'
 import './editors/rectangle.js'
+import './editors/model.js'
 
 import './components/entity-info.js'
 import './components/entity-type-label.js'

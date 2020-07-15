@@ -1,6 +1,6 @@
 const template = `
 <v-row>
-    <v-col cols="6" class="pb-0 mt-2 ml-3">Alow drag to move</v-col> 
+    <v-col cols="6" class="pb-0 mt-2 ml-3">Alow drag to move</v-col>
     <v-col cols="4" class="pt-0 pb-0"><v-switch v-model="active"></v-switch></v-col>
 </v-row>
 `;

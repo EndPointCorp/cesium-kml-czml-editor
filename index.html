@@ -112,6 +112,17 @@
                   </template>
                 </polyline-editor>
 
+                <model-editor v-if="entity.model"
+                  :entity="entity"
+                  :model="entity.model"
+                  :advanced="advanced"
+                  @update="updateHandler"
+                >
+                  <template v-slot:advancetoggle>
+                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0 mt-2"
+                      label="Advanced Editor:" v-model="advanced"></v-switch>
+                  </template>
+                </model-editor>
 
             </v-card-text>
             <v-card-actions class="pt-0 pb-1">
