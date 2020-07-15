@@ -82,9 +82,5 @@ Vue.component('orientation-editor', {
                 this.hpr = Cesium.HeadingPitchRoll.fromDegrees(this.heading, this.pitch, roll);
             }
         }
-    },
-    created: function() {
-        var hpr = Cesium.HeadingPitchRoll.fromDegrees(45, 0, 0);
-        this.entity.orientation = Cesium.Transforms.headingPitchRollQuaternion(this.entity.position.getValue(), hpr);
     }
 });
