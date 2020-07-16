@@ -48,9 +48,7 @@ const template = `
     <v-card-text v-if="billboardInput">
         Click on map to add a new Pin with default icon
     </v-card-text>
-    <v-switch hide-details class="v-input--reverse" label="Edit Icon" v-model="defaultIconEdit"></v-switch>
-
-    <v-btn v-if="!model" small @click="$refs.uploadmodel.click()" small class="mx-2 white--text" color="blue-grey">Upload model</v-btn>
+    <v-btn v-if="!model" small @click="$refs.uploadmodel.click()" small class="mx-6 white--text mb-2" color="blue-grey">Upload model</v-btn>
     <input v-show="false" type="file" ref="uploadmodel"
         class="input-file" accept=".glb"
         @change="uploadModelFile($event)"
