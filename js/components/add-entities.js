@@ -40,6 +40,16 @@ const template = `
     <v-card-text v-if="billboardInput">
         Click on map to add a new Pin with default icon
     </v-card-text>
+    <v-switch hide-details class="v-input--reverse" label="Edit Icon" v-model="defaultIconEdit"></v-switch>
+
+    <v-btn v-if="!model" small @click="$refs.uploadmodel.click()" small class="mx-2 white--text" color="blue-grey">Upload model</v-btn>
+    <input v-show="false" type="file" ref="uploadmodel"
+        class="input-file" accept=".glb"
+        @change="uploadModelFile($event)"
+    ></input>
+    <v-card-text v-if="model">
+        Click on map set model position
+    </v-card-text>
 </v-card>
 `;
 
@@ -62,7 +72,8 @@ Vue.component('add-entities', {
             billboardInput: false,
             defaultBillboardColor: color,
             pinSize: 50,
-            pinText: null
+            pinText: null,
+            model: null
         };
     },
     watch: {
@@ -105,6 +116,23 @@ Vue.component('add-entities', {
 
                 this.$emit('newentity', entity);
             }
+            else if (this.model) {
+                let position = viewer.camera.pickEllipsoid(
+                    event.position,
+                    viewer.scene.globe.ellipsoid);
+
+                let entity = viewer.entities.add({
+                    position: position,
+                    model: {
+                        uri: this.model,
+                        heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND
+                    }
+                });
+
+                this.model = null;
+
+                this.$emit('newentity', entity);
+            }
         },
         updateDefaultBillboard: function(colorVue, size, text) {
             let color = rgbaToCesium(colorVue);
@@ -122,6 +150,13 @@ Vue.component('add-entities', {
             let reader = new FileReader();
             reader.onload = (e) => {
                 this.defaultImage = e.target.result;
+            };
+            reader.readAsDataURL(evnt.target.files[0]);
+        },
+        uploadModelFile: function(evnt) {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                this.model = e.target.result;
             };
             reader.readAsDataURL(evnt.target.files[0]);
         }
