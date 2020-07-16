@@ -1,17 +1,17 @@
 const template = `
 <div class="text-left py-0 my-0">
-<v-row align="center">
-<v-col cols="3" d-flex>
-    <v-img :src="imgUrl" :contain="true" :width="50" :height="50"></v-img>
-</v-col>
-<v-col cols="6">
-    <v-btn small @click="$refs.uploadimg.click()" small class="mx-2 white--text" color="blue-grey">Upload new</v-btn>
-    <input v-show="false" type="file" ref="uploadimg"
-        class="input-file" accept=".png, .jpg, .jpeg, .bmp"
-        @change="fileChangeEvent($event)"
-    ></input>
+    <v-row align="center">
+    <v-col cols="3" d-flex>
+        <v-img :src="imgUrl" :contain="true" :width="50" :height="50"></v-img>
     </v-col>
-</v-row>
+    <v-col cols="6">
+        <v-btn small @click="$refs.uploadimg.click()" small class="mx-2 white--text" color="blue-grey">Upload new</v-btn>
+        <input v-show="false" type="file" ref="uploadimg"
+            class="input-file" accept=".png, .jpg, .jpeg, .bmp"
+            @change="fileChangeEvent($event)"
+        ></input>
+        </v-col>
+    </v-row>
     <div v-if="!dataUrl">
         <v-text-field
             dense
@@ -65,16 +65,21 @@ const template = `
 Vue.component('image-field', {
     props: ['entity', 'feature', 'field'],
     data: function() {
-        let w = this.entity[this.feature]['width'].valueOf();
-        let h = this.entity[this.feature]['height'].valueOf();
+        let w = null;
+        let h = null;
 
-        let url = this.entity[this.feature][this.field].valueOf().url;
+        if (this.entity[this.feature]['width'] && this.entity[this.feature]['height']) {
+            w = this.entity[this.feature]['width'].valueOf();
+            h = this.entity[this.feature]['height'].valueOf();
+        }
+
+        let url = this.entity[this.feature][this.field].valueOf();
+        if (url.url) {
+            url = url.url;
+        }
 
         return {
             imgUrl: url,
-            dataUrl: /^data:/.test(url),
-            componentW: Math.min(50, w),
-            componentH: Math.min(50, h),
             width: w,
             height: h,
             nativeWidth: null,
@@ -88,6 +93,11 @@ Vue.component('image-field', {
     watch: {
         imgUrl: function(newVal) {
             this.updateImageOriginalSize(newVal);
+        }
+    },
+    computed: {
+        dataUrl: function() {
+            return /^data:/.test(this.imgUrl);
         }
     },
     methods: {
@@ -126,8 +136,6 @@ Vue.component('image-field', {
             let w = this.entity[this.feature]['width'].valueOf();
             let h = this.entity[this.feature]['height'].valueOf();
 
-            this.componentW = Math.min(50, w);
-            this.componentH = Math.min(50, h);
             this.width = w;
             this.height = h;
 

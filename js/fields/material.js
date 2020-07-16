@@ -19,7 +19,7 @@ const template = `
   </v-expansion-panels>
 </div>`;
 
-function cesiumToRGBA(c) {
+export function cesiumToRGBA(c) {
     return {
         r: c.red * 255,
         g: c.green * 255,
@@ -28,7 +28,7 @@ function cesiumToRGBA(c) {
     };
 }
 
-function rgbaToCesium(c) {
+export function rgbaToCesium(c) {
     return new Cesium.Color(c.r / 255, c.g / 255, c.b / 255, c.a);
 }
 

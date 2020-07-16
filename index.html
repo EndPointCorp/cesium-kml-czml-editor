@@ -38,6 +38,10 @@
         </v-card-text>
       </v-card>
 
+      <add-entities
+        @newentity="newEntity"
+      ></add-entities>
+
       <entities-list
         :entities="entities"
         :entity="entity"

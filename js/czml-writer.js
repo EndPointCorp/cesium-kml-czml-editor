@@ -112,10 +112,12 @@ function resourceEncoder(ref) {
     const resourceCache = this && this.resourceCache;
     const id = this && this.id;
     return (resource) => {
-        if (resource.isDataUri && resourceCache && ref) {
-            return throughCache(resource.url, resourceCache, `${id}#${ref}`);
+        let url = resource.url || resource;
+        let isDataURL = resource.isDataURL || /^data:/.test(url);
+        if (isDataURL && resourceCache && ref) {
+            return throughCache(url, resourceCache, `${id}#${ref}`);
         }
-        return resource.url;
+        return url;
     }
 }
 

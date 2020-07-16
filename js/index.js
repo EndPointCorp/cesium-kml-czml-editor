@@ -7,6 +7,7 @@ import './editors/model.js'
 import './components/entity-info.js'
 import './components/entity-type-label.js'
 import './components/entities-list.js'
+import './components/add-entities.js'
 
 import './dialogues/tileset-dialog.js'
 import './dialogues/styles-dialog.js'
@@ -113,6 +114,12 @@ const editor = new Vue({
     methods: {
         selectEntity: function(entity) {
             viewer.selectedEntity = entity;
+        },
+        newEntity: function(entity) {
+            this.filename = 'document.czml';
+            this.entities = [...this.entities, entity];
+            this.entity = entity;
+            this.selectEntity(entity);
         },
         addTileset: function(tileset) {
             if (tileset) {

@@ -1,5 +1,5 @@
 const template = `
-    <v-row class="px-4">
+<v-row class="px-4" v-if="entity.position">
     <v-col cols="4">
         <v-text-field
             v-model="heading"
@@ -20,8 +20,8 @@ const template = `
             type="number"
             label="Roll"
         ></v-text-field>
-        </v-col>
-    </v-row>
+    </v-col>
+</v-row>
 `;
 
 export function localHPRToGlobalOrientationQuaternion(position, hpr) {
@@ -45,10 +45,13 @@ Vue.component('orientation-editor', {
     computed: {
         hpr: {
             get: function() {
-                return globalOrientationQuaternionToLocalHPR(
-                    this.entity.position.getValue(),
-                    this.entity.orientation.getValue()
-                );
+                if (this.entity.orientation) {
+                    return globalOrientationQuaternionToLocalHPR(
+                        this.entity.position.getValue(),
+                        this.entity.orientation.getValue()
+                    );
+                }
+                return null;
             },
             set: function(newVal) {
                 let orientationQ = localHPRToGlobalOrientationQuaternion(
@@ -60,7 +63,10 @@ Vue.component('orientation-editor', {
         },
         heading: {
             get: function() {
-                return Math.round(Cesium.Math.toDegrees(this.hpr.heading));
+                if (this.hpr) {
+                    return Math.round(Cesium.Math.toDegrees(this.hpr.heading));
+                }
+                return null;
             },
             set: function(heading) {
                 this.hpr = Cesium.HeadingPitchRoll.fromDegrees(heading, this.pitch, this.roll);
@@ -68,7 +74,10 @@ Vue.component('orientation-editor', {
         },
         pitch: {
             get: function() {
-                return Math.round(Cesium.Math.toDegrees(this.hpr.pitch));
+                if (this.hpr) {
+                    return Math.round(Cesium.Math.toDegrees(this.hpr.pitch));
+                }
+                return null;
             },
             set: function(pitch) {
                 this.hpr = Cesium.HeadingPitchRoll.fromDegrees(this.heading, pitch, this.roll);
@@ -76,7 +85,10 @@ Vue.component('orientation-editor', {
         },
         roll: {
             get: function() {
-                return Math.round(Cesium.Math.toDegrees(this.hpr.roll));
+                if (this.hpr) {
+                    return Math.round(Cesium.Math.toDegrees(this.hpr.roll));
+                }
+                return null;
             },
             set: function(roll) {
                 this.hpr = Cesium.HeadingPitchRoll.fromDegrees(this.heading, this.pitch, roll);
