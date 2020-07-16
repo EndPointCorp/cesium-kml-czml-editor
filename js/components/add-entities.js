@@ -7,33 +7,22 @@ const template = `
     </v-toolbar>
 
 
-<v-row class="mx-2">
-    <v-col cols="2" class="pt-5">
-        <v-img :src="defaultImage" :contain="true" :width="24" :height="24"></v-img>
-    </v-col>
-    <v-col cols="5" class="pt-0">
-        <v-switch hide-details class="v-input--reverse" label="Edit Icon" v-model="defaultIconEdit"></v-switch>
-    </v-col>
-    <v-col cols="4" class="pt-4">
-        <v-btn small @click="$refs.uploadimg.click()" small class="white--text" color="blue-grey">Upload new</v-btn>
-            <input v-show="false" type="file" ref="uploadimg"
-                class="input-file" accept=".png, .jpg, .jpeg, .bmp"
-                @change="fileChangeEvent($event)"
-            ></input>
-        </v-btn>
-    </v-col>
-</v-row>
-
-    <v-row align="center" class="mx-2">
-        <v-col cols="12">
-            <v-btn small @click="addPin" v-if="!billboardInput">
-            Add Pin
+    <v-row class="mx-2">
+        <v-col cols="2" class="pt-5">
+            <v-img :src="defaultImage" :contain="true" :width="24" :height="24"></v-img>
         </v-col>
-        <v-col cols="12">
-        <v-btn v-if="!model" small @click="$refs.uploadmodel.click()" small class="white--text mb-2" color="blue-grey">Upload model</v-btn>
+        <v-col cols="5" class="pt-0">
+            <v-switch hide-details class="v-input--reverse" label="Edit Icon" v-model="defaultIconEdit"></v-switch>
+        </v-col>
+        <v-col cols="4" class="pt-4">
+            <v-btn small @click="$refs.uploadimg.click()" small class="white--text" color="blue-grey">Upload Icon</v-btn>
+                <input v-show="false" type="file" ref="uploadimg"
+                    class="input-file" accept=".png, .jpg, .jpeg, .bmp"
+                    @change="fileChangeEvent($event)"
+                ></input>
+            </v-btn>
         </v-col>
     </v-row>
-
 
     <v-row v-if="defaultIconEdit" class="mx-2 ml-8 mb-3">
         <v-text-field v-model="pinSize" dense type="number" label="Pin Size">
@@ -50,10 +39,21 @@ const template = `
         </v-color-picker>
     </v-row>
 
+    <v-row align="center" class="mx-2">
+        <v-col cols="12">
+            <v-btn small @click="addPin" v-if="!billboardInput">
+            Add Pin
+        </v-col>
+        <v-card-text v-if="billboardInput">
+            Click on map to add a new Pin with default icon
+        </v-card-text>
+    </v-row>
 
-    <v-card-text v-if="billboardInput">
-        Click on map to add a new Pin with default icon
-    </v-card-text>
+    <v-row align="center" class="mx-2">
+        <v-col cols="12">
+            <v-btn v-if="!model" small @click="$refs.uploadmodel.click()" small class="mb-2">Add model</v-btn>
+        </v-col>
+    </v-row>
 
     <input v-show="false" type="file" ref="uploadmodel"
         class="input-file" accept=".glb"
