@@ -117,6 +117,13 @@ Vue.component('add-entities', {
                 pinBuilder.fromColor(color, size);
 
             this.defaultImage = canvas.toDataURL();
+        },
+        fileChangeEvent: function(evnt) {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                this.defaultImage = e.target.result;
+            };
+            reader.readAsDataURL(evnt.target.files[0]);
         }
     },
     computed: {
