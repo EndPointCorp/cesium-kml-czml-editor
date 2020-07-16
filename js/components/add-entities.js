@@ -6,26 +6,36 @@ const template = `
         <v-toolbar-title>Create:</v-toolbar-title>
     </v-toolbar>
 
-    <v-row align="center">
-        <v-col cols="3" d-flex>
-            <v-img :src="defaultImage" :contain="true" :width="24" :height="24"></v-img>
-        </v-col>
+    <v-row align="center" class="mx-2">
         <v-col cols="6">
             <v-btn small @click="$refs.uploadimg.click()" small class="mx-2 white--text" color="blue-grey">Upload new</v-btn>
             <input v-show="false" type="file" ref="uploadimg"
                 class="input-file" accept=".png, .jpg, .jpeg, .bmp"
                 @change="fileChangeEvent($event)"
             ></input>
-            <v-switch hide-details class="v-input--reverse" label="Edit Icon" v-model="defaultIconEdit"></v-switch>
         </v-col>
     </v-row>
+    <v-row class="mx-2">
+        <v-col cols="3" class="pt-5">
+            <v-img :src="defaultImage" :contain="true" :width="24" :height="24"></v-img>
+        </v-col>
+        <v-col cols="4" class="pt-4">
+            <v-btn small @click="addPin" v-if="!billboardInput">
+            Add Pin
+        </v-btn>
+        </v-col>
+        <v-col cols="5" class="pt-0">
+        <v-switch hide-details class="v-input--reverse" label="Edit Icon" v-model="defaultIconEdit"></v-switch>
+    </v-col>
+    </v-row>
 
-    <v-row v-if="defaultIconEdit">
+    <v-row v-if="defaultIconEdit" class="mx-2 ml-8 mb-2">
         <v-text-field v-model="pinSize" dense type="number" label="Pin Size">
         </v-text-field>
         <v-text-field v-model="pinText" dense label="Pin Text">
         </v-text-field>
         <v-color-picker
+            class="ml-2"
             hide-inputs
             hide-mode-switch
             v-model="colorSwitchValue"
@@ -34,9 +44,7 @@ const template = `
         </v-color-picker>
     </v-row>
 
-    <v-btn small @click="addPin" v-if="!billboardInput">
-        Add Pin
-    </v-btn>
+
     <v-card-text v-if="billboardInput">
         Click on map to add a new Pin with default icon
     </v-card-text>
