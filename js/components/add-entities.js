@@ -1,4 +1,5 @@
 import { cesiumToRGBA, rgbaToCesium } from '../fields/material.js'
+import '../lib/JsColor.js'
 
 const template = `
 <v-card color="grey lighten-1" flat class="mb-1">
@@ -29,20 +30,15 @@ const template = `
         </v-text-field>
         <v-text-field v-model="pinText" dense label="Pin Text">
         </v-text-field>
-        <v-color-picker
-            class="ml-2"
-            hide-inputs
-            hide-mode-switch
-            v-model="colorSwitchValue"
-            :mode="'rgba'"
-            @input="updateDefaultIcon">
-        </v-color-picker>
+
+        <jscolor id="colorThemeTextColor" v-model="colorSwitchValue"></jscolor>
     </v-row>
 
     <v-row align="center" class="mx-2">
         <v-col cols="12">
             <v-btn small @click="addPin" v-if="!billboardInput">
             Add Pin
+            </v-btn>
         </v-col>
         <v-card-text v-if="billboardInput">
             Click on map to add a new Pin with default icon
@@ -85,7 +81,8 @@ Vue.component('add-entities', {
             defaultBillboardColor: color,
             pinSize: 50,
             pinText: null,
-            model: null
+            model: null,
+            theme_text_color: '#000000'
         };
     },
     watch: {

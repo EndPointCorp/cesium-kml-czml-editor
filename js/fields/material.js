@@ -1,22 +1,13 @@
+import '../lib/JsColor.js'
+
 const template = `
 <div>
-<v-expansion-panels flat>
-    <v-expansion-panel>
-    <v-expansion-panel-header>{{ label }}</v-expansion-panel-header>
-      <v-expansion-panel-content>
-    <v-color-picker v-if="value"
-        hide-inputs
-        hide-mode-switch
-        v-model="value"
-        :mode="'rgba'"
-        @input="update">
-    </v-color-picker>
+    <jscolor id="colorThemeTextColor" v-model="value"></jscolor>
+
     <button v-if="!entity[feature][field]" @click="setNew">
         Set new {{ label }}
     </button>
-    </v-expansion-panel-content>
-    </v-expansion-panel>
-  </v-expansion-panels>
+
 </div>`;
 
 export function cesiumToRGBA(c) {
