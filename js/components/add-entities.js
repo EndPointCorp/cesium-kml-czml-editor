@@ -1,4 +1,4 @@
-import { cesiumToRGBA, rgbaToCesium } from '../fields/material.js'
+import { cesiumToCSSColor, rgbaToCesium } from '../fields/material.js'
 import '../lib/JsColor.js'
 
 const template = `
@@ -82,6 +82,7 @@ Vue.component('add-entities', {
             pinSize: 50,
             pinText: null,
             model: null,
+            hex: true,
             theme_text_color: '#000000'
         };
     },
@@ -173,7 +174,7 @@ Vue.component('add-entities', {
     computed: {
         colorSwitchValue: {
             get: function () {
-                return cesiumToRGBA(this.defaultBillboardColor);
+                return cesiumToCSSColor(this.defaultBillboardColor, this.hex);
             },
             set: function (val) {
                 this.updateDefaultBillboard(val, this.pinSize, this.pinText);
