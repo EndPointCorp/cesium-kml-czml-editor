@@ -39,6 +39,10 @@ Vue.component('jscolor',{
                 /rgba\s*\(\s*(\d{1,3})\,\s*(\d{1,3})\,\s*(\d{1,3})\,\s*([\d\.]+)\s*\)/ig.test(text)) {
                 this.$emit('input', this.color);
             }
+
+            if (!text) {
+                this.$emit('input', null);
+            }
         },
         onFineChange(e){
             this.color = '#' + e.detail.jscolor;

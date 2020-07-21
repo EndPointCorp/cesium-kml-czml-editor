@@ -177,7 +177,9 @@ Vue.component('add-entities', {
                 return cesiumToCSSColor(this.defaultBillboardColor, this.hex);
             },
             set: function (val) {
-                this.updateDefaultBillboard(val, this.pinSize, this.pinText);
+                if (val) {
+                    this.updateDefaultBillboard(val, this.pinSize, this.pinText);
+                }
             }
         }
     }
