@@ -70,9 +70,12 @@ const template = `
         <v-divider></v-divider>
 
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="submit">Submit</v-btn>
-          <v-btn @click="cancel">Cancel</v-btn>
+            <v-checkbox dense v-model="addToEntities"
+                label="Add to CZML entities">
+            </v-checkbox>
+            <v-spacer></v-spacer>
+            <v-btn @click="submit">Submit</v-btn>
+            <v-btn @click="cancel">Cancel</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -86,7 +89,8 @@ Vue.component('tileset-dialog-container', {
             key: null,
             url: null,
             dialog: false,
-            tilesList: []
+            tilesList: [],
+            addToEntities: false
         }
     },
     methods: {
@@ -111,14 +115,15 @@ Vue.component('tileset-dialog-container', {
                 this.tilesList.push({
                     resource: this.resource,
                     key: this.key,
-                    url: this.url
+                    url: this.url,
+                    asCZML: this.addToEntities
                 });
 
                 this.resource = null;
                 this.key = null;
                 this.url = null;
 
-                this.$emit('addtileset', tileset);
+                this.$emit('addtileset', tileset, this.addToEntities);
             }
         },
         addTile: function() {

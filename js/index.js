@@ -121,22 +121,6 @@ const editor = new Vue({
             this.entity = entity;
             this.selectEntity(entity);
         },
-        addTileset: function(tileset) {
-            if (tileset) {
-                console.log(tileset);
-                viewer.scene.primitives.add(tileset);
-            }
-        },
-        deleteTileset: function(tileset) {
-            for (let i = 0; i < viewer.scene.primitives.length; i++) {
-                let sceneTS = viewer.scene.primitives.get(i);
-
-                if (sceneTS.url === tileset.url || sceneTS.url.indexOf(tileset.resource) > 0) {
-                    viewer.scene.primitives.remove(sceneTS);
-                    break;
-                }
-            }
-        },
         updateHandler: function(value, field, feature) {
             this.changes[field] = value;
             this.copyType = feature;

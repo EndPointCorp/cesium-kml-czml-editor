@@ -354,6 +354,15 @@ function writeModel(model) {
     return result;
 }
 
+function writeTileset(tileset) {
+    const result = {};
+
+    writeConstantProperty(tileset.uri, result, 'uri');
+    writeConstantProperty(tileset.maximumScreenSpaceError, result, 'maximumScreenSpaceError');
+
+    return result;
+}
+
 export default class DocumentWriter {
 
     constructor () {
@@ -430,6 +439,10 @@ export default class DocumentWriter {
 
         if (entity.model) {
             packet.model = writeModel(entity.model);
+        }
+
+        if (entity.tileset) {
+            packet.tileset = writeTileset(entity.tileset);
         }
 
         if (entity.parent) {

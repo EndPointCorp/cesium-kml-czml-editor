@@ -6,7 +6,6 @@ const template = `
         <v-toolbar-title>Create:</v-toolbar-title>
     </v-toolbar>
 
-
     <v-row class="mx-2">
         <v-col cols="2" class="pt-5">
             <v-img :src="defaultImage" :contain="true" :width="24" :height="24"></v-img>
@@ -47,6 +46,15 @@ const template = `
         <v-card-text v-if="billboardInput">
             Click on map to add a new Pin with default icon
         </v-card-text>
+    </v-row>
+
+    <v-row align="center" class="mx-2">
+        <v-col cols="12">
+            <tileset-dialog-container
+                @addtileset="addTileset"
+                @deletetileset="deleteTileset">
+            </tileset-dialog-container>
+        </v-col>
     </v-row>
 
     <v-row align="center" class="mx-2">
@@ -171,6 +179,34 @@ Vue.component('add-entities', {
                 this.model = e.target.result;
             };
             reader.readAsDataURL(evnt.target.files[0]);
+        },
+        addTileset: function(tileset, addToEntities) {
+            if (tileset) {
+                if (addToEntities) {
+                    console.log(tileset);
+                    let entity = viewer.entities.add({
+                        name: `Tileset (${tileset.url})`,
+                        tileset: {
+                            uri: tileset.url
+                        }
+                    });
+
+                    this.$emit('newentity', entity);
+                }
+                else {
+                    viewer.scene.primitives.add(tileset);
+                }
+            }
+        },
+        deleteTileset: function(tileset) {
+            for (let i = 0; i < viewer.scene.primitives.length; i++) {
+                let sceneTS = viewer.scene.primitives.get(i);
+
+                if (sceneTS.url === tileset.url || sceneTS.url.indexOf(tileset.resource) > 0) {
+                    viewer.scene.primitives.remove(sceneTS);
+                    break;
+                }
+            }
         }
     },
     computed: {
