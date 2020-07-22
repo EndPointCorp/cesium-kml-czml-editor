@@ -34,16 +34,19 @@ Cesium.Color.prototype.toCssHexString = function () {
     return "#" + r + g + b;
 };
 
-export function cesiumToRGBA(c) {
-    return {
-        r: c.red * 255,
-        g: c.green * 255,
-        b: c.blue * 255,
-        a: c.alpha
-    };
-}
+Cesium.Color.prototype.toCssColorString = function () {
+    var red = Cesium.Color.floatToByte(this.red);
+    var green = Cesium.Color.floatToByte(this.green);
+    var blue = Cesium.Color.floatToByte(this.blue);
+    if (this.alpha === 1) {
+      return "rgb(" + red + "," + green + "," + blue + ")";
+    }
+    var alphaString = this.alpha.toFixed(2).replace(/0$/g, '');
+    return "rgba(" + red + "," + green + "," + blue + "," + alphaString + ")";
+};
 
-export function cesiumToCSSColor(c, asHEX = true) {
+export function cesiumToCSSColor(c, asHEX = c.alpha === 1) {
+    console.log(c.toCssColorString());
     return asHEX ? c.toCssHexString() : c.toCssColorString();
 }
 
@@ -86,7 +89,7 @@ Vue.component('material-field', {
     methods: {
         setNew: function() {
             this.entity[this.feature][this.field] = new Cesium.ColorMaterialProperty();
-            this.value = cesiumToRGBA(Cesium.Color.WHITE);
+            this.value = cesiumToCSSColor(Cesium.Color.WHITE);
         }
     },
     watch: {
@@ -95,7 +98,7 @@ Vue.component('material-field', {
             if (newValue[this.feature][this.field]) {
                 let material = newValue[this.feature][this.field].getValue();
                 if (material) {
-                    this.value = cesiumToRGBA(material.color);
+                    this.value = cesiumToCSSColor(material.color);
                 }
             }
         }
@@ -124,14 +127,14 @@ Vue.component('color-field', {
     methods: {
         setNew: function() {
             this.entity[this.feature][this.field] = new Cesium.Color();
-            this.value = cesiumToRGBA(new Cesium.Color());
+            this.value = cesiumToCSSColor(new Cesium.Color());
         }
     },
     watch: {
         entity: function(newValue) {
             this.value = null;
             if (newValue[this.feature][this.field]) {
-                this.value = cesiumToRGBA(newValue[this.feature][this.field].getValue());
+                this.value = cesiumToCSSColor(newValue[this.feature][this.field].getValue());
             }
         }
     },

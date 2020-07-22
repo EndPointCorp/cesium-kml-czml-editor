@@ -1,29 +1,48 @@
 const template = `
-    <div class="input-control color-input">
+    <v-input class="color-input v-text-field">
+        <v-label>{{label}}</v-label>
+        <span ref="color_span" class="color-preview" @click="showColorPicker">&nbsp;</span>
         <input :value="value"
-               :id="id"
-               class="{hash:true, format='any' styleElement:'', onFineChange:'jsColorOnFineChange(this)'}"
-               @change="onChange($event.target)"
-               @input="onChange($event.target)"
-               @focus="showColorPicker"
-               @onFineChange="onFineChange"
-               ref="color_input"
-               data-jscolor=""
+            :id="id"
+            :alphaChannel="alphaChannel"
+            @change="onChange($event.target)"
+            @input="onChange($event.target)"
+            @focus="showColorPicker"
+            ref="color_input"
+            data-jscolor=""
         />
-        <span class="color-value" ref="color_span" @click="showColorPicker"></span>
-    </div>
+        <v-icon right small>mdi-remove-circle</v-icon>
+    </v-input>
 `
 Vue.component('jscolor',{
     template,
     data(){
         return {
-            color: ''
+            color: '',
+            picker: null
         }
     },
-    props: [
-        'value',
-        'id'
-    ],
+    props: {
+        value: String,
+        removeButton: {
+            default: true
+        },
+        label: String,
+        alphaChannel: {
+            default: 'true' // 'true', 'false', 'auto'
+        },
+        /**
+        'auto' - automatically detect format from the initial color value and keep it in effect
+        'any' - user can enter a color code in any supported format (and it will stay in that format until different one is used)
+        'hex' - HEX color in standard CSS notation #RRGGBB
+        'rgb' - RGB color in standard CSS notation rgb(r,g,b)
+        'rgba' - RGBA color in standard CSS notation rgba(r,g,b,a
+         */
+        format: {
+            default: 'any'
+        },
+        id: String
+    },
     methods: {
         onChange(target){
             // this.color = target.jscolor.toHEXString();
@@ -44,23 +63,21 @@ Vue.component('jscolor',{
                 this.$emit('input', null);
             }
         },
-        onFineChange(e){
-            this.color = '#' + e.detail.jscolor;
-            this.$refs.color_span.style.backgroundColor = this.color;
-            this.$emit('input', this.color);
-        },
         showColorPicker(){
-            this.$refs.color_input.jscolor.show();
+            this.picker.show();
         }
     },
     mounted: function () {
-        window.jscolor.install()
+        this.picker = new JSColor(this.$refs.color_input, {
+            hash: true,
+            format: 'any',
+            value: this.value,
+            valueElement: this.$refs.color_input,
+            previewElement: this.$refs.color_span,
+            onInput: () => {this.onChange(this.$refs.color_input);}
+        });
     },
     updated: function () {
         this.$refs.color_span.style.backgroundColor = this.value;
     }
 });
-
-window.jsColorOnFineChange = function(thisObj){
-    thisObj.valueElement.dispatchEvent(new CustomEvent("onFineChange", {detail: {jscolor: thisObj}}));
-}

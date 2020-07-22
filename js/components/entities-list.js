@@ -14,9 +14,9 @@ const template = `
 
         <v-menu bottom left v-if="supportedTypeFilters.length > supportedTypeFiltersShortList.length">
             <template v-slot:activator="{ on, attrs }">
-            <v-btn dark icon v-bind="attrs" v-on="on">
-                <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
+                <v-btn dark icon v-bind="attrs" v-on="on">
+                    <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
             </template>
 
             <v-list dense>
