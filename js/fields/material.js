@@ -43,12 +43,15 @@ export function cesiumToRGBA(c) {
     };
 }
 
-export function cesiumToCSSColor(c, asHEX) {
+export function cesiumToCSSColor(c, asHEX = true) {
     return asHEX ? c.toCssHexString() : c.toCssColorString();
 }
 
 export function rgbaToCesium(c) {
-    return new Cesium.Color(c.r / 255, c.g / 255, c.b / 255, c.a);
+    if (c) {
+        return new Cesium.Color(c.r / 255, c.g / 255, c.b / 255, c.a);
+    }
+    return null;
 }
 
 Vue.component('material-field', {
@@ -70,7 +73,12 @@ Vue.component('material-field', {
             set(v){
                 // Synchronize values from local model data to Cesium
                 let val = rgbaToCesium(v);
-                this.entity[this.feature][this.field] = new Cesium.ColorMaterialProperty(val);
+                if (val) {
+                    this.entity[this.feature][this.field] = new Cesium.ColorMaterialProperty(val);
+                }
+                else {
+                    this.entity[this.feature][this.field] = null;
+                }
                 this.$emit('input', val, this.field, this.feature, this.entity);
             }
         }
