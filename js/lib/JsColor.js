@@ -1,5 +1,8 @@
 const template = `
-    <v-input class="color-input v-text-field" append-icon="mdi-close" @click:append="alert('close call')">
+    <v-input class="color-input v-text-field"
+        append-icon="mdi-close"
+        @click:append="$emit('input', null);">
+
         <v-label>{{label}}</v-label>
         <span ref="color_span" class="color-preview" @click="showColorPicker">&nbsp;</span>
         <input :value="value"

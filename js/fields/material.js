@@ -2,7 +2,7 @@ import '../lib/JsColor.js'
 
 const template = `
 <div>
-    <jscolor id="colorThemeTextColor" v-model="value"></jscolor>
+    <jscolor v-if="entity[feature][field]" id="colorThemeTextColor" v-model="value"></jscolor>
 
     <button v-if="!entity[feature][field]" @click="setNew">
         Set new {{ label }}
