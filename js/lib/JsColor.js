@@ -1,5 +1,5 @@
 const template = `
-    <v-input class="color-input v-text-field">
+    <v-input class="color-input v-text-field" append-icon="mdi-close" @click:append="alert('close call')">
         <v-label>{{label}}</v-label>
         <span ref="color_span" class="color-preview" @click="showColorPicker">&nbsp;</span>
         <input :value="value"
@@ -11,7 +11,6 @@ const template = `
             ref="color_input"
             data-jscolor=""
         />
-        <v-icon right small>mdi-remove-circle</v-icon>
     </v-input>
 `
 Vue.component('jscolor',{
