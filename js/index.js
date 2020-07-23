@@ -14,7 +14,9 @@ import './dialogues/styles-dialog.js'
 
 import DocumentWriter from './czml-writer.js'
 
-// import CitiesDataSource from './cities/CitiesDataSource.js'
+import LabelsButton from './cities/cesium-toolbar-button.js'
+
+import CitiesDataSource from './cities/CitiesDataSource.js'
 
 import {extrudePolygon, polygonAverageHeight} from './editors/polygon.js'
 import {polylineAverageHeight} from './editors/polyline.js'
@@ -25,9 +27,15 @@ Cesium.Ion.defaultAccessToken = getParams.get('ion_key') ||
         'eyJqdGkiOiI0YzE4M2QwNS00NjcwLTQzZGMtYmViNC1mOWJiZjljMzY3ZDAiLCJpZCI6NzMxNCwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0ODk1MTczNX0.' +
         'MjNWfJWsWk4lFXRoZS1EeqaFrWxEnugRqw9M3HRfAQk';
 
-const viewer = new Cesium.Viewer('viewer');
+const viewer = new Cesium.Viewer('viewer', {
+    fullscreenButton: false,
+    homeButton: false,
+    navigationInstructionsInitiallyVisible: false,
+    navigationHelpButton: false
+});
 window.viewer = viewer;
 
+LabelsButton(viewer);
 // CitiesDataSource(viewer);
 
 const esriImagery = viewer.baseLayerPicker.viewModel

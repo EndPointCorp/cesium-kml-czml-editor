@@ -25,6 +25,19 @@ class FeaturesMap {
     }
 }
 
+function disablePick(viewer, ds) {
+    const entities = ds.entities;
+    const pick = viewer.scene.pick;
+    viewer.scene.pick = function(...args) {
+        let picked = pick.call(viewer.scene, ...args);
+        let id = Cesium.defaultValue(picked.id, picked.primitive.id);
+        if (id instanceof Cesium.Entity && entities.contains(id)) {
+            return null;
+        }
+        return picked;
+    };
+}
+
 export default function CitiesDataSource(viewer) {
     const tilingScheme = new Cesium.GeographicTilingScheme();
     let visibleTiles = [];
@@ -34,6 +47,8 @@ export default function CitiesDataSource(viewer) {
 
     const tilesDS = new Cesium.CustomDataSource('tiles');
     viewer.dataSources.add(tilesDS);
+
+    disablePick(viewer, tilesDS);
 
     function cameraChanged() {
         let camera = viewer.camera;
@@ -227,6 +242,7 @@ export default function CitiesDataSource(viewer) {
                     pixelOffset: new Cesium.Cartesian2(0, 10),
                     outlineWidth: 1,
                     fillColor: Cesium.Color.AZURE,
+                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
                     translucencyByDistance: new Cesium.NearFarScalar(20000, 0, 30000, 1)
                 }
             });
@@ -247,4 +263,6 @@ export default function CitiesDataSource(viewer) {
     }
 
     viewer.camera.changed.addEventListener(cameraChanged);
+
+    return tilesDS;
 }
