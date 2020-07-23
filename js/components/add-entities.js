@@ -3,7 +3,7 @@ import { cesiumToRGBA, rgbaToCesium } from '../fields/material.js'
 const template = `
 <v-card color="grey lighten-1" flat class="mb-1">
     <v-toolbar dense flat dark color="black">
-        <v-toolbar-title>Create:</v-toolbar-title>
+        <v-toolbar-title>Create</v-toolbar-title>
     </v-toolbar>
 
     <v-row class="mx-2">

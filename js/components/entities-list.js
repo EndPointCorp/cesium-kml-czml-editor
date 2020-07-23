@@ -4,7 +4,7 @@ import {labelForType, entityType} from './entity-type-label.js'
 const template = `
 <v-card color="grey lighten-1" flat class="mb-1" v-if="entities.length > 0">
     <v-toolbar dense flat dark color="black">
-        <v-toolbar-title>KML Entities:</v-toolbar-title>
+        <v-toolbar-title>KML Entities</v-toolbar-title>
         <template v-slot:extension class="entites-ext">
         <template v-if="" v-for="key in supportedTypeFiltersShortList">
             <v-checkbox hide-details v-model="typeFilters[key]"></v-checkbox>
