@@ -101,6 +101,24 @@ input#file {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+input:focus {
+    outline: none !important;
+}
+
+.color-input .color-preview {
+    width: 22px;
+    white-space: nowrap;
+    display: inline-block;
+    margin-right: 0.5em;
+}
+
+.color-input label {
+    transform-origin: top left;
+    transform: translateY(-18px) scale(.75);
+    left: 0px;
+    right: auto;
+    position: absolute;
+}
 
 .v-toolbar__extension {
     background-color: gray;
