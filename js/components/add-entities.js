@@ -44,13 +44,14 @@ const template = `
         </v-card-text>
     </v-row>
 
-    <v-row align="center" class="mx-2 ml-6">
-        <v-text-field v-model="labelText" dense label="Label Text">
-        </v-text-field>
-    </v-row>
+
 
     <v-row align="center" class="mx-2">
-        <v-col cols="12" v-if="!labelInput">
+        <v-col cols="12" class="pb-0">
+            <v-text-field v-model="labelText" hide-details dense label="Label Text">
+            </v-text-field>
+        </v-col>
+        <v-col cols="12" v-if="!labelInput" class="pt-1">
             <v-btn small @click="addLabel">
             Add Label
             </v-btn>
