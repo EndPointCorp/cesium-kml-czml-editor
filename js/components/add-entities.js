@@ -50,7 +50,7 @@ const template = `
     </v-row>
 
     <v-row align="center" class="mx-2">
-        <v-col cols="12">
+        <v-col cols="12" v-if="!labelInput">
             <v-btn small @click="addLabel">
             Add Label
             </v-btn>
