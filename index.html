@@ -127,7 +127,7 @@
                   </template>
                 </model-editor>
 
-                <model-editor v-if="entity.label"
+                <label-editor v-if="entity.label"
                   :entity="entity"
                   :label="entity.label"
                   :advanced="advanced"
@@ -137,7 +137,7 @@
                     <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0 mt-2"
                       label="Advanced Editor:" v-model="advanced"></v-switch>
                   </template>
-                </model-editor>
+                </label-editor>
 
             </v-card-text>
             <v-card-actions class="pt-0 pb-1">
