@@ -127,6 +127,18 @@
                   </template>
                 </model-editor>
 
+                <model-editor v-if="entity.label"
+                  :entity="entity"
+                  :label="entity.label"
+                  :advanced="advanced"
+                  @update="updateHandler"
+                >
+                  <template v-slot:advancetoggle>
+                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0 mt-2"
+                      label="Advanced Editor:" v-model="advanced"></v-switch>
+                  </template>
+                </model-editor>
+
             </v-card-text>
             <v-card-actions class="pt-0 pb-1">
               <!-- <v-btn small>Update <template v-if="entity.billboard">Pin</template><template v-else>Polygon</template></v-btn> -->

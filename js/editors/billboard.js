@@ -30,7 +30,7 @@ const template = `
                 :label="'Vertical Origin'">
             </enum-field>
         </v-col>
-        </v-row>
+    </v-row>
 
         <extend-to-ground :entity="entity"></extend-to-ground>
 
