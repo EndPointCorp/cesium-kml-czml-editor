@@ -363,6 +363,33 @@ function writeTileset(tileset) {
     return result;
 }
 
+function writeLabel(label) {
+    const result = {};
+
+    writeConstantProperty(label.text, result, 'text');
+    writeConstantProperty(label.font, result, 'font');
+    writeConstantProperty(label.style, result, 'style', enumEncoder(Cesium.LabelStyle));
+    writeConstantProperty(label.scale, result, 'scale');
+    writeConstantProperty(label.showBackground, result, 'showBackground');
+    writeConstantProperty(label.backgroundColor, result, 'backgroundColor', encodeColor);
+    writeConstantProperty(label.backgroundPadding, result, 'backgroundPadding', encodeCartesian2);
+    writeConstantProperty(label.pixelOffset, result, 'pixelOffset', encodeCartesian2);
+    writeConstantProperty(label.eyeOffset, result, 'eyeOffset', encodeCartesian3);
+    writeConstantProperty(label.horizontalOrigin, result, 'horizontalOrigin', enumEncoder(Cesium.HorizontalOrigin));
+    writeConstantProperty(label.verticalOrigin, result, 'verticalOrigin', enumEncoder(Cesium.VerticalOrigin));
+    writeConstantProperty(label.heightReference, result, 'heightReference', enumEncoder(Cesium.HeightReference));
+    writeConstantProperty(label.fillColor, result, 'fillColor', encodeColor);
+    writeConstantProperty(label.outlineColor, result, 'outlineColor', encodeColor);
+    writeConstantProperty(label.outlineWidth, result, 'outlineWidth');
+    writeConstantProperty(label.translucencyByDistance, result, 'translucencyByDistance', encodeNearFarScalar);
+    writeConstantProperty(label.pixelOffsetScaleByDistance, result, 'pixelOffsetScaleByDistance', encodeNearFarScalar);
+    writeConstantProperty(label.scaleByDistance, result, 'scaleByDistance', encodeNearFarScalar);
+    writeConstantProperty(label.distanceDisplayCondition, result, 'distanceDisplayCondition', encodeDistanceDisplayCondition);
+    writeConstantProperty(label.disableDepthTestDistance, result, 'disableDepthTestDistance');
+
+    return result;
+}
+
 export default class DocumentWriter {
 
     constructor () {
@@ -443,6 +470,10 @@ export default class DocumentWriter {
 
         if (entity.tileset) {
             packet.tileset = writeTileset(entity.tileset);
+        }
+
+        if (entity.label) {
+            packet.label = writeLabel(entity.label);
         }
 
         if (entity.parent) {
