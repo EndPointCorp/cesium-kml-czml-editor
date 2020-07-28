@@ -3,6 +3,7 @@ import './editors/polygon.js'
 import './editors/polyline.js'
 import './editors/rectangle.js'
 import './editors/model.js'
+import './editors/label.js'
 
 import './components/entity-info.js'
 import './components/entity-type-label.js'
@@ -15,8 +16,6 @@ import './dialogues/styles-dialog.js'
 import DocumentWriter from './czml-writer.js'
 
 import LabelsButton from './cities/cesium-toolbar-button.js'
-
-import CitiesDataSource from './cities/CitiesDataSource.js'
 
 import {extrudePolygon, polygonAverageHeight} from './editors/polygon.js'
 import {polylineAverageHeight} from './editors/polyline.js'

@@ -44,6 +44,23 @@ const template = `
         </v-card-text>
     </v-row>
 
+
+
+    <v-row align="center" class="mx-2">
+        <v-col cols="12" class="pb-0">
+            <v-text-field v-model="labelText" hide-details dense label="Label Text">
+            </v-text-field>
+        </v-col>
+        <v-col cols="12" v-if="!labelInput" class="pt-1">
+            <v-btn small @click="addLabel">
+            Add Label
+            </v-btn>
+        </v-col>
+        <v-card-text v-if="labelInput">
+            Click on map to add a new Label
+        </v-card-text>
+    </v-row>
+
     <v-row align="center" class="mx-2">
         <v-col cols="12">
             <tileset-dialog-container
@@ -91,6 +108,8 @@ Vue.component('add-entities', {
             pinText: null,
             model: null,
             hex: true,
+            labelText: 'Label 1',
+            labelInput: false,
             theme_text_color: '#000000'
         };
     },
@@ -112,6 +131,9 @@ Vue.component('add-entities', {
         addPin: function () {
             this.billboardInput = true;
 
+        },
+        addLabel: function() {
+            this.labelInput = true;
         },
         mouseClick: function (event) {
             if (this.billboardInput) {
@@ -148,6 +170,24 @@ Vue.component('add-entities', {
                 });
 
                 this.model = null;
+
+                this.$emit('newentity', entity);
+            }
+            else if (this.labelInput) {
+                this.labelInput = false;
+                let position = viewer.camera.pickEllipsoid(
+                    event.position,
+                    viewer.scene.globe.ellipsoid);
+
+                let entity = viewer.entities.add({
+                    position: position,
+                    label: {
+                        text: this.labelText,
+                        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                        heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
+                        disableDepthTestDistance: 1000000000
+                    }
+                });
 
                 this.$emit('newentity', entity);
             }

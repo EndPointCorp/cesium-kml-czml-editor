@@ -13,7 +13,7 @@ const template = `
         <image-field
             @input="inputHandler"
             :entity="entity"
-            :feature="'billboard'"
+            :feature="feature"
             :field="'image'"
             :label="'Icon'">
         </image-field>
@@ -24,64 +24,65 @@ const template = `
             <enum-field
                 @input="inputHandler"
                 :entity="entity"
-                :feature="'billboard'"
+                :feature="feature"
                 :field="'verticalOrigin'"
                 :enum="'VerticalOrigin'"
                 :label="'Vertical Origin'">
             </enum-field>
         </v-col>
-        </v-row>
+    </v-row>
 
-        <extend-to-ground :entity="entity"></extend-to-ground>
+    <extend-to-ground :entity="entity"></extend-to-ground>
 
-        <v-divider light></v-divider>
-        <slot name="advancetoggle"></slot>
+    <v-divider light></v-divider>
+    <slot name="advancetoggle"></slot>
 
-        <v-col cols="12" class="py-0 px-4 advanced" v-if="advanced">
-
-        <v-row>
-        <v-col cols="12" class="py-1">
-            <direct-field
-                @input="inputHandler"
-                :entity="entity"
-                :feature="'billboard'"
-                :field="'disableDepthTestDistance'"
-                :label="'Disable Depth Test Distance'">
-            </direct-field>
-        </v-col>
-        </v-row>
+    <v-col cols="12" class="py-0 px-4 advanced" v-if="advanced">
 
         <v-row>
-        <v-col cols="12" class="py-1">
-            <components-field
-                @input="inputHandler"
-                :entity="entity"
-                :feature="'billboard'"
-                :field="'pixelOffset'"
-                :type="'Cartesian2'"
-                :components="['x', 'y']"
-                :label="'Pixel Offset'">
-            </components-field>
-        </v-col>
-        </v-row>
-        <v-row>
-        <v-col cols="6" class="py-1 pl-0 ">
-            <enum-field
-                @input="inputHandler"
-                :entity="entity"
-                :feature="'billboard'"
-                :field="'heightReference'"
-                :enum="'HeightReference'"
-                :label="'Height Reference'">
-            </enum-field>
+            <v-col cols="12" class="py-1">
+                <direct-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'disableDepthTestDistance'"
+                    :label="'Disable Depth Test Distance'">
+                </direct-field>
             </v-col>
-            </v-row>
-            <v-row>
+        </v-row>
+
+        <v-row>
+            <v-col cols="12" class="py-1">
+                <components-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'pixelOffset'"
+                    :type="'Cartesian2'"
+                    :components="['x', 'y']"
+                    :label="'Pixel Offset'">
+                </components-field>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="6" class="py-1 pl-0 ">
+                <enum-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'heightReference'"
+                    :enum="'HeightReference'"
+                    :label="'Height Reference'">
+                </enum-field>
+            </v-col>
+        </v-row>
+        <v-row>
             <v-col cols="6" class="pt-4 pl-0 ">
                 <direct-field
                     @input="inputHandler"
                     :entity="entity"
-                    :feature="'billboard'"
+                    :feature="feature"
                     :field="'scale'"
                     :label="'Scale'">
                 </direct-field>
@@ -90,26 +91,26 @@ const template = `
                 <direct-field
                     @input="inputHandler"
                     :entity="entity"
-                    :feature="'billboard'"
+                    :feature="feature"
                     :field="'rotation'"
                     :label="'Rotation'">
                 </direct-field>
             </v-col>
-            </v-row>
-            <v-row>
+        </v-row>
+        <v-row>
             <v-col cols="12" class="py-1">
-            <components-field
-                @input="inputHandler"
-                :entity="entity"
-                :feature="'billboard'"
-                :field="'eyeOffset'"
-                :type="'Cartesian3'"
-                :components="['x', 'y', 'z']"
-                :label="'Eye Offset'">
-            </components-field>
+                <components-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'eyeOffset'"
+                    :type="'Cartesian3'"
+                    :components="['x', 'y', 'z']"
+                    :label="'Eye Offset'">
+                </components-field>
             </v-col>
-            </v-row>
-        </v-col>
+        </v-row>
+    </v-col>
 </div>
 `;
 
@@ -117,6 +118,7 @@ Vue.component('billboard-editor', {
     props: ['entity', 'billboard', 'advanced'],
     data: () => ({
         iconSize: {},
+        feature: 'billboard'
     }),
     template: template,
     methods: {
