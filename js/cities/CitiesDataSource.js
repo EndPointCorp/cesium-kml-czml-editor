@@ -145,7 +145,6 @@ export default function CitiesDataSource(viewer) {
             // DataSource doesn't remove children, do it manually
             visibleFeatures.get(tileId).forEach(featureId => {
                 tilesDS.entities.removeById(featureId);
-                console.log('Remove', featureId, tileId);
             });
             visibleFeatures.remove(tileId);
         }
@@ -206,7 +205,6 @@ export default function CitiesDataSource(viewer) {
                     getChildrenTiles(t).forEach(chld => {
                         let child = findByCoords(visibleTiles, chld.x, chld.y, chld.level);
                         if (child) {
-                            console.log('Remove', tms(child), 'parent', tms(t));
                             removeTile(child);
                             findAndRemove(visibleTiles, child);
                         }
@@ -225,7 +223,6 @@ export default function CitiesDataSource(viewer) {
 
     function addCityEntity(tileEntity, city) {
         if (visibleFeatures.add(tileEntity.id, city.name)) {
-            console.log('Add', city.name, tileEntity.id);
             let ce = new Cesium.Entity({
                 id: city.name,
                 parent: tileEntity,

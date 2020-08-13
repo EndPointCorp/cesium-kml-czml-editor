@@ -114,7 +114,7 @@ function attachController(entity, onUpdate) {
             entity.polygon.hierarchy.setValue(moveHierarchy(hierarchy, deltaLon, deltaLat));
         };
     }
-    else {
+    else if(entity.polyline) {
         const positions = entity.polyline.positions.getValue().map(toCartographic);
         getter = () => {
             return entity.polyline.positions.getValue()[0];
@@ -124,6 +124,9 @@ function attachController(entity, onUpdate) {
                 .map(p => offsetCartographic(p, deltaLon, deltaLat))
                 .map(toCartesian);
         };
+    }
+    else {
+        return {};
     }
 
     return _attachController(entity, getter, setter, onUpdate);

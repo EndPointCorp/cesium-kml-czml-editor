@@ -30,6 +30,8 @@ const template = `
                 hide-details
                 v-model="resource"
                 id="resource"
+                :readonly="isDirectJson"
+                @input="validateForm"
                 label="Ion resource"></v-text-field></span>
             </div>
 
@@ -38,14 +40,24 @@ const template = `
                 hide-details
                 v-model="key"
                 id="key"
+                @input="validateForm"
+                :readonly="isDirectJson"
                 label="Ion key"></v-text-field></span>
             </div>
+
+            <br/>
+            <br/>
+
+            OR
+
 
             <div class="tr">
                 <span><v-text-field
                 hide-details
                 v-model="url"
                 id="url"
+                @input="validateForm"
+                :readonly="isIonResource"
                 label="Tileset json URL"></v-text-field></span>
             </div>
 
@@ -71,6 +83,7 @@ const template = `
 
         <v-card-actions>
             <v-checkbox dense v-model="addToEntities"
+                :readonly="isIonResource"
                 label="Add to CZML entities">
             </v-checkbox>
             <v-spacer></v-spacer>
@@ -90,7 +103,9 @@ Vue.component('tileset-dialog-container', {
             url: null,
             dialog: false,
             tilesList: [],
-            addToEntities: false
+            addToEntities: false,
+            isIonResource: false,
+            isDirectJson: false
         }
     },
     methods: {
@@ -98,18 +113,16 @@ Vue.component('tileset-dialog-container', {
             this.dialog = false;
         },
         submit: function () {
-            let url = this.url;
-            if (!url && this.resource) {
-                url = Cesium.IonResource.fromAssetId(this.resource, {
+            let urlPromise = Promise.resolve(this.url);
+            if (!this.url && this.resource) {
+                urlPromise = Cesium.IonResource.fromAssetId(this.resource, {
                     accessToken: this.key
                 });
             }
 
-            if (url) {
-                this.dialog = false;
-
+            urlPromise.then((url) => {
                 let tileset = new Cesium.Cesium3DTileset({
-                    url: this.url
+                    url: url
                 });
 
                 this.tilesList.push({
@@ -119,12 +132,13 @@ Vue.component('tileset-dialog-container', {
                     asCZML: this.addToEntities
                 });
 
+                this.$emit('addtileset', tileset, this.addToEntities);
+
+                this.dialog = false;
                 this.resource = null;
                 this.key = null;
                 this.url = null;
-
-                this.$emit('addtileset', tileset, this.addToEntities);
-            }
+            });
         },
         addTile: function() {
             this.tilesList = [...this.tilesList, {url: null}]
@@ -132,6 +146,20 @@ Vue.component('tileset-dialog-container', {
         deleteTile: function(index) {
             let deleted = this.tilesList.splice(index, 1)[0];
             this.$emit('deletetileset', deleted);
+        },
+        validateForm: function() {
+            if (this.key || this.resource) {
+                this.addToEntities = false;
+                this.url = null;
+            }
+            else if (this.url) {
+                this.key = null;
+                this.resource = null;
+            }
+
+            this.isIonResource = !!(this.resource || this.key);
+            this.isDirectJson = !!this.url;
+
         }
     }
 });
