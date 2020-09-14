@@ -234,12 +234,20 @@ export default function CitiesDataSource(viewer) {
                 label: {
                     font: "16px sans-serif",
                     text: city.name,
-                    verticalOrigin: Cesium.VerticalOrigin.BASELINE,
+                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                     horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                    pixelOffset: new Cesium.Cartesian2(0, 10),
-                    outlineWidth: 1,
-                    fillColor: Cesium.Color.AZURE,
-                    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                    outlineWidth: 2,
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    fillColor: Cesium.Color.LEMONCHIFFON,
+                    outlineColor: Cesium.Color.BLACK,
+                    disableDepthTestDistance: 6000000,
+                    translucencyByDistance: new Cesium.NearFarScalar(20000, 0, 30000, 1)
+                },
+                point: {
+                    color: Cesium.Color.FIREBRICK,
+                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                    pixelSize: 6,
+                    disableDepthTestDistance: 6000000,
                     translucencyByDistance: new Cesium.NearFarScalar(20000, 0, 30000, 1)
                 }
             });
@@ -250,12 +258,8 @@ export default function CitiesDataSource(viewer) {
 
     const cities = fetch('js/cities/cities.json').then(r => r.json());
     function queryData(x, y, level) {
-        return cities.then(cities => {
-            const bbox = tilingScheme.tileXYToRectangle(x, y, level);
-            return Promise.resolve(cities.filter(city => {
-                let c = Cesium.Cartographic.fromDegrees(city.position[0], city.position[1]);
-                return Cesium.Rectangle.contains(bbox, c);
-            }));
+        return fetch(`http://localhost:48088/${level}/${x}/${y}`).then(resp => {
+            return resp.json();
         });
     }
 
