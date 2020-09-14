@@ -211,11 +211,13 @@ export default function CitiesDataSource(viewer) {
                     });
                 }
 
-                let city = filterTileData(data)[0];
-                let tileEntity = tilesDS.entities.getOrCreateEntity(tms(t));
+                if (data) {
+                    let city = filterTileData(data)[0];
+                    let tileEntity = tilesDS.entities.getOrCreateEntity(tms(t));
 
-                if (city) {
-                    addCityEntity(tileEntity, city);
+                    if (city) {
+                        addCityEntity(tileEntity, city);
+                    }
                 }
             });
         });
@@ -256,7 +258,6 @@ export default function CitiesDataSource(viewer) {
         }
     }
 
-    const cities = fetch('js/cities/cities.json').then(r => r.json());
     function queryData(x, y, level) {
         return fetch(`http://localhost:48088/${level}/${x}/${y}`).then(resp => {
             return resp.json();
