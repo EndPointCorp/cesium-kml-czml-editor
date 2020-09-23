@@ -3,6 +3,7 @@ import '../fields/checkbox.js'
 import '../fields/direct.js'
 import '../fields/enum.js'
 import '../fields/image.js'
+import '../fields/near-far.js'
 
 import '../fields/extend-to-ground.js'
 
@@ -108,6 +109,28 @@ const template = `
                     :components="['x', 'y', 'z']"
                     :label="'Eye Offset'">
                 </components-field>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12" class="py-1">
+                <near-far-scalar-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'pixelOffsetScaleByDistance'"
+                    :label="'Pixel Offset Scale By Distance'">
+                </near-far-scalar-field>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12" class="py-1">
+                <near-far-scalar-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'scaleByDistance'"
+                    :label="'Scale By Distance'">
+                </near-far-scalar-field>
             </v-col>
         </v-row>
     </v-col>

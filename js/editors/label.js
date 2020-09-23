@@ -6,6 +6,7 @@ import '../fields/material.js'
 
 const template = `
 <div class="editor label-editor">
+    <span class="editor-name">Label: </span>
     <v-row>
         <v-col cols="6" class="pb-2 pt-0">
             <direct-field
@@ -18,7 +19,8 @@ const template = `
         </v-col>
     </v-row>
 
-    <extend-to-ground :entity="entity"></extend-to-ground>
+    <extend-to-ground v-if="!entity.billboard"
+        :entity="entity"></extend-to-ground>
 
     <v-divider light></v-divider>
     <slot name="advancetoggle"></slot>

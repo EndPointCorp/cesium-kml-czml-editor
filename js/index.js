@@ -34,7 +34,7 @@ const viewer = new Cesium.Viewer('viewer', {
 });
 window.viewer = viewer;
 
-LabelsButton(viewer);
+// LabelsButton(viewer);
 // CitiesDataSource(viewer);
 
 const esriImagery = viewer.baseLayerPicker.viewModel
