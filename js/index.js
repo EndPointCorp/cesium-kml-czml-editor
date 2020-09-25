@@ -58,7 +58,7 @@ function applyDefaults(entities) {
 function billboardDefaults(entities) {
     entities.forEach(e => {
         if (e.billboard) {
-            e.billboard.verticalOrigin = Cesium.VerticalOrigin.BOTTOM;
+            // e.billboard.verticalOrigin = Cesium.VerticalOrigin.BOTTOM;
 
             // Don't use relative height measure for Billboards with extension
             // bc. polylines doesn't have rELATIVE_TO_GROUND reference mode

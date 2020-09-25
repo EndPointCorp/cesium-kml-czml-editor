@@ -183,9 +183,7 @@ const template = `
                     @input="inputHandler"
                     :entity="entity"
                     :feature="feature"
-                    :field="'translucencyByDistance'"
-                    :type="'NearFarScalar'"
-                    :components="['near', 'nearValue', 'far', 'farValue']"
+                    :field="'near-far-scalar-field'"
                     :label="'Translucency By Distance'">
                 </components-field>
             </v-col>
