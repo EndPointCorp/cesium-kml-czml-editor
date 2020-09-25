@@ -3,6 +3,7 @@ const template = `<v-text-field
     hide-details
     class="direct-property-field"
     @input="input"
+    :clearable="true"
     :value="entity[feature][field]"
     :label="label"
     :rules="rules">
@@ -12,7 +13,10 @@ Vue.component('direct-field', {
     props: ['entity', 'feature', 'field', 'label', 'rules', 'validator'],
     methods: {
         input: function(value) {
-            if (this.validator) {
+            if (value === undefined || value === null || value === '') {
+                let pd = Object.getOwnPropertyDescriptor(this.entity[this.feature].__proto__, this.field);
+                pd.set.apply(this.entity[this.feature], [ undefined ]);
+            } else if (this.validator) {
                 if (this.validator(value)) {
                     this.entity[this.feature][this.field] = value;
                     this.handleUpdate();

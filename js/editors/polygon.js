@@ -16,6 +16,13 @@ const template = `
         :label="'Height'"
     >
     </direct-field>
+    <div v-if="entity.polygon.height" class="description">
+        Polygons will be clamped to ground, if they are filled with a constant color
+        and has no height or extruded height.<br/>
+        NOTE: Setting height to 0 will disable clamping.<br/>
+        Use clear button for Height and Extruded Height to set them to undefined and
+        clamp polygon to ground.
+    </div>
 
     <direct-field
         class="pt-4"

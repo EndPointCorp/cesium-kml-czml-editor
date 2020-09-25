@@ -1,12 +1,13 @@
 const template = `
-    <v-select 
+    <v-select
         dense
-        class="enum-field" 
-        v-model="value" 
+        class="enum-field"
+        v-model="value"
         v-on:change="update();"
         hide-details
         :items="options"
         :label="label"
+        :clearable="true"
     ></v-select>`;
 
 Vue.component('enum-field', {
@@ -25,14 +26,21 @@ Vue.component('enum-field', {
 
         return {
             value: value,
-            options: [undefined, ...Object.keys(Cesium[this.enum])]
+            options: [...Object.keys(Cesium[this.enum])]
         };
     },
     methods: {
         update: function() {
             // Synchronized values from local model data to Cesium
             let val = Cesium[this.enum][this.value];
-            this.entity[this.feature][this.field] = val;
+            if (val === undefined) {
+                let pd = Object.getOwnPropertyDescriptor(this.entity[this.feature].__proto__, this.field);
+                pd.set.apply(this.entity[this.feature], [ undefined ]);
+                this.value = undefined;
+            }
+            else {
+                this.entity[this.feature][this.field] = val;
+            }
 
             this.$emit('input', val, this.field, this.feature, this.entity);
         }

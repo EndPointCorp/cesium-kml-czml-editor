@@ -17,6 +17,14 @@ const template = `
     >
     </direct-field>
 
+    <div v-if="entity.rectangle.height" class="description">
+        Boxes will be clamped to ground, if they are filled with a constant color
+        and has no height or extruded height.<br/>
+        NOTE: Setting height to 0 will disable clamping.<br/>
+        Use clear button for Height and Extruded Height to set them to undefined and
+        clamp box to ground.
+    </div>
+
     <div class="description">
         Height is the altitude above ground of plain (not extruded) rectangle,
         or altitude of the bottom for extruded rectangle.
