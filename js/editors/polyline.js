@@ -47,6 +47,20 @@ const template = `
             :field="'zIndex'"
             :label="'Z Index'">
         </direct-field>
+
+        <enum-field
+            class="mt-6 mb-2 px-1"
+            @input="inputHandler"
+            :entity="entity"
+            :feature="'polyline'"
+            :field="'classificationType'"
+            :enum="'ClassificationType'"
+            :label="'Classification Type'">
+        </enum-field>
+        <div class="description">
+            Property specifying whether this polyline will classify terrain, 3D Tiles,
+            or both when clamped to the ground.
+        </div>
     </div>
 </div>
 `;
