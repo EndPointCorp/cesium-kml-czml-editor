@@ -179,13 +179,13 @@ const template = `
 
         <v-row>
             <v-col cols="6" class="pb-2 pt-0">
-                <components-field
+                <near-far-scalar-field
                     @input="inputHandler"
                     :entity="entity"
                     :feature="feature"
-                    :field="'near-far-scalar-field'"
+                    :field="'translucencyByDistance'"
                     :label="'Translucency By Distance'">
-                </components-field>
+                </near-far-scalar-field>
             </v-col>
         </v-row>
 
