@@ -4,6 +4,7 @@ import '../fields/direct.js'
 import '../fields/enum.js'
 import '../fields/image.js'
 import '../fields/near-far.js'
+import '../fields/angle.js'
 
 import '../fields/extend-to-ground.js'
 
@@ -41,15 +42,13 @@ const template = `
     <v-col cols="12" class="py-0 px-4 advanced" v-if="advanced">
 
         <v-row>
-            <v-col cols="12" class="py-1">
-                <direct-field
-                    @input="inputHandler"
-                    :entity="entity"
-                    :feature="feature"
-                    :field="'disableDepthTestDistance'"
-                    :label="'Disable Depth Test Distance'">
-                </direct-field>
-            </v-col>
+            <direct-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="feature"
+                :field="'disableDepthTestDistance'"
+                :label="'Disable Depth Test Distance'">
+            </direct-field>
         </v-row>
 
         <v-row>
@@ -67,7 +66,7 @@ const template = `
         </v-row>
 
         <v-row>
-            <v-col cols="6" class="py-1 pl-0 ">
+            <v-col cols="6" class="py-1 pl-0">
                 <enum-field
                     @input="inputHandler"
                     :entity="entity"
@@ -89,14 +88,25 @@ const template = `
                 </direct-field>
             </v-col>
             <v-col cols="6" class="pt-4">
-                <direct-field
+                <angle-field
                     @input="inputHandler"
                     :entity="entity"
                     :feature="feature"
                     :field="'rotation'"
                     :label="'Rotation'">
-                </direct-field>
+                </angle-field>
             </v-col>
+        </v-row>
+        <v-row>
+            <checkbox-field
+                class="mb-0"
+                @input="inputHandler"
+                :entity="entity"
+                :feature="feature"
+                :field="'sizeInMeters'"
+                :label="'Size in meters'"
+            >
+            </checkbox-field>
         </v-row>
         <v-row>
             <v-col cols="12" class="py-1">
@@ -109,6 +119,26 @@ const template = `
                     :components="['x', 'y', 'z']"
                     :label="'Eye Offset'">
                 </components-field>
+            </v-col>
+        </v-row>
+        <v-row>
+            <color-field
+                @input="inputHandler"
+                :entity="entity"
+                :feature="feature"
+                :field="'color'"
+                :label="'Color'">
+            </color-field>
+        </v-row>
+        <v-row>
+            <v-col cols="12" class="py-1">
+                <near-far-scalar-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'translucencyByDistance'"
+                    :label="'Translucency By Distance'">
+                </near-far-scalar-field>
             </v-col>
         </v-row>
         <v-row>

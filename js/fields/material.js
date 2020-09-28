@@ -4,9 +4,9 @@ const template = `
 <div>
     <jscolor v-if="entity[feature][field]" id="colorThemeTextColor" v-model="value"></jscolor>
 
-    <button v-if="!entity[feature][field]" @click="setNew">
+    <v-btn small v-if="!entity[feature][field]" @click="setNew">
         Set new {{ label }}
-    </button>
+    </v-btn>
 
 </div>`;
 
@@ -46,8 +46,10 @@ Cesium.Color.prototype.toCssColorString = function () {
 };
 
 export function cesiumToCSSColor(c, asHEX = c.alpha === 1) {
-    console.log(c.toCssColorString());
-    return asHEX ? c.toCssHexString() : c.toCssColorString();
+    if (c) {
+        return asHEX ? c.toCssHexString() : c.toCssColorString();
+    }
+    return null;
 }
 
 export function rgbaToCesium(c) {
@@ -118,9 +120,15 @@ Vue.component('color-field', {
             },
             set(v){
                 // Synchronize values from local model data to Cesium
-                let val = rgbaToCesium(v);
-                this.entity[this.feature][this.field] = val;
-                this.$emit('input', val, this.field, this.feature, this.entity);
+                if (v === null || v === undefined) {
+                    let pd = Object.getOwnPropertyDescriptor(this.entity[this.feature].__proto__, this.field);
+                    pd.set.apply(this.entity[this.feature], [ undefined ]);
+                }
+                else {
+                    let val = rgbaToCesium(v);
+                    this.entity[this.feature][this.field] = val;
+                    this.$emit('input', val, this.field, this.feature, this.entity);
+                }
             }
         }
     },

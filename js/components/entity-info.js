@@ -59,7 +59,7 @@ const template = `
     <v-row v-if="entity">
         <position-editor :entity="entity"></position-editor>
     </v-row>
-    <v-row v-if="entity">
+    <v-row v-if="entity && entity.model">
         <orientation-editor :entity="entity"></orientation-editor>
     </v-row>
 </div>

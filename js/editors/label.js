@@ -6,18 +6,20 @@ import '../fields/material.js'
 
 const template = `
 <div class="editor label-editor">
-    <span class="editor-name">Label: </span>
-    <v-row>
-        <v-col cols="6" class="pb-2 pt-0">
-            <direct-field
-                @input="inputHandler"
-                :entity="entity"
-                :feature="feature"
-                :field="'text'"
-                :label="'Text'">
-            </direct-field>
-        </v-col>
-    </v-row>
+    <div class="py-1">
+        <span class="editor-name">Label: </span>
+        <v-row>
+            <v-col cols="6" class="pb-2 pt-0">
+                <direct-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'text'"
+                    :label="'Text'">
+                </direct-field>
+            </v-col>
+        </v-row>
+    </div>
 
     <extend-to-ground v-if="!entity.billboard"
         :entity="entity"></extend-to-ground>

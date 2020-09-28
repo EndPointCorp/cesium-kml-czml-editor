@@ -1,12 +1,12 @@
 const template = `
 <v-row>
-    <v-row>
+    <v-row style="margin-left: 0">
         {{ label }}
     </v-row>
     <template v-if="entity[feature][field]">
-        <v-row>
-            <v-col cols="3" class="px-0 py-1">Near</v-col>
-            <v-col cols="3" class="py-0">
+        <v-row style="margin-left: 0; margin-top: 10px;">
+            <v-col cols="2" class="px-0 py-1">Near</v-col>
+            <v-col cols="4" class="py-0">
                 <v-text-field
                     dense
                     hide-details
@@ -16,7 +16,7 @@ const template = `
                     @input="update();">
                 </v-text-field>
             </v-col>
-            <v-col cols="3" class="py-0">
+            <v-col cols="4" class="py-0">
                 <v-text-field
                     dense
                     hide-details
@@ -27,9 +27,9 @@ const template = `
                 </v-text-field>
             </v-col>
         </v-row>
-        <v-row>
-            <v-col cols="3" class="px-0 py-1">Far</v-col>
-            <v-col cols="3" class="py-0">
+        <v-row style="margin-left: 0; margin-top: 10px;">
+            <v-col cols="2" class="px-0 py-1">Far</v-col>
+            <v-col cols="4" class="py-0">
                 <v-text-field
                     dense
                     hide-details
@@ -39,7 +39,7 @@ const template = `
                     @input="update();">
                 </v-text-field>
             </v-col>
-            <v-col cols="3" class="py-0">
+            <v-col cols="4" class="py-0">
                 <v-text-field
                     dense
                     hide-details
@@ -54,6 +54,7 @@ const template = `
     <v-btn small v-if="!entity[feature][field]"
         v-on:click="newValue();">set new</v-btn>
     <v-btn small v-if="entity[feature][field]"
+        style="margin-top: 5px;"
         v-on:click="remove();">delete</v-btn>
 </v-row>
 `;

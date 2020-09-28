@@ -23,13 +23,13 @@ const template = `
         </v-text-field>
     </div>
 
-    <div v-if="nativeWidth && nativeHeight" class="mb-2">
+    <div v-if="nativeWidth && nativeHeight" class="mb-2" style="margin-top: 5px;">
         Image dimensions: {{nativeWidth}}, {{nativeHeight}}
 
         <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs"
-        v-on="on" v-if="nativeHeight > height * 0.9" @click="resize" small class="mx-2 white--text" color="blue-grey">
+        v-on="on" v-if="nativeHeight > height * 0.9" @click="resize" x-small class="mx-2 white--text" color="blue-grey">
             Resize
         </v-btn>
         </template>
