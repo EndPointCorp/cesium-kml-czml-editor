@@ -9,7 +9,7 @@ const template = `
     <div class="py-1">
         <span class="editor-name">Label: </span>
         <v-row>
-            <v-col cols="6" class="pb-2 pt-0">
+            <v-col cols="14" class="pb-2 pt-0" style="margin-top: 8px;">
                 <direct-field
                     @input="inputHandler"
                     :entity="entity"
@@ -28,21 +28,8 @@ const template = `
     <slot name="advancetoggle"></slot>
 
     <v-col cols="12" class="py-0 px-4 advanced" v-if="advanced">
-
         <v-row>
-            <v-col cols="12" class="py-1">
-                <color-field
-                    @input="inputHandler"
-                    :entity="entity"
-                    :feature="feature"
-                    :field="'fillColor'"
-                    :label="'Fill Color'">
-                </color-field>
-            </v-col>
-        </v-row>
-
-        <v-row>
-            <v-col cols="12" class="py-1">
+            <v-col cols="12" class="pb-2 pt-0" style="margin-left: -13px;">
                 <checkbox-field
                     @input="inputHandler"
                     :entity="entity"
@@ -54,7 +41,19 @@ const template = `
         </v-row>
 
         <v-row>
-            <v-col cols="12" class="py-1">
+            <v-col cols="12" class="py-1" style="margin-left: -13px;">
+                <color-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'fillColor'"
+                    :label="'Fill Color'">
+                </color-field>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="12" class="py-1" style="margin-left: -13px;">
                 <color-field
                     @input="inputHandler"
                     :entity="entity"
@@ -66,7 +65,7 @@ const template = `
         </v-row>
 
         <v-row>
-            <v-col cols="6" class="pb-2 pt-0">
+            <v-col cols="12" class="pb-2 pt-0" style="margin-left: -13px; margin-top: 8px;">
                 <enum-field
                     @input="inputHandler"
                     :entity="entity"
@@ -79,7 +78,7 @@ const template = `
         </v-row>
 
         <v-row>
-            <v-col cols="12" class="py-1">
+            <v-col cols="12" class="py-1" style="margin-left: -13px; margin-top: 8px;">
                 <color-field
                     @input="inputHandler"
                     :entity="entity"
@@ -91,19 +90,7 @@ const template = `
         </v-row>
 
         <v-row>
-            <v-col cols="12" class="py-1">
-                <direct-field
-                    @input="inputHandler"
-                    :entity="entity"
-                    :feature="feature"
-                    :field="'outlineWidth'"
-                    :label="'Outline Width'">
-                </direct-field>
-            </v-col>
-        </v-row>
-
-        <v-row>
-            <v-col cols="12" class="py-1">
+            <v-col cols="12" class="py-1" style="margin-left: -13px; margin-top: 8px;">
                 <direct-field
                     @input="inputHandler"
                     :entity="entity"
@@ -116,7 +103,19 @@ const template = `
         </v-row>
 
         <v-row>
-            <v-col cols="6" class="pb-2 pt-0">
+            <v-col cols="6" class="py-1" style="margin-left: -13px; margin-top: 8px;">
+                <direct-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'outlineWidth'"
+                    :label="'Outline Width'">
+                </direct-field>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="6" class="pb-2 pt-0" style="margin-left: -13px; margin-top: 8px;">
                 <direct-field
                     @input="inputHandler"
                     :entity="entity"
@@ -128,7 +127,7 @@ const template = `
         </v-row>
 
         <v-row>
-            <v-col cols="6" class="pb-2 pt-0">
+            <v-col cols="6" class="pb-2 pt-0" style="margin-left: -13px; margin-top: 8px;">
                 <enum-field
                     @input="inputHandler"
                     :entity="entity"
@@ -141,7 +140,7 @@ const template = `
         </v-row>
 
         <v-row>
-            <v-col cols="6" class="pb-2 pt-0">
+            <v-col cols="6" class="pb-2 pt-0" style="margin-left: -13px; margin-top: 8px;">
                 <enum-field
                     @input="inputHandler"
                     :entity="entity"
@@ -154,7 +153,7 @@ const template = `
         </v-row>
 
         <v-row>
-            <v-col cols="6" class="pb-2 pt-0">
+            <v-col cols="12" class="pb-2 pt-0">
                 <components-field
                     @input="inputHandler"
                     :entity="entity"
@@ -168,19 +167,7 @@ const template = `
         </v-row>
 
         <v-row>
-            <v-col cols="12" class="py-1">
-                <direct-field
-                    @input="inputHandler"
-                    :entity="entity"
-                    :feature="feature"
-                    :field="'disableDepthTestDistance'"
-                    :label="'Disable Depth Test Distance'">
-                </direct-field>
-            </v-col>
-        </v-row>
-
-        <v-row>
-            <v-col cols="6" class="pb-2 pt-0">
+            <v-col cols="12" class="pb-2 pt-0"  style="margin-left: 0;">
                 <near-far-scalar-field
                     @input="inputHandler"
                     :entity="entity"
@@ -188,6 +175,32 @@ const template = `
                     :field="'translucencyByDistance'"
                     :label="'Translucency By Distance'">
                 </near-far-scalar-field>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="12" class="py-1">
+                <components-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'distanceDisplayCondition'"
+                    :type="'DistanceDisplayCondition'"
+                    :components="['near', 'far']"
+                    :label="'Display Distance'">
+                </components-field>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="6" class="py-2" style="margin-left: -13px;">
+                <direct-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'disableDepthTestDistance'"
+                    :label="'Disable Depth Test Distance'">
+                </direct-field>
             </v-col>
         </v-row>
 

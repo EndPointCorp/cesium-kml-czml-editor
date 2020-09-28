@@ -163,6 +163,19 @@ const template = `
                 </near-far-scalar-field>
             </v-col>
         </v-row>
+        <v-row>
+            <v-col cols="12" class="py-1">
+                <components-field
+                    @input="inputHandler"
+                    :entity="entity"
+                    :feature="feature"
+                    :field="'distanceDisplayCondition'"
+                    :type="'DistanceDisplayCondition'"
+                    :components="['near', 'far']"
+                    :label="'Display Distance'">
+                </components-field>
+            </v-col>
+        </v-row>
     </v-col>
 </div>
 `;
