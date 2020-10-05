@@ -77,6 +77,9 @@ Vue.component('image-field', {
         if (url.url) {
             url = url.url;
         }
+        if (url instanceof HTMLCanvasElement) {
+            url = url.toDataURL();
+        }
 
         return {
             imgUrl: url,

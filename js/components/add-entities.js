@@ -44,7 +44,47 @@ const template = `
         </v-card-text>
     </v-row>
 
+    <v-row align="center" class="mx-2">
+        <v-col cols="12">
+            <v-btn small @click="addPolyline" v-if="!polylineInput">
+            Add Polyline
+            </v-btn>
+        </v-col>
+        <v-col cols="6" v-if="polylineInput">
+            <v-btn small @click="savePolyline">
+            Save
+            </v-btn>
+        </v-col>
+        <v-col cols="6" v-if="polylineInput">
+            <v-btn small @click="cancelPolyline">
+            Cancel
+            </v-btn>
+        </v-col>
+        <v-card-text v-if="polylineInput">
+            Click on map to add points to polyline
+        </v-card-text>
+    </v-row>
 
+    <v-row align="center" class="mx-2">
+        <v-col cols="12">
+            <v-btn small @click="addPolygon" v-if="!polygonInput">
+            Add Polygon
+            </v-btn>
+        </v-col>
+        <v-col cols="6" v-if="polygonInput">
+            <v-btn small @click="savePolygon">
+            Save
+            </v-btn>
+        </v-col>
+        <v-col cols="6" v-if="polygonInput">
+            <v-btn small @click="cancelPolygon">
+            Cancel
+            </v-btn>
+        </v-col>
+        <v-card-text v-if="polygonInput">
+            Click on map to add points to polygon
+        </v-card-text>
+    </v-row>
 
     <v-row align="center" class="mx-2">
         <v-col cols="12" class="pb-0">
@@ -110,6 +150,10 @@ Vue.component('add-entities', {
             hex: true,
             labelText: 'Label 1',
             labelInput: false,
+            polylineInput: false,
+            polylineE: false,
+            polygonInput: false,
+            polygonE: false,
             theme_text_color: '#000000'
         };
     },
@@ -130,7 +174,32 @@ Vue.component('add-entities', {
     methods: {
         addPin: function () {
             this.billboardInput = true;
-
+        },
+        addPolyline: function() {
+            this.polylineInput = true;
+        },
+        savePolyline: function() {
+            this.polylineInput = false;
+            this.$emit('newentity', this.polylineE);
+            this.polylineE = undefined;
+        },
+        cancelPolyline: function() {
+            this.polylineInput = false;
+            viewer.entities.remove(this.polylineE);
+            this.polylineE = undefined;
+        },
+        addPolygon: function() {
+            this.polygonInput = true;
+        },
+        savePolygon: function() {
+            this.polygonInput = false;
+            this.$emit('newentity', this.polygonE);
+            this.polygonE = undefined;
+        },
+        cancelPolygon: function() {
+            this.polygonInput = false;
+            viewer.entities.remove(this.polygonE);
+            this.polygonE = undefined;
         },
         addLabel: function() {
             this.labelInput = true;
@@ -155,6 +224,50 @@ Vue.component('add-entities', {
                 });
 
                 this.$emit('newentity', entity);
+            }
+            else if (this.polylineInput) {
+                let position = viewer.camera.pickEllipsoid(
+                    event.position,
+                    viewer.scene.globe.ellipsoid);
+                if (this.polylineE) {
+                    this.polylineE.polyline.positions = [
+                        ...this.polylineE.polyline.positions.getValue(),
+                        position
+                    ];
+                }
+                else {
+                    this.polylineE = viewer.entities.add({
+                        polyline: {
+                            positions: [position],
+                            clampToGround: true,
+                            width: 3
+                        }
+                    });
+                }
+            }
+            else if (this.polygonInput) {
+                let position = viewer.camera.pickEllipsoid(
+                    event.position,
+                    viewer.scene.globe.ellipsoid);
+                if (this.polygonE) {
+                    this.polygonE.polygon.hierarchy = {
+                        positions: [
+                            ...this.polygonE.polygon.hierarchy.getValue().positions,
+                            position
+                        ]
+                    };
+
+                }
+                else {
+                    this.polygonE = viewer.entities.add({
+                        polygon: {
+                            hierarchy: {
+                                positions: [position]
+                            },
+                            fill: true
+                        }
+                    });
+                }
             }
             else if (this.model) {
                 let position = viewer.camera.pickEllipsoid(

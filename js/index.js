@@ -129,8 +129,10 @@ const editor = new Vue({
             this.selectEntity(entity);
         },
         updateHandler: function(value, field, feature) {
-            this.changes[field] = value;
-            this.copyType = feature;
+            this.changes[field] = {
+                value: value,
+                feature: feature
+            };
         },
         flyToEntity: function() {
             if (this.entity) {

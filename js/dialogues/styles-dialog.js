@@ -73,7 +73,7 @@ const template = `
                                 </v-list-item-action>
                                 <v-list-item-content>
                                     <v-list-item-title v-text="property"></v-list-item-title>
-                                    <v-list-item-title v-text="value"></v-list-item-title>
+                                    <v-list-item-title v-html="preview(property, value)"></v-list-item-title>
                                 </v-list-item-content>
                                 </template>
                             </v-list-item>
@@ -100,6 +100,105 @@ export function applyProperties(src, dst, properties) {
     });
 }
 
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function image(v) {
+    return {
+        text: "" + v,
+        html: `<img style="max-width: 25px; max-height: 25px; width: auto; height: auto;" src="${v}"></img>`
+    };
+}
+
+function direct(v) {
+    return {
+        text: "" + v
+    };
+}
+
+function cartesian2(v) {
+    return {
+        text: "" + v
+    };
+}
+
+function cartesian3(v) {
+    // TODO
+    return {
+        text: "" + v
+    };
+}
+
+function getEnum(enm) {
+    return function(v) {
+        return {
+            text: Object.keys(enm)[v]
+        };
+    }
+}
+
+function color(v) {
+    let rgb = [
+        Math.floor(v.red * 255),
+        Math.floor(v.green * 255),
+        Math.floor(v.blue * 255)];
+    let hexColor = rgbToHex(rgb[0], rgb[1], rgb[2]);
+    return {
+        text: "" + v,
+        html: `<span style="display: inline-block;
+                            width: 10px;
+                            height: 10px;
+                            vertical-align: middle;
+                            background-color:rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]});"
+                >
+                    &nbsp;
+                </span>
+                &nbsp;${hexColor}`
+    }
+}
+
+function boolean(v) {
+    return v ? 'True': 'False';
+}
+
+function nearFarScalar(v) {
+    // TODO
+    return "" + v;
+}
+
+function distanceDisplayCondition(v) {
+    // TODO
+    return "" + v;
+}
+
+const meta = {
+    billboard: {
+        image: image,
+        scale: direct,
+        pixelOffset: cartesian2,
+        eyeOffset: cartesian3,
+        horizontalOrigin: getEnum(Cesium.HorizontalOrigin),
+        verticalOrigin: getEnum(Cesium.VerticalOrigin),
+        heightReference: getEnum(Cesium.HeightReference),
+        color: color,
+        rotation: direct,
+        sizeInMeters: boolean,
+        width: direct,
+        height: direct,
+        scaleByDistance: nearFarScalar,
+        translucencyByDistance: nearFarScalar,
+        pixelOffsetScaleByDistance: nearFarScalar,
+        distanceDisplayCondition: distanceDisplayCondition,
+        disableDepthTestDistance: direct
+    }
+};
+
 Vue.component('styles-dialog-container', {
     template: template,
     props: ['entity', 'entities', 'changes'],
@@ -121,19 +220,34 @@ Vue.component('styles-dialog-container', {
                 else if (this.entity.polygon) {
                     this.featureType = 'polygon';
                 }
+                else if (this.entity.polyline) {
+                    this.featureType = 'polyline';
+                }
+                else if (this.entity.label) {
+                    this.featureType = 'label';
+                }
+                else if (this.entity.rectangle) {
+                    this.featureType = 'rectangle';
+                }
                 this.selectedEntities = this.applicableEntities.map((_, i) => i);
                 this.selectedProperties = Object.keys(this.changes).map((_, i) => i);
             }
         }
     },
     computed: {
-        applicableEntities() {
+        applicableEntities: function() {
             return this.entities.filter(e => e[this.featureType]);
         }
     },
     methods: {
         cancel: function () {
             this.dialog = false;
+        },
+        preview: function(property, value) {
+            let feature = this.changes[property].feature;
+            let prev = meta[feature] && meta[feature][property];
+            let preview = prev ? prev(this.changes[property].value) : this.changes[property].value;
+            return preview.html || `<span v-bind:text="${preview.text}"></span>`;
         },
         submit: function () {
             let changesKeys = Object.keys(this.changes);
