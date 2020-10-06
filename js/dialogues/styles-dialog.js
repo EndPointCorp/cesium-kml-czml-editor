@@ -41,7 +41,7 @@ const template = `
                             <v-list-item>
                                 <template v-slot:default="{ active, toggle }">
                                     <v-list-item-action>
-                                    <v-checkbox color="primary" @click="toggle" v-model="active"></v-checkbox>
+                                    <v-checkbox color="primary" @click.self="toggle" v-model="active"></v-checkbox>
                                     </v-list-item-action>
                                     <v-list-item-content>
                                     <v-list-item-title v-text="entity.name"></v-list-item-title>
@@ -69,7 +69,7 @@ const template = `
                             <v-list-item>
                             <template v-slot:default="{ active, toggle }">
                                 <v-list-item-action>
-                                <v-checkbox color="primary" @click="toggle" v-model="active"></v-checkbox>
+                                <v-checkbox color="primary" @click.self="toggle" v-model="active"></v-checkbox>
                                 </v-list-item-action>
                                 <v-list-item-content>
                                     <v-list-item-title v-text="property"></v-list-item-title>

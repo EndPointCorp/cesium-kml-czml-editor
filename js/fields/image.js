@@ -125,12 +125,10 @@ Vue.component('image-field', {
         upload(dataUrl) {
             this.entity[this.feature][this.field] = dataUrl;
             this.imgUrl = dataUrl;
-            this.dataUrl = true;
             this.$emit('input', dataUrl, this.field, this.feature, this.entity);
         },
         handleUpdate() {
             this.entity[this.feature][this.field] = dataUrl;
-            this.dataUrl = /^data:/.test(this.imgUrl)
         },
         resize() {
 
