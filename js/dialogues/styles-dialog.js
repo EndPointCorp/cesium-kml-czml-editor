@@ -116,30 +116,17 @@ function image(v) {
     };
 }
 
-function direct(v) {
-    return {
-        text: "" + v
-    };
-}
-
 function cartesian2(v) {
-    return {
-        text: "" + v
-    };
+    return "" + v;
 }
 
 function cartesian3(v) {
-    // TODO
-    return {
-        text: "" + v
-    };
+    return "" + v;
 }
 
 function getEnum(enm) {
     return function(v) {
-        return {
-            text: Object.keys(enm)[v]
-        };
+        return Object.keys(enm)[v];
     }
 }
 
@@ -167,35 +154,66 @@ function boolean(v) {
     return v ? 'True': 'False';
 }
 
-function nearFarScalar(v) {
+function material(v) {
     // TODO
+    return "" + v;
+}
+
+function nearFarScalar(v) {
     return "" + v;
 }
 
 function distanceDisplayCondition(v) {
-    // TODO
     return "" + v;
 }
 
+function escapeHTML(text) {
+    let p = document.createElement('p');
+    p.innerText = text;
+    return p.innerHTML;
+}
+
 const meta = {
-    billboard: {
-        image: image,
-        scale: direct,
-        pixelOffset: cartesian2,
-        eyeOffset: cartesian3,
+    defaults: {
+        color: color,
+        fill: boolean,
+        outline: boolean,
+        outlineColor: color,
+        material: material,
         horizontalOrigin: getEnum(Cesium.HorizontalOrigin),
         verticalOrigin: getEnum(Cesium.VerticalOrigin),
         heightReference: getEnum(Cesium.HeightReference),
-        color: color,
-        rotation: direct,
-        sizeInMeters: boolean,
-        width: direct,
-        height: direct,
+        extrudedHeightReference: getEnum(Cesium.HeightReference),
         scaleByDistance: nearFarScalar,
         translucencyByDistance: nearFarScalar,
+        pixelOffset: cartesian2,
+        eyeOffset: cartesian3,
         pixelOffsetScaleByDistance: nearFarScalar,
         distanceDisplayCondition: distanceDisplayCondition,
-        disableDepthTestDistance: direct
+        classificationType: getEnum(Cesium.ClassificationType)
+    },
+    billboard: {
+        image: image,
+        sizeInMeters: boolean,
+    },
+    label: {
+        fillColor: color,
+        backgroundColor: color,
+        showBackground: boolean,
+        style: getEnum(Cesium.LabelStyle),
+    },
+    model: {
+        colorBlendMode: getEnum(Cesium.ColorBlendMode),
+        silhouetteColor: color
+    },
+    polygon: {
+        closeTop: boolean,
+        closeBottom: boolean,
+        perPositionHeight: boolean,
+
+    },
+    polyline: {
+        clampToGround: boolean,
     }
 };
 
@@ -245,9 +263,14 @@ Vue.component('styles-dialog-container', {
         },
         preview: function(property, value) {
             let feature = this.changes[property].feature;
-            let prev = meta[feature] && meta[feature][property];
+            let prev = (meta[feature] && meta[feature][property]) || meta['defaults'][property];
             let preview = prev ? prev(this.changes[property].value) : this.changes[property].value;
-            return preview.html || `<span v-bind:text="${preview.text}"></span>`;
+
+            if (typeof preview === 'string') {
+                return escapeHTML(preview);
+            }
+
+            return preview.html || escapeHTML(preview);
         },
         submit: function () {
             let changesKeys = Object.keys(this.changes);

@@ -107,6 +107,7 @@ const editor = new Vue({
         return {
             czml: null,
             filename: null,
+            loadedFromFile: false,
             entities: [],
             entity: null,
             advanced: false,
@@ -188,6 +189,7 @@ function handleFileSelect(evt) {
 
 function loadFile(file) {
     editor.filename = file.name.replace('.kml', '.czml').replace('.kmz', '.czml');
+    editor.loadedFromFile = true;
 
     console.log('load', file);
 

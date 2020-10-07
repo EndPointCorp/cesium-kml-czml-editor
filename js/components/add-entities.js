@@ -5,124 +5,131 @@ const template = `
 <v-card color="grey lighten-1" flat class="mb-1">
     <v-toolbar dense flat dark color="black">
         <v-toolbar-title>Create</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="maximized = !maximized">
+            <v-icon v-if="maximized">mdi-chevron-up</v-icon>
+            <v-icon v-if="!maximized">mdi-chevron-down</v-icon>
+        </v-btn>
     </v-toolbar>
 
-    <v-row class="mx-2">
-        <v-col cols="2" class="pt-5">
-            <v-img :src="defaultImage" :contain="true" :width="24" :height="24"></v-img>
-        </v-col>
-        <v-col cols="5" class="pt-0">
-            <v-switch hide-details class="v-input--reverse" label="Edit Icon" v-model="defaultIconEdit"></v-switch>
-        </v-col>
-        <v-col cols="4" class="pt-4">
-            <v-btn small @click="$refs.uploadimg.click()" small class="white--text" color="blue-grey">Upload Icon</v-btn>
-                <input v-show="false" type="file" ref="uploadimg"
-                    class="input-file" accept=".png, .jpg, .jpeg, .bmp"
-                    @change="fileChangeEvent($event)"
-                ></input>
-            </v-btn>
-        </v-col>
-    </v-row>
+    <v-expansion-panel v-if="maximized">
+        <v-row class="mx-2">
+            <v-col cols="2" class="pt-5">
+                <v-img :src="defaultImage" :contain="true" :width="24" :height="24"></v-img>
+            </v-col>
+            <v-col cols="5" class="pt-0">
+                <v-switch hide-details class="v-input--reverse" label="Edit Icon" v-model="defaultIconEdit"></v-switch>
+            </v-col>
+            <v-col cols="4" class="pt-4">
+                <v-btn small @click="$refs.uploadimg.click()" small class="white--text" color="blue-grey">Upload Icon</v-btn>
+                    <input v-show="false" type="file" ref="uploadimg"
+                        class="input-file" accept=".png, .jpg, .jpeg, .bmp"
+                        @change="fileChangeEvent($event)"
+                    ></input>
+                </v-btn>
+            </v-col>
+        </v-row>
 
-    <v-row v-if="defaultIconEdit" class="mx-2 ml-8 mb-3">
-        <v-text-field v-model="pinSize" dense type="number" label="Pin Size">
-        </v-text-field>
-        <v-text-field v-model="pinText" dense label="Pin Text">
-        </v-text-field>
-
-        <jscolor id="colorThemeTextColor" v-model="colorSwitchValue"></jscolor>
-    </v-row>
-
-    <v-row align="center" class="mx-2">
-        <v-col cols="12">
-            <v-btn small @click="addPin" v-if="!billboardInput">
-            Add Pin
-            </v-btn>
-        </v-col>
-        <v-card-text v-if="billboardInput">
-            Click on map to add a new Pin with default icon
-        </v-card-text>
-    </v-row>
-
-    <v-row align="center" class="mx-2">
-        <v-col cols="12">
-            <v-btn small @click="addPolyline" v-if="!polylineInput">
-            Add Polyline
-            </v-btn>
-        </v-col>
-        <v-col cols="6" v-if="polylineInput">
-            <v-btn small @click="savePolyline">
-            Save
-            </v-btn>
-        </v-col>
-        <v-col cols="6" v-if="polylineInput">
-            <v-btn small @click="cancelPolyline">
-            Cancel
-            </v-btn>
-        </v-col>
-        <v-card-text v-if="polylineInput">
-            Click on map to add points to polyline
-        </v-card-text>
-    </v-row>
-
-    <v-row align="center" class="mx-2">
-        <v-col cols="12">
-            <v-btn small @click="addPolygon" v-if="!polygonInput">
-            Add Polygon
-            </v-btn>
-        </v-col>
-        <v-col cols="6" v-if="polygonInput">
-            <v-btn small @click="savePolygon">
-            Save
-            </v-btn>
-        </v-col>
-        <v-col cols="6" v-if="polygonInput">
-            <v-btn small @click="cancelPolygon">
-            Cancel
-            </v-btn>
-        </v-col>
-        <v-card-text v-if="polygonInput">
-            Click on map to add points to polygon
-        </v-card-text>
-    </v-row>
-
-    <v-row align="center" class="mx-2">
-        <v-col cols="12" class="pb-0">
-            <v-text-field v-model="labelText" hide-details dense label="Label Text">
+        <v-row v-if="maximized && defaultIconEdit" class="mx-2 ml-8 mb-3">
+            <v-text-field v-model="pinSize" dense type="number" label="Pin Size">
             </v-text-field>
-        </v-col>
-        <v-col cols="12" v-if="!labelInput" class="pt-1">
-            <v-btn small @click="addLabel">
-            Add Label
-            </v-btn>
-        </v-col>
-        <v-card-text v-if="labelInput">
-            Click on map to add a new Label
+            <v-text-field v-model="pinText" dense label="Pin Text">
+            </v-text-field>
+
+            <jscolor id="colorThemeTextColor" v-model="colorSwitchValue"></jscolor>
+        </v-row>
+
+        <v-row align="center" class="mx-2" >
+            <v-col cols="12">
+                <v-btn small @click="addPin" v-if="!billboardInput">
+                Add Pin
+                </v-btn>
+            </v-col>
+            <v-card-text v-if="billboardInput">
+                Click on map to add a new Pin with default icon
+            </v-card-text>
+        </v-row>
+
+        <v-row align="center" class="mx-2" >
+            <v-col cols="12">
+                <v-btn small @click="addPolyline" v-if="!polylineInput">
+                Add Polyline
+                </v-btn>
+            </v-col>
+            <v-col cols="6" v-if="polylineInput">
+                <v-btn small @click="savePolyline">
+                Save
+                </v-btn>
+            </v-col>
+            <v-col cols="6" v-if="polylineInput">
+                <v-btn small @click="cancelPolyline">
+                Cancel
+                </v-btn>
+            </v-col>
+            <v-card-text v-if="polylineInput">
+                Click on map to add points to polyline
+            </v-card-text>
+        </v-row>
+
+        <v-row align="center" class="mx-2" >
+            <v-col cols="12">
+                <v-btn small @click="addPolygon" v-if="!polygonInput">
+                Add Polygon
+                </v-btn>
+            </v-col>
+            <v-col cols="6" v-if="polygonInput">
+                <v-btn small @click="savePolygon">
+                Save
+                </v-btn>
+            </v-col>
+            <v-col cols="6" v-if="polygonInput">
+                <v-btn small @click="cancelPolygon">
+                Cancel
+                </v-btn>
+            </v-col>
+            <v-card-text v-if="polygonInput">
+                Click on map to add points to polygon
+            </v-card-text>
+        </v-row>
+
+        <v-row align="center" class="mx-2">
+            <v-col cols="12" class="pb-0">
+                <v-text-field v-model="labelText" hide-details dense label="Label Text">
+                </v-text-field>
+            </v-col>
+            <v-col cols="12" v-if="!labelInput" class="pt-1">
+                <v-btn small @click="addLabel">
+                Add Label
+                </v-btn>
+            </v-col>
+            <v-card-text v-if="labelInput">
+                Click on map to add a new Label
+            </v-card-text>
+        </v-row>
+
+        <v-row align="center" class="mx-2">
+            <v-col cols="12">
+                <tileset-dialog-container
+                    @addtileset="addTileset"
+                    @deletetileset="deleteTileset">
+                </tileset-dialog-container>
+            </v-col>
+        </v-row>
+
+        <v-row align="center" class="mx-2">
+            <v-col cols="12">
+                <v-btn v-if="!model" small @click="$refs.uploadmodel.click()" small class="mb-2">Add model</v-btn>
+            </v-col>
+        </v-row>
+
+        <input v-show="false" type="file" ref="uploadmodel"
+            class="input-file" accept=".glb"
+            @change="uploadModelFile($event)"
+        ></input>
+        <v-card-text v-if="model">
+            Click on map set model position
         </v-card-text>
-    </v-row>
-
-    <v-row align="center" class="mx-2">
-        <v-col cols="12">
-            <tileset-dialog-container
-                @addtileset="addTileset"
-                @deletetileset="deleteTileset">
-            </tileset-dialog-container>
-        </v-col>
-    </v-row>
-
-    <v-row align="center" class="mx-2">
-        <v-col cols="12">
-            <v-btn v-if="!model" small @click="$refs.uploadmodel.click()" small class="mb-2">Add model</v-btn>
-        </v-col>
-    </v-row>
-
-    <input v-show="false" type="file" ref="uploadmodel"
-        class="input-file" accept=".glb"
-        @change="uploadModelFile($event)"
-    ></input>
-    <v-card-text v-if="model">
-        Click on map set model position
-    </v-card-text>
+    </v-expansion-panel>
 </v-card>
 `;
 
@@ -135,6 +142,7 @@ function createScreenSpaceEventHandler() {
 
 Vue.component('add-entities', {
     template,
+    props: ['kmlloaded'],
     data: function () {
         let pinBuilder = new Cesium.PinBuilder();
         let color = Cesium.Color.fromCssColorString('#006A4D');
@@ -154,7 +162,8 @@ Vue.component('add-entities', {
             polylineE: false,
             polygonInput: false,
             polygonE: false,
-            theme_text_color: '#000000'
+            theme_text_color: '#000000',
+            maximized: true
         };
     },
     watch: {
@@ -163,6 +172,11 @@ Vue.component('add-entities', {
         },
         pinText: function (pinText) {
             this.updateDefaultBillboard(this.colorSwitchValue, this.pinSize, pinText);
+        },
+        kmlloaded: function (loaded) {
+            if (loaded) {
+                this.maximized = false;
+            }
         }
     },
     created: function () {
