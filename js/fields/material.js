@@ -2,7 +2,7 @@ import '../lib/JsColor.js'
 
 const template = `
 <div>
-    <jscolor v-if="entity[feature][field]" id="colorThemeTextColor" v-model="value"></jscolor>
+    <jscolor v-if="entity[feature][field]" v-model="value"></jscolor>
 
     <v-btn small v-if="!entity[feature][field]" @click="setNew">
         Set new {{ label }}
@@ -92,17 +92,6 @@ Vue.component('material-field', {
         setNew: function() {
             this.entity[this.feature][this.field] = new Cesium.ColorMaterialProperty();
             this.value = cesiumToCSSColor(Cesium.Color.WHITE);
-        }
-    },
-    watch: {
-        entity: function(newValue) {
-            this.value = null;
-            if (newValue[this.feature][this.field]) {
-                let material = newValue[this.feature][this.field].getValue();
-                if (material) {
-                    this.value = cesiumToCSSColor(material.color);
-                }
-            }
         }
     },
     template: template
