@@ -160,6 +160,7 @@ Vue.component('add-entities', {
             labelInput: false,
             polylineInput: false,
             polylineE: false,
+            controlPoints:[],
             polygonInput: false,
             polygonE: false,
             theme_text_color: '#000000',
@@ -243,6 +244,15 @@ Vue.component('add-entities', {
                 let position = viewer.camera.pickEllipsoid(
                     event.position,
                     viewer.scene.globe.ellipsoid);
+
+                this.controlPoints.push(viewer.entities.add({
+                    position: position,
+                    point: {
+                        pixelSize: 6,
+                        color: Cesium.Color.RED
+                    }
+                }));
+
                 if (this.polylineE) {
                     this.polylineE.polyline.positions = [
                         ...this.polylineE.polyline.positions.getValue(),
@@ -270,7 +280,6 @@ Vue.component('add-entities', {
                             position
                         ]
                     };
-
                 }
                 else {
                     this.polygonE = viewer.entities.add({
