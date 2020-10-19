@@ -113,7 +113,7 @@ function resourceEncoder(ref) {
     const id = this && this.id;
     return (resource) => {
         if (resource instanceof Cesium.ReferenceProperty) {
-            return `${resource.targetId}#${url.targetPropertyNames.join('.')}`;
+            return `${resource.targetId}#${resource.targetPropertyNames.join('.')}`;
         }
         let url = resource.url || resource;
         let isDataURL = resource.isDataURL || /^data:/.test(url);
