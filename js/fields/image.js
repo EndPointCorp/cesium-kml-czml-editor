@@ -131,7 +131,18 @@ Vue.component('image-field', {
             this.entity[this.feature][this.field] = dataUrl;
         },
         resize() {
+            const i = new Image();
+            i.src = this.imgUrl;
 
+            var oc = document.createElement('canvas'),
+            octx = oc.getContext('2d');
+
+            oc.width = this.width;
+            oc.height = this.height;
+            octx.drawImage(i, 0, 0, oc.width, oc.height);
+
+            this.imgUrl = oc.toDataURL();
+            this.entity[this.feature][this.field] = this.imgUrl;
         },
         updateSize(...args) {
             let w = this.entity[this.feature]['width'].valueOf();
