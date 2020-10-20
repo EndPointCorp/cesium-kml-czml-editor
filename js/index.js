@@ -199,7 +199,22 @@ function loadFile(file) {
     else if (/\.czml/.test(file.name)) {
         const reader = new FileReader();
         reader.onload = function() {
-            loadDataSourcePromise(Cesium.CzmlDataSource.load(JSON.parse(reader.result)));
+            let czmljson = JSON.parse(reader.result);
+            // Sanitize references
+            let selfRefs = 0;
+            czmljson.forEach(packet => {
+                if (packet.billboard && packet.billboard.image && packet.billboard.image.reference) {
+                    if (packet.billboard.image.reference.split('#')[0] === packet.id) {
+                        console.warn('Self-referencing reference for billboard image', packet);
+                        let pb = new Cesium.PinBuilder();
+                        packet.billboard.image = pb.fromText(
+                            "" + ++selfRefs,
+                            Cesium.Color.fromRandom({"alpha": 1.0}),
+                            32).toDataURL();
+                    }
+                }
+            });
+            loadDataSourcePromise(Cesium.CzmlDataSource.load(czmljson));
         };
         reader.readAsText(file);
     }
