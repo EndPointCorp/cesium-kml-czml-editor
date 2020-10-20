@@ -12,6 +12,12 @@ const template = `
         ></input>
         </v-col>
     </v-row>
+    <div v-if="referenceId">
+        This field is a reference of billboard image of another Entity.
+        <v-btn small class="mx-2 white--text" color="blue-grey" @click="findReferenced">
+            Select Reference Entity
+        </v-btn>
+    </div>
     <div v-if="!dataUrl">
         <v-text-field
             dense
@@ -73,9 +79,10 @@ Vue.component('image-field', {
             h = this.entity[this.feature]['height'].valueOf();
         }
 
-
+        let referenceId = null;
         let url = this.entity[this.feature][this.field].valueOf();
         if (url instanceof Cesium.ReferenceProperty) {
+            referenceId = url.targetId;
             url = url.resolvedProperty.valueOf();
         }
         if (url.url) {
@@ -91,6 +98,7 @@ Vue.component('image-field', {
             height: h,
             nativeWidth: null,
             nativeHeight: null,
+            referenceId: referenceId
         }
     },
     template: template,
@@ -116,6 +124,20 @@ Vue.component('image-field', {
                 self.nativeHeight = i.height;
             };
             i.src = url;
+        },
+        findReferenced() {
+            let ent = viewer.entities.getById(this.referenceId);
+            if (!ent) {
+                for (let i = 0; i < viewer.dataSources.length; i++) {
+                    ent = viewer.dataSources.get(i).entities.getById(this.referenceId);
+                    if (ent) {
+                        break;
+                    }
+                }
+            }
+            if (ent) {
+                viewer.selectedEntity = ent;
+            }
         },
         fileChangeEvent(evnt) {
             const self = this;
