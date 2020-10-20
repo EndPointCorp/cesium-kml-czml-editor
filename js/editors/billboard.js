@@ -12,7 +12,7 @@ const template = `
 <div class="editor billboard-editor">
     <div class="py-1">
         <span class="editor-name">Billboard: </span>
-        <image-field
+        <image-field :key="entity.id"
             @input="inputHandler"
             :entity="entity"
             :feature="feature"
