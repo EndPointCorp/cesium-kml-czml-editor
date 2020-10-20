@@ -108,7 +108,7 @@ function throughCache(url, resourceCache, ref) {
     return url;
 }
 
-function resourceEncoder(ref) {
+function _resourceEncoder(ref) {
     const resourceCache = this && this.resourceCache;
     const id = this && this.id;
     return (resource) => {
@@ -123,6 +123,8 @@ function resourceEncoder(ref) {
         return url;
     }
 }
+
+var resourceEncoder = _resourceEncoder;
 
 function enumEncoder(enm) {
     return (v) => {
@@ -219,7 +221,11 @@ function encodeArticulations(v) {
 function writeBillboard(billboard) {
     const result = {};
 
-    writeConstantProperty(billboard.image, result, 'image', resourceEncoder('billboard.image'));
+    var image = billboard.image;
+    if (billboard.image.valueOf() instanceof Cesium.ReferenceProperty) {
+        image = billboard.image.valueOf().resolvedProperty;
+    }
+    writeConstantProperty(image, result, 'image', resourceEncoder('billboard.image'));
     writeConstantProperty(billboard.scale, result, 'scale');
     writeConstantProperty(billboard.pixelOffset, result, 'pixelOffset', encodeCartesian2);
     writeConstantProperty(billboard.eyeOffset, result, 'eyeOffset', encodeCartesian3);
@@ -449,7 +455,7 @@ export default class DocumentWriter {
             }
         }
 
-        resourceEncoder = resourceEncoder.bind(this);
+        resourceEncoder = _resourceEncoder.bind(this);
 
         if (entity.billboard) {
             packet.billboard = writeBillboard(entity.billboard);

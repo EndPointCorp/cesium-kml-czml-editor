@@ -73,7 +73,11 @@ Vue.component('image-field', {
             h = this.entity[this.feature]['height'].valueOf();
         }
 
+
         let url = this.entity[this.feature][this.field].valueOf();
+        if (url instanceof Cesium.ReferenceProperty) {
+            url = url.resolvedProperty.valueOf();
+        }
         if (url.url) {
             url = url.url;
         }
