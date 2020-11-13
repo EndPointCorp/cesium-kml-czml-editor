@@ -1,6 +1,27 @@
 import { cesiumToCSSColor, rgbaToCesium } from '../fields/material.js'
 import '../lib/JsColor.js'
 
+const WHITE_CIRCLE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAC4jAAAuIw" +
+"F4pT92AAAF90lEQVR4Xu2bS4/jRBSFb/N+jEDADAjEIgKJYcWS/79mOStAAmUxAgHdIJB4gxp/qTrJrfJ1bCf2tJ3hSDV2exK7zrmPKtetmD3" +
+"luKovzI3b29v79bUaV1dX1/W1uTCrAI7sW+5yrwANvAA3/DOXKJMLUJHWuY6vNe3NfH4MPzbtl3wu4hwnF2MyATJxWZpzmgi/n6+/2rTX8zl4" +
+"2Z3/7s5/btqv+fyxHQSBuMjfTCHEc/WFsQgsTttYIi3CEEWMl/I18EI+evyVj5D/wxLp9+wgCGJsLYvQPHv34XOEOEsAZ/WaOJ1+xw6EIcuR57"+
+"1iyfOetTb+bRqsfmvaP5ZII4oE4b7c3wtxjRCninByCDQPfWjdxBEF0lgf4pB90dLznrd+/G1JiD8tiYIAeAFikAe+a9o3VgnRiPAFXx6D0R5" +
+"QWf2Dpn1iJfE3LN1XLj+EcA19R2GCiNyPkOD+PIfnySMe8aEcEqNywygBHPmP7WD1D5v2tqWOYfFziHeBe9G4L6FAvxGHv5VISbbbpn0+JiQG" +
+"CxCQJwQ+ytce2DzEa3gheJ5CjHMlVzBYhEECBOQ/teSC71rqBAJEWX0uSAjyCtCz/RA7SIReAXrIE4MoP6fVjwHihJ+3Pv0TekXoFcCWS17g+" +
+"fSD/giFCFZOrQscFcANdRtLMe/J37Oe7z9BIAL98SLQX6B5QjhEdhLIrq+hjmxPwvOW7/zuHYH+1J7A/IFpNHzC4TEkUY31jPMMdfytrHvXbt" +
+"8FhQP9ZNJEv8HuPSLKB6EAGXJ9FCXRkOlpSyUv0D/6CfAAXrI25t4mPZ6pL1TWx/WJeyY5jLVPcqg7B/ST/tJv+g+PHa/Mb4/IA0R+Y8n6cn0" +
+"mH2sC/VUowGNj5drCDoUHOHUi6y/d9WvQ38gLPM92CFjb+njJ2qwv0G/6Dw95QRECtQB17CuW1mZ9QV4AjyIX6AN7Ady4rxcLxdBarS94Hnpx" +
+"uq8wqD0A8Fqp8X7JY/5QaG6g+UGxKOsF8O7POzZuEy1brRHwgA+8ijCIPAAoDPS6uXbAQ+5foBbAxz/Z8+Q1w4UBHhrNCiF2EyGXAH38s3q79" +
+"vgX4AEfnwdIhDe1B3hcivWFkE+XAJeUAAUlwgKRAL5cdYko+EUCPFX4X4D6gpVV2ktEwS8SAPAOTU3ukgAfeBXoEgCk2vPlIOSzEyAvFNJYQV" +
+"UtnhI1VdpLADzgoyozPKkmX9cewOqpavHU50PVVgh4wAde8NP2m84QkBDU5y8B8CiIC14AlowJg8eWMuUlJUIlQHjBb79EHnmAzwO0tecB+i8" +
+"uiv899gK4ROjzAF/guGZ4HgqDXQLkP2sP8GHAPhzchi+s1QvoN/2HB3wK9we1AIAPbC1tQuKDyp5rhEYzeMBna1WpvBDAFQ69F/xk6/QCWZ/+" +
+"e+sXBdKoNCb32Nq66wOK/dr6RYG0JQDqUEa2gxdQUdHaOouLrUWFBUK5q7Z+a49ASwAH5QItk7OeBiiVL9kTcP0fcvveOmJfCAWovOBRvqwS0" +
+"5ILJhrz5fpfWep/aH0QCgCyCKqhsYoqDwCExT078v07ANke8lj826Z9acn1vzY37tc4SoCNRdkTtvmS34eHCEvxBFle5Il7NkVtLZEPN0iBow" +
+"Jk4EpsNRP8FrQliBCR/8zytlkLtsV49Arg8kGXCHjFA7ub0YFsT7Ij5kPyXa4v9AoAOkR4mI9aZiJJzr1XWMDqjPMMdQiAlYl5uf0g8mCQAKB" +
+"DBFyPrWgc59wtLnjiWJ1xnqGObE/C29oI8mCwAKASgQfo1ZL3bDqGN5CNue+UQnji3B/i/ocTDHW7bM/1oeTBKAFAvrmEAHRqY+1fjGAhFVoX" +
+"+4uRsGA4FLmqrI0V2lzlhVA5WhMoBD/nN0MhcRtpdY+zBABuy1kkhMrRTKUVEppQRaOGEqoI412El1aoWsT58KnkwdkCCM4bgN9wxSwSMYAEE" +
+"Xyh0ldsRBhAmlyzW8nJDZxsdY/JBBACjwA6SpA+iDAQyUksXmNyATwqMQRdOwZPcHLSHrMKEMGJ0om5yEb4D1gsLPtR6hv3AAAAAElFTkSuQmCC";
+
 const template = `
 <v-card color="grey lighten-1" flat class="mb-1">
     <v-toolbar dense flat dark color="black">
@@ -133,11 +154,105 @@ const template = `
 </v-card>
 `;
 
+class ShapeController {
+
+    constructor() {
+        this.mouseDownPosition = null;
+    }
+
+    setControlPoints(controlPoints) {
+        this.controlPoints = controlPoints;
+    }
+
+    setOnControlPointMoveListener(listener) {
+        this.listener = listener;
+    }
+
+    reset() {
+        this.mouseDownPosition = null;
+        this.mouseDownEntityPosition = null;
+        this.activeControlPoint = null;
+    }
+
+    mouseMove(e) {
+        if (this.mouseDownPosition && this.activeControlPoint) {
+            let pc = viewer.camera.pickEllipsoid(e.endPosition, viewer.scene.globe.ellipsoid);
+            let mousePosition = Cesium.Cartographic.fromCartesian(pc);
+
+            let deltaLat = mousePosition.latitude - this.mouseDownPosition.latitude;
+            let deltaLon = mousePosition.longitude - this.mouseDownPosition.longitude;
+
+            let entityNewPosition = new Cesium.Cartographic(
+                this.mouseDownEntityPosition.longitude + deltaLon,
+                this.mouseDownEntityPosition.latitude + deltaLat,
+                this.mouseDownEntityPosition.height
+            );
+
+            this.activeControlPoint.position = Cesium.Cartographic.toCartesian(entityNewPosition);
+            this.onNewPosition(entityNewPosition, deltaLon, deltaLat);
+        }
+    }
+
+    onNewPosition(entityNewPosition, deltaLon, deltaLat) {
+        if (this.listener) {
+            this.listener(this.activeControlPoint, entityNewPosition, deltaLon, deltaLat);
+        }
+    }
+
+    mouseDown(e) {
+        let pick = viewer.scene.pick(e.position);
+
+        if (this.controlPoints && pick && this.controlPoints.indexOf(pick.id) >= 0) {
+            disableDefaultControls();
+            this.activeControlPoint = pick.id;
+            let pc = viewer.camera.pickEllipsoid(e.position, viewer.scene.globe.ellipsoid);
+            this.mouseDownPosition = Cesium.Cartographic.fromCartesian(pc);
+            this.mouseDownEntityPosition = Cesium.Cartographic.fromCartesian(pick.id.position.getValue());
+        }
+    }
+
+    mouseUp(e) {
+        this.mouseDownPosition = null;
+        this.mouseDownEntityPosition = null;
+        enableDefaultControls();
+    }
+}
+
+const shapeController = new ShapeController();
+
 let screenSpaceEventHandler;
+let defaultClickAction;
 function createScreenSpaceEventHandler() {
     if (!screenSpaceEventHandler) {
         screenSpaceEventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        defaultClickAction = viewer.screenSpaceEventHandler.getInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+        screenSpaceEventHandler.setInputAction(
+            shapeController.mouseDown.bind(shapeController),
+            Cesium.ScreenSpaceEventType.LEFT_DOWN);
+        screenSpaceEventHandler.setInputAction(
+            shapeController.mouseMove.bind(shapeController),
+            Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+        screenSpaceEventHandler.setInputAction(
+            shapeController.mouseUp.bind(shapeController),
+            Cesium.ScreenSpaceEventType.LEFT_UP);
     }
+}
+
+function disableDefaultControls() {
+    viewer.scene.screenSpaceCameraController.enableInputs = false;
+}
+
+function enableDefaultControls() {
+    viewer.scene.screenSpaceCameraController.enableInputs = true;
+}
+
+function disableDefaultClickAction() {
+    viewer.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+}
+
+function enableDefaultClickAction() {
+    viewer.screenSpaceEventHandler.setInputAction(defaultClickAction, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 }
 
 Vue.component('add-entities', {
@@ -164,7 +279,8 @@ Vue.component('add-entities', {
             polygonInput: false,
             polygonE: false,
             theme_text_color: '#000000',
-            maximized: true
+            maximized: true,
+            shapeController: shapeController
         };
     },
     watch: {
@@ -192,14 +308,20 @@ Vue.component('add-entities', {
         },
         addPolyline: function() {
             this.polylineInput = true;
+            disableDefaultClickAction();
         },
         savePolyline: function() {
             this.polylineInput = false;
             this.$emit('newentity', this.polylineE);
             this.polylineE = undefined;
+            this.controlPoints.forEach(e => viewer.entities.remove(e));
+            this.controlPoints = [];
+            enableDefaultClickAction();
         },
         cancelPolyline: function() {
             this.polylineInput = false;
+            this.controlPoints.forEach(e => viewer.entities.remove(e));
+            this.controlPoints = [];
             viewer.entities.remove(this.polylineE);
             this.polylineE = undefined;
         },
@@ -220,6 +342,7 @@ Vue.component('add-entities', {
             this.labelInput = true;
         },
         mouseClick: function (event) {
+            console.log(event);
             if (this.billboardInput) {
                 this.billboardInput = false;
                 let position = viewer.camera.pickEllipsoid(
@@ -241,32 +364,57 @@ Vue.component('add-entities', {
                 this.$emit('newentity', entity);
             }
             else if (this.polylineInput) {
-                let position = viewer.camera.pickEllipsoid(
-                    event.position,
-                    viewer.scene.globe.ellipsoid);
+                let position = viewer.scene.pickPosition(
+                    event.position);
 
-                this.controlPoints.push(viewer.entities.add({
-                    position: position,
-                    point: {
-                        pixelSize: 6,
-                        color: Cesium.Color.RED
-                    }
-                }));
-
-                if (this.polylineE) {
-                    this.polylineE.polyline.positions = [
-                        ...this.polylineE.polyline.positions.getValue(),
-                        position
-                    ];
-                }
-                else {
-                    this.polylineE = viewer.entities.add({
-                        polyline: {
-                            positions: [position],
-                            clampToGround: true,
-                            width: 3
-                        }
+                let ent = viewer.scene.pick(event.position);
+                if (ent && this.controlPoints.indexOf(ent.id) >= 0) {
+                    let c = attachController(ent.id, entity => {
+                        return entity.position.getValue();
+                    },
+                    positionC3 => {
+                        ent.id.position = positionC3;
                     });
+                    c.active = true;
+                }
+
+                if (position) {
+                    this.controlPoints.push(viewer.entities.add({
+                        position: position,
+                        billboard: {
+                            image: WHITE_CIRCLE,
+                            width: 32,
+                            height: 32,
+                            scale: 0.4,
+                            heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                            disableDepthTestDistance: 1000000,
+                            color: Cesium.Color.ORANGERED
+                        }
+                    }));
+
+                    if (this.polylineE) {
+                        this.polylineE.polyline.positions = [
+                            ...this.polylineE.polyline.positions.getValue(),
+                            position
+                        ];
+                    }
+                    else {
+                        this.polylineE = viewer.entities.add({
+                            polyline: {
+                                positions: [position],
+                                clampToGround: true,
+                                width: 3,
+                                material: Cesium.Color.SALMON
+                            }
+                        });
+
+                        this.shapeController.setOnControlPointMoveListener((cp, cartographic) => {
+                            let p = [...this.polylineE.polyline.positions.getValue()];
+                            p[this.controlPoints.indexOf(cp)] = cp.position.getValue();
+                            this.polylineE.polyline.positions = p;
+                        });
+                    }
+                    this.shapeController.setControlPoints(this.controlPoints);
                 }
             }
             else if (this.polygonInput) {
