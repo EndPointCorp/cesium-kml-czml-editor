@@ -312,6 +312,7 @@ Vue.component('add-entities', {
         },
         savePolyline: function() {
             this.polylineInput = false;
+            this.polylineE.polyline.positions = this.controlPoints.map(cp => cp.position.getValue());
             this.$emit('newentity', this.polylineE);
             this.polylineE = undefined;
             this.controlPoints.forEach(e => viewer.entities.remove(e));
@@ -392,26 +393,16 @@ Vue.component('add-entities', {
                         }
                     }));
 
-                    if (this.polylineE) {
-                        this.polylineE.polyline.positions = [
-                            ...this.polylineE.polyline.positions.getValue(),
-                            position
-                        ];
-                    }
-                    else {
+                    if (!this.polylineE) {
                         this.polylineE = viewer.entities.add({
                             polyline: {
-                                positions: [position],
+                                positions: new Cesium.CallbackProperty(() => {
+                                    return this.controlPoints.map(cp => cp.position.getValue())
+                                }, false),
                                 clampToGround: true,
                                 width: 3,
                                 material: Cesium.Color.SALMON
                             }
-                        });
-
-                        this.shapeController.setOnControlPointMoveListener((cp, cartographic) => {
-                            let p = [...this.polylineE.polyline.positions.getValue()];
-                            p[this.controlPoints.indexOf(cp)] = cp.position.getValue();
-                            this.polylineE.polyline.positions = p;
                         });
                     }
                     this.shapeController.setControlPoints(this.controlPoints);
