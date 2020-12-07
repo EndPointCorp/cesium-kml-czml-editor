@@ -29,7 +29,7 @@ Vue.component('extend-to-ground', {
     props: ['entity'],
     data: function() {
         return {
-            extend: !!this.entity.polyline
+            extend: !!this.entity.cylinder
         }
     },
     template: template,
@@ -48,18 +48,20 @@ Vue.component('extend-to-ground', {
             const position = this.entity.position.getValue();
             const cartographic = Cesium.Cartographic.fromCartesian(position);
 
-            this.entity.polyline = new Cesium.PolylineGraphics({
-                positions: [
-                    position,
-                    Cesium.Cartesian3.fromRadians(
-                        cartographic.longitude,
-                        cartographic.latitude,
-                        0)
-                ]
+            this.entity.cylinder = new Cesium.CylinderGraphics({
+                fill: false,
+                heightReference: this.entity.billboard.heightReference,
+                numberOfVerticalLines: 1,
+                outline: true,
+                outlineColor: Cesium.Color.WHITE,
+                slices: 3,
+                length: cartographic.height,
+                bottomRadius: 0.0001,
+                topRadius: 0.0001
             });
         },
         removeDropLine() {
-            this.entity.polyline = null;
+            this.entity.cylinder = null;
         }
     }
 });
