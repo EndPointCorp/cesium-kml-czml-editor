@@ -73,11 +73,6 @@ const template = `
             @input="inputHandler"
         ></color-field>
 
-
-
-
-
-
     </div>
 </div>
 `;
