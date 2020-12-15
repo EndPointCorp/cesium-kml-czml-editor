@@ -78,6 +78,10 @@ function billboardDefaults(entities) {
 function polylineDefaults(entities) {
     entities.forEach(e => {
         if (e.polyline && !e.billboard) {
+            if(!e.polyline.arcType || e.polyline.arcType.getValue() === Cesium.ArcType.NONE) {
+                e.polyline.arcType = Cesium.ArcType.GEODESIC;
+            }
+
             let h = polylineAverageHeight(e.polyline);
             if (h < 0.1) {
                 e.polyline.clampToGround = true;
