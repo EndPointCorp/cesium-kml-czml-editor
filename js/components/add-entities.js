@@ -156,8 +156,10 @@ const template = `
 
 class ShapeController {
 
-    constructor() {
+    constructor(viewer, controlPointsDS) {
         this.mouseDownPosition = null;
+        this.viewer = viewer;
+        this.controlPointsDS = controlPointsDS;
     }
 
     setControlPoints(controlPoints) {
