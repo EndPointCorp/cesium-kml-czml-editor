@@ -8,7 +8,7 @@ const template = `
 <div class="editor label-editor">
     <div class="py-1">
         <span class="editor-name">Label: </span>
-        <v-row>
+        <v-row class="py-4">
             <v-col cols="14" class="pb-2 pt-0" style="margin-top: 8px;">
                 <direct-field
                     @input="inputHandler"
@@ -40,7 +40,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-2">
             <v-col cols="12" class="py-1" style="margin-left: -13px;">
                 <color-field
                     @input="inputHandler"
@@ -52,7 +52,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-2">
             <v-col cols="12" class="py-1" style="margin-left: -13px;">
                 <color-field
                     @input="inputHandler"
@@ -64,7 +64,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-2">
             <v-col cols="12" class="pb-2 pt-0" style="margin-left: -13px; margin-top: 8px;">
                 <enum-field
                     @input="inputHandler"
@@ -89,7 +89,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-3">
             <v-col cols="12" class="py-1" style="margin-left: -13px; margin-top: 8px;">
                 <direct-field
                     @input="inputHandler"
@@ -102,7 +102,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-2">
             <v-col cols="6" class="py-1" style="margin-left: -13px; margin-top: 8px;">
                 <direct-field
                     @input="inputHandler"
@@ -114,7 +114,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-2">
             <v-col cols="6" class="pb-2 pt-0" style="margin-left: -13px; margin-top: 8px;">
                 <direct-field
                     @input="inputHandler"
@@ -126,7 +126,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-2">
             <v-col cols="6" class="pb-2 pt-0" style="margin-left: -13px; margin-top: 8px;">
                 <enum-field
                     @input="inputHandler"
@@ -139,7 +139,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-2">
             <v-col cols="6" class="pb-2 pt-0" style="margin-left: -13px; margin-top: 8px;">
                 <enum-field
                     @input="inputHandler"
@@ -152,7 +152,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-6">
             <v-col cols="12" class="pb-2 pt-0">
                 <components-field
                     @input="inputHandler"
@@ -166,7 +166,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-6">
             <v-col cols="12" class="pb-2 pt-0"  style="margin-left: 0;">
                 <near-far-scalar-field
                     @input="inputHandler"
@@ -178,7 +178,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-4">
             <v-col cols="12" class="py-1">
                 <components-field
                     @input="inputHandler"
@@ -192,7 +192,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-4">
             <v-col cols="6" class="py-2" style="margin-left: -13px;">
                 <direct-field
                     @input="inputHandler"
@@ -204,7 +204,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-4">
             <v-col cols="12" class="py-1">
                 <components-field
                     @input="inputHandler"
