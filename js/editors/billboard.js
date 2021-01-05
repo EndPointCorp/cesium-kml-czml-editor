@@ -21,7 +21,7 @@ const template = `
         </image-field>
     </div>
 
-    <v-row>
+    <v-row class="py-6">
         <v-col cols="6" class="pb-2 pt-0">
             <enum-field
                 @input="inputHandler"
@@ -41,7 +41,7 @@ const template = `
 
     <v-col cols="12" class="py-0 px-4 advanced" v-if="advanced">
 
-        <v-row>
+        <v-row class="my-4">
             <direct-field
                 @input="inputHandler"
                 :entity="entity"
@@ -51,7 +51,7 @@ const template = `
             </direct-field>
         </v-row>
 
-        <v-row>
+        <v-row class="py-4">
             <v-col cols="12" class="py-1">
                 <components-field
                     @input="inputHandler"
@@ -65,7 +65,7 @@ const template = `
             </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="py-5">
             <v-col cols="6" class="py-1 pl-0">
                 <enum-field
                     @input="inputHandler"
@@ -77,8 +77,8 @@ const template = `
                 </enum-field>
             </v-col>
         </v-row>
-        <v-row>
-            <v-col cols="6" class="pt-4 pl-0 ">
+        <v-row class="py-1">
+            <v-col cols="6" class="py-0 pl-0">
                 <direct-field
                     @input="inputHandler"
                     :entity="entity"
@@ -87,7 +87,7 @@ const template = `
                     :label="'Scale'">
                 </direct-field>
             </v-col>
-            <v-col cols="6" class="pt-4">
+            <v-col cols="6" class="py-0">
                 <angle-field
                     @input="inputHandler"
                     :entity="entity"
@@ -108,7 +108,7 @@ const template = `
             >
             </checkbox-field>
         </v-row>
-        <v-row>
+        <v-row class="my-6">
             <v-col cols="12" class="py-1">
                 <components-field
                     @input="inputHandler"
@@ -123,6 +123,7 @@ const template = `
         </v-row>
         <v-row>
             <color-field
+                class="mt-3 mb-6"
                 @input="inputHandler"
                 :entity="entity"
                 :feature="feature"
@@ -130,7 +131,7 @@ const template = `
                 :label="'Color'">
             </color-field>
         </v-row>
-        <v-row>
+        <v-row class="py-4">
             <v-col cols="12" class="py-1">
                 <near-far-scalar-field
                     @input="inputHandler"
@@ -141,8 +142,8 @@ const template = `
                 </near-far-scalar-field>
             </v-col>
         </v-row>
-        <v-row>
-            <v-col cols="12" class="py-1">
+        <v-row class="py-4">
+            <v-col cols="12" class="py-1 my-1">
                 <near-far-scalar-field
                     @input="inputHandler"
                     :entity="entity"
@@ -152,7 +153,7 @@ const template = `
                 </near-far-scalar-field>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row class="py-4">
             <v-col cols="12" class="py-1">
                 <near-far-scalar-field
                     @input="inputHandler"
@@ -163,7 +164,7 @@ const template = `
                 </near-far-scalar-field>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row class="my-4">
             <v-col cols="12" class="py-1">
                 <components-field
                     @input="inputHandler"
