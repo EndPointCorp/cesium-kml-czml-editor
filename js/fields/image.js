@@ -1,6 +1,6 @@
 const template = `
 <div class="text-left py-0 my-0">
-    <v-row align="center">
+    <v-row align="center" class="my-1">
     <v-col cols="3" d-flex>
         <v-img :src="imgUrl" :contain="true" :width="50" :height="50"></v-img>
     </v-col>
