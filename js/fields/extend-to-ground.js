@@ -4,24 +4,44 @@ const template = `
     <div>
         <v-switch hide-details id="extend"
             class="v-input--reverse py-0 my-0"
-            label="Extend to ground:" v-model="extend"
+            label="Extend to ground:" v-model="extended"
             @change="handleChange"></v-switch>
     </div>
-    <div v-if="entity.polyline">
+    <div v-if="extended">
         <direct-field
+            @input="inputHandler"
             :entity="entity"
-            :feature="'polyline'"
-            :field="'width'"
+            :feature="'cylinder'"
+            :field="'outlineWidth'"
             :label="'Extension Line Width'">
         </direct-field>
 
-        <material-field
-            class="pt-2"
+        <direct-field
+            @input="inputHandler"
             :entity="entity"
-            :feature="'polyline'"
-            :field="'material'"
+            :feature="'cylinder'"
+            :field="'length'"
+            :label="'Length'">
+        </direct-field>
+
+        <color-field
+            class="pt-2"
+            @input="inputHandler"
+            :entity="entity"
+            :feature="'cylinder'"
+            :field="'outlineColor'"
             :label="'Extension Line Color'"
-        ></material-field>
+        ></color-field>
+
+        <enum-field
+            class="pt-2"
+            @input="inputHandler"
+            :entity="entity"
+            :feature="'cylinder'"
+            :field="'heightReference'"
+            :enum="'HeightReference'"
+            :label="'Height Reference'">
+        </enum-field>
     </div>
 </div>`
 
@@ -29,37 +49,42 @@ Vue.component('extend-to-ground', {
     props: ['entity'],
     data: function() {
         return {
-            extend: !!this.entity.polyline
+            extended: !!this.entity.cylinder
         }
     },
     template: template,
     methods: {
         handleChange() {
-            if (this.extend) {
+            if (this.extended) {
                 this.createDropLine();
             }
             else {
                 this.removeDropLine();
             }
             // This isn't a real feature and field of Cesium entity
-            this.$emit('input', this.extend, 'extend-to-ground', 'billboard', this.entity);
+            this.$emit('input', this.extended, 'extend-to-ground', 'billboard', this.entity);
         },
         createDropLine() {
             const position = this.entity.position.getValue();
             const cartographic = Cesium.Cartographic.fromCartesian(position);
 
-            this.entity.polyline = new Cesium.PolylineGraphics({
-                positions: [
-                    position,
-                    Cesium.Cartesian3.fromRadians(
-                        cartographic.longitude,
-                        cartographic.latitude,
-                        0)
-                ]
+            this.entity.cylinder = new Cesium.CylinderGraphics({
+                topRadius: 0.01,
+                bottomRadius: 0.01,
+                slices: 3,
+                numberOfVerticalLines: 1,
+                length: cartographic.height,
+                outline: true,
+                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                outlineWidth: 1,
+                outlineColor: Cesium.Color.WHITE,
             });
         },
         removeDropLine() {
-            this.entity.polyline = null;
+            this.entity.cylinder = null;
+        },
+        inputHandler(...args) {
+            this.$emit('update', ...args);
         }
     }
 });
