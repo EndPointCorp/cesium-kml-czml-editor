@@ -32,16 +32,6 @@ const template = `
             :field="'outlineColor'"
             :label="'Extension Line Color'"
         ></color-field>
-
-        <enum-field
-            class="pt-2"
-            @input="inputHandler"
-            :entity="entity"
-            :feature="'cylinder'"
-            :field="'heightReference'"
-            :enum="'HeightReference'"
-            :label="'Height Reference'">
-        </enum-field>
     </div>
 </div>`
 
