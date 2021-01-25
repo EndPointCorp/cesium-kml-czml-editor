@@ -33,7 +33,30 @@ const template = `
             :label="'Extension Line Color'"
         ></color-field>
     </div>
-</div>`
+</div>
+`;
+
+export function createExtensionLine(entity) {
+    const position = entity.position.getValue();
+    const cartographic = Cesium.Cartographic.fromCartesian(position);
+
+    entity.cylinder = new Cesium.CylinderGraphics({
+        topRadius: 0.01,
+        bottomRadius: 0.01,
+        slices: 3,
+        numberOfVerticalLines: 1,
+        length: cartographic.height,
+        outline: true,
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        outlineWidth: 1,
+        outlineColor: Cesium.Color.WHITE,
+    });
+}
+
+export function removeExtensionLine(entity) {
+    entity.cylinder = null;
+    entity.polyline = null;
+}
 
 Vue.component('extend-to-ground', {
     props: ['entity'],
@@ -55,23 +78,10 @@ Vue.component('extend-to-ground', {
             this.$emit('input', this.extended, 'extend-to-ground', 'billboard', this.entity);
         },
         createDropLine() {
-            const position = this.entity.position.getValue();
-            const cartographic = Cesium.Cartographic.fromCartesian(position);
-
-            this.entity.cylinder = new Cesium.CylinderGraphics({
-                topRadius: 0.01,
-                bottomRadius: 0.01,
-                slices: 3,
-                numberOfVerticalLines: 1,
-                length: cartographic.height,
-                outline: true,
-                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-                outlineWidth: 1,
-                outlineColor: Cesium.Color.WHITE,
-            });
+            createExtensionLine(this.entity);
         },
         removeDropLine() {
-            this.entity.cylinder = null;
+            removeExtensionLine(this.entity);
         },
         inputHandler(...args) {
             this.$emit('update', ...args);
