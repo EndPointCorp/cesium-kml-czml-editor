@@ -49,6 +49,8 @@ if (ionTerrain) {
     viewer.baseLayerPicker.viewModel.selectedTerrain = ionTerrain;
 }
 
+window.dispatchEvent(new CustomEvent('viewer-created', { detail: {viewer} }));
+
 function applyDefaults(entities) {
     billboardDefaults(entities);
     polylineDefaults(entities);
