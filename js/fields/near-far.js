@@ -1,10 +1,16 @@
 const template = `
 <v-row>
-    <v-row style="margin-left: 0">
-        {{ label }}
+    <v-row style="margin-left: 0" class="justify-space-between">
+        <span>{{ label }}</span>
+        <span>
+        <v-btn small align="right" v-if="!entity[feature][field]"
+        v-on:click="newValue();">set new</v-btn>
+    <v-btn small v-if="entity[feature][field]"
+        v-on:click="remove();">delete</v-btn>
+        </span>
     </v-row>
     <template v-if="entity[feature][field]">
-        <v-row style="margin-left: 0; margin-top: 10px;">
+        <v-row class="my-4 ml-0">
             <v-col cols="2" class="px-0 py-1">Near</v-col>
             <v-col cols="4" class="py-0">
                 <v-text-field
@@ -27,7 +33,7 @@ const template = `
                 </v-text-field>
             </v-col>
         </v-row>
-        <v-row style="margin-left: 0; margin-top: 10px;">
+        <v-row class="my-4 ml-0">
             <v-col cols="2" class="px-0 py-1">Far</v-col>
             <v-col cols="4" class="py-0">
                 <v-text-field
@@ -51,11 +57,7 @@ const template = `
             </v-col>
         </v-row>
     </template>
-    <v-btn small v-if="!entity[feature][field]"
-        v-on:click="newValue();">set new</v-btn>
-    <v-btn small v-if="entity[feature][field]"
-        style="margin-top: 5px;"
-        v-on:click="remove();">delete</v-btn>
+    
 </v-row>
 `;
 

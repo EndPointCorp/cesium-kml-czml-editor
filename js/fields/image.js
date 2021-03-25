@@ -1,6 +1,6 @@
 const template = `
 <div class="text-left py-0 my-0">
-    <v-row align="center">
+    <v-row align="center" class="my-1">
     <v-col cols="3" d-flex>
         <v-img :src="imgUrl" :contain="true" :width="50" :height="50"></v-img>
     </v-col>
@@ -33,16 +33,23 @@ const template = `
         Image dimensions: {{nativeWidth}}, {{nativeHeight}}
 
         <v-tooltip bottom>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs"
-        v-on="on" v-if="nativeHeight > height * 0.9" @click="resize" x-small class="mx-2 white--text" color="blue-grey">
-            Resize
-        </v-btn>
-        </template>
-      <span>Size of native image used for an icon is bigger than<br>
-      the icon displayed by Cesium. You can resize it down<br>
-      to reduce czml file size and speedup the loading.</span>
-    </v-tooltip>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    v-bind="attrs"
+                    v-on="on"
+                    v-show="isImageOversized"
+                    @click="resize"
+                    x-small
+                    class="mx-2 white--text"
+                    color="blue-grey"
+                >
+                    Resize
+                </v-btn>
+            </template>
+            <span>Size of native image used for an icon is bigger than<br>
+            the icon displayed by Cesium. You can resize it down<br>
+            to reduce czml file size and speedup the loading.</span>
+        </v-tooltip>
     </div>
 
     <v-row>
@@ -71,14 +78,6 @@ const template = `
 Vue.component('image-field', {
     props: ['entity', 'feature', 'field'],
     data: function() {
-        let w = null;
-        let h = null;
-
-        if (this.entity[this.feature]['width'] && this.entity[this.feature]['height']) {
-            w = this.entity[this.feature]['width'].valueOf();
-            h = this.entity[this.feature]['height'].valueOf();
-        }
-
         let referenceId = null;
         let url = this.entity[this.feature][this.field].valueOf();
         if (url instanceof Cesium.ReferenceProperty) {
@@ -94,8 +93,6 @@ Vue.component('image-field', {
 
         return {
             imgUrl: url,
-            width: w,
-            height: h,
             nativeWidth: null,
             nativeHeight: null,
             referenceId: referenceId
@@ -113,6 +110,23 @@ Vue.component('image-field', {
     computed: {
         dataUrl: function() {
             return /^data:/.test(this.imgUrl);
+        },
+        isImageOversized: function() {
+            const oversizedHeight = Math.round(this.nativeHeight * 0.9) > Math.round(this.height);
+            const oversizedWidth = Math.round(this.nativeWidth * 0.9) > Math.round(this.width);
+            return oversizedHeight || oversizedWidth;
+        },
+        width: function() {
+            if (this.entity[this.feature]['width']) {
+                return  this.entity[this.feature]['width'].valueOf();
+            }
+            return null;
+        },
+        height: function() {
+            if (this.entity[this.feature]['height']) {
+                return this.entity[this.feature]['height'].valueOf();
+            }
+            return null;
         }
     },
     methods: {
@@ -157,26 +171,25 @@ Vue.component('image-field', {
             this.entity[this.feature][this.field] = dataUrl;
         },
         resize() {
+            const targetWidth = this.width;
+            const targeHeight = this.height;
+
             const i = new Image();
+            i.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = targetWidth;
+                canvas.height = targeHeight;
+
+                const ctx = canvas.getContext('2d');
+
+                ctx.drawImage(i, 0, 0, targetWidth, targeHeight);
+
+                this.imgUrl = canvas.toDataURL();
+                this.entity[this.feature][this.field] = this.imgUrl;
+            };
             i.src = this.imgUrl;
-
-            var oc = document.createElement('canvas'),
-            octx = oc.getContext('2d');
-
-            oc.width = this.width;
-            oc.height = this.height;
-            octx.drawImage(i, 0, 0, oc.width, oc.height);
-
-            this.imgUrl = oc.toDataURL();
-            this.entity[this.feature][this.field] = this.imgUrl;
         },
         updateSize(...args) {
-            let w = this.entity[this.feature]['width'].valueOf();
-            let h = this.entity[this.feature]['height'].valueOf();
-
-            this.width = w;
-            this.height = h;
-
             this.$emit('input', ...args);
         }
     }
