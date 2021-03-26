@@ -66,30 +66,26 @@ function bindScreenSpaceEvents(viewer) {
     }
 }
 
-function toCartographic(p) {
-    return Cesium.Cartographic.fromCartesian(p);
-}
-
-function toCartesian(p) {
-    return Cesium.Cartographic.toCartesian(p);
-}
-
-function offsetCartographic(p, deltaLon, deltaLat) {
-    return new Cesium.Cartographic(p.longitude + deltaLon, p.latitude + deltaLat, p.height);
-}
-
-function moveHierarchy(h, deltaLon, deltaLat) {
-    let newPositions = h.positions
-        .map(toCartographic)
-        .map(p => offsetCartographic(p, deltaLon, deltaLat))
-        .map(toCartesian);
-
-    let newHoles = null;
-    if (h.holes) {
-        newHoles = h.holes.map(hh => moveHierarchy(hh, deltaLon, deltaLat));
+function createController(entity, getter, setter, onUpdate) {
+    controller = {
+        active: false,
+        entity: entity,
+        initialPosition: Cesium.Cartographic.fromCartesian(getter(entity)),
+        pick: function(pick) {
+            if (this.active) {
+                return pick.id == entity;
+            }
+        },
+        getEntityPosition: function() {
+            return this.initialPosition;
+        },
+        newPosition: function(newPosition, ...lonlat) {
+            setter(Cesium.Cartographic.toCartesian(newPosition), newPosition, ...lonlat);
+            onUpdate && onUpdate();
+        }
     }
 
-    return new Cesium.PolygonHierarchy(newPositions, newHoles);
+    return controller;
 }
 
 function attachController(entity, onUpdate) {
@@ -129,29 +125,33 @@ function attachController(entity, onUpdate) {
         return {};
     }
 
-    return _attachController(entity, getter, setter, onUpdate);
+    return createController(entity, getter, setter, onUpdate);
 }
 
-function _attachController(entity, getter, setter, onUpdate) {
-    controller = {
-        active: false,
-        entity: entity,
-        initialPosition: Cesium.Cartographic.fromCartesian(getter(entity)),
-        pick: function(pick) {
-            if (this.active) {
-                return pick.id == entity;
-            }
-        },
-        getEntityPosition: function() {
-            return this.initialPosition;
-        },
-        newPosition: function(newPosition, ...lonlat) {
-            setter(Cesium.Cartographic.toCartesian(newPosition), newPosition, ...lonlat);
-            onUpdate && onUpdate();
-        }
+function toCartographic(p) {
+    return Cesium.Cartographic.fromCartesian(p);
+}
+
+function toCartesian(p) {
+    return Cesium.Cartographic.toCartesian(p);
+}
+
+function offsetCartographic(p, deltaLon, deltaLat) {
+    return new Cesium.Cartographic(p.longitude + deltaLon, p.latitude + deltaLat, p.height);
+}
+
+function moveHierarchy(h, deltaLon, deltaLat) {
+    let newPositions = h.positions
+        .map(toCartographic)
+        .map(p => offsetCartographic(p, deltaLon, deltaLat))
+        .map(toCartesian);
+
+    let newHoles = null;
+    if (h.holes) {
+        newHoles = h.holes.map(hh => moveHierarchy(hh, deltaLon, deltaLat));
     }
 
-    return controller;
+    return new Cesium.PolygonHierarchy(newPositions, newHoles);
 }
 
 Vue.component('position-editor', {

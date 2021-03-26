@@ -1,5 +1,6 @@
 import { cesiumToCSSColor, rgbaToCesium } from '../fields/material.js'
 import '../lib/JsColor.js'
+import GeometryEditor from '../util/GeometryEditor.js'
 
 const template = `
 <v-card color="grey lighten-1" flat class="mb-1">
@@ -133,20 +134,16 @@ const template = `
 </v-card>
 `;
 
-let screenSpaceEventHandler;
-function createScreenSpaceEventHandler() {
-    if (!screenSpaceEventHandler) {
-        screenSpaceEventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-    }
-}
+let shapeEditController;
 
 Vue.component('add-entities', {
     template,
     props: ['kmlloaded'],
     data: function () {
-        let pinBuilder = new Cesium.PinBuilder();
-        let color = Cesium.Color.fromCssColorString('#006A4D');
-        let canvas = pinBuilder.fromColor(color, 50);
+        const pinBuilder = new Cesium.PinBuilder();
+        const color = Cesium.Color.fromCssColorString('#006A4D');
+        const canvas = pinBuilder.fromColor(color, 50);
+
         return {
             defaultImage: canvas.toDataURL(),
             defaultIconEdit: false,
@@ -163,7 +160,7 @@ Vue.component('add-entities', {
             polygonInput: false,
             polygonE: false,
             theme_text_color: '#000000',
-            maximized: true
+            maximized: true,
         };
     },
     watch: {
@@ -180,9 +177,13 @@ Vue.component('add-entities', {
         }
     },
     created: function () {
-        createScreenSpaceEventHandler();
+        if (!shapeEditController) {
+            shapeEditController = new GeometryEditor(viewer);
+        }
+
+        const screenSpaceEventHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
         screenSpaceEventHandler.setInputAction(
-            this.mouseClick,
+            this.mouseClick.bind(this),
             Cesium.ScreenSpaceEventType.LEFT_CLICK);
     },
     methods: {
@@ -191,29 +192,37 @@ Vue.component('add-entities', {
         },
         addPolyline: function() {
             this.polylineInput = true;
+            this.polylineE = shapeEditController.newEntity('polyline');
+            viewer.entities.add(this.polylineE);
         },
         savePolyline: function() {
             this.polylineInput = false;
+            shapeEditController.save();
             this.$emit('newentity', this.polylineE);
-            this.polylineE = undefined;
+            this.polylineE = null;
         },
         cancelPolyline: function() {
             this.polylineInput = false;
             viewer.entities.remove(this.polylineE);
-            this.polylineE = undefined;
+            shapeEditController.cancel();
+            this.polylineE = null;
         },
         addPolygon: function() {
             this.polygonInput = true;
+            this.polygonE = shapeEditController.newEntity('polygon');
+            viewer.entities.add(this.polygonE);
         },
         savePolygon: function() {
             this.polygonInput = false;
+            shapeEditController.save();
             this.$emit('newentity', this.polygonE);
-            this.polygonE = undefined;
+            this.polygonE = null;
         },
         cancelPolygon: function() {
             this.polygonInput = false;
             viewer.entities.remove(this.polygonE);
-            this.polygonE = undefined;
+            shapeEditController.cancel();
+            this.polygonE = null;
         },
         addLabel: function() {
             this.labelInput = true;
@@ -238,50 +247,6 @@ Vue.component('add-entities', {
                 });
 
                 this.$emit('newentity', entity);
-            }
-            else if (this.polylineInput) {
-                let position = viewer.camera.pickEllipsoid(
-                    event.position,
-                    viewer.scene.globe.ellipsoid);
-                if (this.polylineE) {
-                    this.polylineE.polyline.positions = [
-                        ...this.polylineE.polyline.positions.getValue(),
-                        position
-                    ];
-                }
-                else {
-                    this.polylineE = viewer.entities.add({
-                        polyline: {
-                            positions: [position],
-                            clampToGround: true,
-                            width: 3
-                        }
-                    });
-                }
-            }
-            else if (this.polygonInput) {
-                let position = viewer.camera.pickEllipsoid(
-                    event.position,
-                    viewer.scene.globe.ellipsoid);
-                if (this.polygonE) {
-                    this.polygonE.polygon.hierarchy = {
-                        positions: [
-                            ...this.polygonE.polygon.hierarchy.getValue().positions,
-                            position
-                        ]
-                    };
-
-                }
-                else {
-                    this.polygonE = viewer.entities.add({
-                        polygon: {
-                            hierarchy: {
-                                positions: [position]
-                            },
-                            fill: true
-                        }
-                    });
-                }
             }
             else if (this.model) {
                 let position = viewer.camera.pickEllipsoid(
@@ -317,6 +282,12 @@ Vue.component('add-entities', {
                 });
 
                 this.$emit('newentity', entity);
+            }
+            else if (this.polylineInput) {
+                // handled by shapeEditController
+            }
+            else if (this.polygonInput) {
+                // handled by shapeEditController
             }
         },
         updateDefaultBillboard: function (colorVue, size, text) {

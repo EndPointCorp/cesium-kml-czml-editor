@@ -238,7 +238,7 @@ function loadFile(file) {
 
 document.getElementById('file').addEventListener('change', handleFileSelect, false);
 
-viewer.selectedEntityChanged.addEventListener((selection) => {
+function viewerEntityChangeListener(selection) {
     editor.entity = selection;
 
     if (selection) {
@@ -248,4 +248,14 @@ viewer.selectedEntityChanged.addEventListener((selection) => {
     else {
         editor.selectEntity(null);
     }
-});
+}
+
+viewer.selectedEntityChanged.addEventListener(viewerEntityChangeListener);
+
+export function disableSelectedEntityChangeListener() {
+    viewer.selectedEntityChanged.removeEventListener(viewerEntityChangeListener);
+}
+
+export function enableSelectedEntityChangeListener() {
+    viewer.selectedEntityChanged.addEventListener(viewerEntityChangeListener);
+}

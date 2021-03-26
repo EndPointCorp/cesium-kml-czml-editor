@@ -1,5 +1,6 @@
 import './position.js'
 import './orientation.js'
+import './geometry.js'
 
 function round(value, step = 1.0) {
     const inv = 1.0 / step;
@@ -56,9 +57,10 @@ const template = `
         </v-text-field>
         </v-col>
     </v-row>
-    <v-row v-if="entity">
+    <template v-if="entity">
         <position-editor :entity="entity"></position-editor>
-    </v-row>
+        <geometry-editor :entity="entity"></geometry-editor>
+    </template>
     <v-row v-if="entity && entity.model">
         <orientation-editor :entity="entity"></orientation-editor>
     </v-row>
