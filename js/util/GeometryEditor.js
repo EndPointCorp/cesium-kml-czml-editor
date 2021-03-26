@@ -41,18 +41,18 @@ export default class GeometryEditor {
             viewer.dataSources.add(GeometryEditor.controlPointsDisplay);
         }
 
-        this.controlPoints = [];
+        this._controlPoints = [];
 
         this._createScreenSpaceEventHandler();
     }
 
     newEntity(type) {
-        this.type = type;
+        this._type = type;
         this._setTypeOptions();
 
         this.entity = new Cesium.Entity({
-            [ this.type ]: {
-                [this.entityGeometryProperty]: new Cesium.CallbackProperty(this._geometryCallback.bind(this), false),
+            [ this._type ]: {
+                [this._entityGeometryProperty]: new Cesium.CallbackProperty(this._geometryCallback.bind(this), false),
                 ...this.entityOptions
             }
         });
@@ -61,27 +61,27 @@ export default class GeometryEditor {
     }
 
     editEntity(type, entity) {
-        this.type = type;
+        this._type = type;
         this._setTypeOptions();
 
         this.entity = entity;
-        this._oldGeometry = this.entity[this.type][this.entityGeometryProperty].getValue();
+        this._oldGeometry = this.entity[this._type][this._entityGeometryProperty].getValue();
         this._geometryAsControlPoints();
 
-        this.entity[this.type][this.entityGeometryProperty] = new Cesium.CallbackProperty(this._geometryCallback.bind(this), false);
+        this.entity[this._type][this._entityGeometryProperty] = new Cesium.CallbackProperty(this._geometryCallback.bind(this), false);
 
         return this.entity;
     }
 
     _geometryAsControlPoints() {
-        if (this.type === 'polyline') {
-            const positions = this.entity[this.type][this.entityGeometryProperty].getValue();
+        if (this._type === 'polyline') {
+            const positions = this.entity[this._type][this._entityGeometryProperty].getValue();
             positions.forEach(position => {
                 this._addControlPoint(position);
             });
         }
-        else if (this.type === 'polygon') {
-            const hierarchy = this.entity[this.type][this.entityGeometryProperty].getValue();
+        else if (this._type === 'polygon') {
+            const hierarchy = this.entity[this._type][this._entityGeometryProperty].getValue();
             hierarchy.positions.forEach(position => {
                 this._addControlPoint(position);
             });
@@ -89,22 +89,25 @@ export default class GeometryEditor {
     }
 
     _geometryCallback() {
-        if (this.type === 'polyline') {
-            return this.controlPoints.map(cp => cp.position.getValue());
+        if (this._type === 'polyline') {
+            return this._controlPoints.map(cp => cp.position.getValue());
         }
-        if (this.type === 'polygon') {
-            return new Cesium.PolygonHierarchy(this.controlPoints.map(cp => cp.position.getValue()));
+        if (this._type === 'polygon') {
+            return new Cesium.PolygonHierarchy(this._controlPoints.map(cp => cp.position.getValue()));
         }
     }
 
     save() {
         // Apply changes to entity
-        this.entity[this.type][this.entityGeometryProperty] = new Cesium.ConstantProperty(this._geometryCallback());
+        this.entity[this._type][this._entityGeometryProperty] = new Cesium.ConstantProperty(this._geometryCallback());
 
         this.reset();
     }
 
     cancel() {
+        if (this._oldGeometry) {
+            this.entity[this._type][this._entityGeometryProperty] = this._oldGeometry;
+        }
         this.reset();
     }
 
@@ -118,12 +121,12 @@ export default class GeometryEditor {
 
     reset() {
         this.entity = null;
-        this.type = null;
-        this.oldGeometry = null;
+        this._type = null;
+        this._oldGeometry = null;
         this._activeControlPoint = null;
-        this.entityGeometryProperty = null;
+        this._entityGeometryProperty = null;
         GeometryEditor.controlPointsDisplay.entities.removeAll();
-        this.controlPoints = [];
+        this._controlPoints = [];
     }
 
     destroy() {
@@ -133,8 +136,8 @@ export default class GeometryEditor {
     }
 
     _setTypeOptions() {
-        if (this.type === 'polyline') {
-            this.entityGeometryProperty = 'positions';
+        if (this._type === 'polyline') {
+            this._entityGeometryProperty = 'positions';
 
             this.entityOptions = {
                 clampToGround: true,
@@ -142,8 +145,8 @@ export default class GeometryEditor {
                 material: Cesium.Color.SALMON,
             };
         }
-        else if (this.type === 'polygon') {
-            this.entityGeometryProperty = 'hierarchy';
+        else if (this._type === 'polygon') {
+            this._entityGeometryProperty = 'hierarchy';
 
             this.entityOptions = {
                 material: Cesium.Color.SALMON.withAlpha(0.3),
@@ -160,7 +163,7 @@ export default class GeometryEditor {
 
         if (this.entity) {
             // CP drag is handled by this.screenSpaceEventHandler
-            if (ent && this.controlPoints.indexOf(ent.id) >= 0) {
+            if (ent && this._controlPoints.indexOf(ent.id) >= 0) {
                 return;
             }
 
@@ -177,7 +180,7 @@ export default class GeometryEditor {
             billboard: CONTROL_POINT_BILLBOARD_OPTIONS
         });
 
-        this.controlPoints.push(cpEntity);
+        this._controlPoints.push(cpEntity);
         GeometryEditor.controlPointsDisplay.entities.add(cpEntity);
     }
 
@@ -202,7 +205,7 @@ export default class GeometryEditor {
     _mouseDown(e) {
         const pick = this.viewer.scene.pick(e.position);
 
-        if (this.controlPoints && pick && this.controlPoints.includes(pick.id)) {
+        if (this._controlPoints && pick && this._controlPoints.includes(pick.id)) {
             this.disableDefaultControls();
             this._activeControlPoint = pick.id;
             // Use pick ellipsoid viewer.scene.pickPosition(e.position) returns null if we click on entity

@@ -1,6 +1,6 @@
 import { cesiumToCSSColor, rgbaToCesium } from '../fields/material.js'
 import '../lib/JsColor.js'
-import '../util/GeometryEditor.js'
+import GeometryEditor from '../util/GeometryEditor.js'
 
 const template = `
 <v-card color="grey lighten-1" flat class="mb-1">
