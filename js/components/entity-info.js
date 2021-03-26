@@ -57,10 +57,10 @@ const template = `
         </v-text-field>
         </v-col>
     </v-row>
-    <v-row v-if="entity">
+    <template v-if="entity">
         <position-editor :entity="entity"></position-editor>
         <geometry-editor :entity="entity"></geometry-editor>
-    </v-row>
+    </template>
     <v-row v-if="entity && entity.model">
         <orientation-editor :entity="entity"></orientation-editor>
     </v-row>

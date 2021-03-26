@@ -17,7 +17,7 @@ const template = `
         <v-btn small @click="save">
             Save
         </v-btn>
-        <v-btn small @click="cancel">
+        <v-btn small @click="cancel" class="ml-2">
             Cancel
         </v-btn>
     </v-col>

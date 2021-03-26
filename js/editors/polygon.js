@@ -4,7 +4,7 @@ import '../fields/enum.js'
 import '../fields/material.js'
 
 const template = `
-<div class="editor polygon-editor">
+<div class="editor polygon-editor mt-4">
     <div class="editor-name">Polygon</div>
 
     <direct-field
