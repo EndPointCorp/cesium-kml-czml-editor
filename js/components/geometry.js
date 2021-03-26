@@ -6,14 +6,14 @@ import {
 } from '../index.js'
 
 const template = `
-<v-row v-show="entity.polygon || entity.polyline">
-    <v-btn small @click="edit" v-if="!active">
+<v-row v-show="entity.polygon || entity.polyline" class="mb-2 ml-2">
+    <v-btn small @click="edit" v-if="!active" >
     Edit geometry
     </v-btn>
     <v-col cols="12" v-if="active">
-        <v-card-text>
+        <p>
             Click on map to add points. Or move existing points.
-        </v-card-text>
+        </p>
         <v-btn small @click="save">
             Save
         </v-btn>
