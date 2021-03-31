@@ -20,6 +20,8 @@ const WHITE_CIRCLE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYA
 "+4uRsGA4FLmqrI0V2lzlhVA5WhMoBD/nN0MhcRtpdY+zBABuy1kkhMrRTKUVEppQRaOGEqoI412El1aoWsT58KnkwdkCCM4bgN9wxSwSMYAEE" +
 "Xyh0ldsRBhAmlyzW8nJDZxsdY/JBBACjwA6SpA+iDAQyUksXmNyATwqMQRdOwZPcHLSHrMKEMGJ0om5yEb4D1gsLPtR6hv3AAAAAElFTkSuQmCC";
 
+const DEFAULT_COLOR = Cesium.Color.YELLOW;
+
 const CONTROL_POINT_BILLBOARD_OPTIONS = {
     image: WHITE_CIRCLE,
     width: 32,
@@ -27,7 +29,7 @@ const CONTROL_POINT_BILLBOARD_OPTIONS = {
     scale: 0.4,
     heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
     disableDepthTestDistance: 1000000,
-    color: Cesium.Color.ORANGERED
+    color: DEFAULT_COLOR
 };
 
 export default class GeometryEditor {
@@ -142,16 +144,16 @@ export default class GeometryEditor {
             this.entityOptions = {
                 clampToGround: true,
                 width: 3,
-                material: Cesium.Color.SALMON,
+                material: DEFAULT_COLOR,
             };
         }
         else if (this._type === 'polygon') {
             this._entityGeometryProperty = 'hierarchy';
 
             this.entityOptions = {
-                material: Cesium.Color.SALMON.withAlpha(0.3),
+                material: DEFAULT_COLOR.withAlpha(0.3),
                 outline: true,
-                outlineColor: Cesium.Color.SALMON,
+                outlineColor: DEFAULT_COLOR,
                 outlineWidth: 2,
             };
         }
@@ -175,13 +177,34 @@ export default class GeometryEditor {
     }
 
     _addControlPoint(position) {
+        const color = this._getEntityColor();
         const cpEntity = new Cesium.Entity({
             position: position,
-            billboard: CONTROL_POINT_BILLBOARD_OPTIONS
+            billboard: {
+                ...CONTROL_POINT_BILLBOARD_OPTIONS,
+                color
+            }
         });
 
         this._controlPoints.push(cpEntity);
         GeometryEditor.controlPointsDisplay.entities.add(cpEntity);
+    }
+
+    _getEntityColor() {
+        if (! this.entity) {
+            return DEFAULT_COLOR;
+        }
+
+        if (this._type === 'polygon') {
+            const fillColor = this.entity.polygon.material.getValue();
+            const outlineColor = this.entity.polygon.outlineColor.getValue();
+            return outlineColor || fillColor || DEFAULT_COLOR;
+        }
+        else if (this._type === 'polyline') {
+            return this.entity.polyline.material.getValue().color || DEFAULT_COLOR;
+        }
+
+        return DEFAULT_COLOR;
     }
 
     _mouseMove(e) {
