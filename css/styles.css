@@ -140,3 +140,11 @@ body::-webkit-scrollbar {
 .highlight {
   border: 1px dashed gray;
 }
+
+#uploadContainer.dragover {
+    background-color:#bdbdbd;
+    background-image: url('/assets/tray-arrow-down.svg');
+    background-position: center;
+}
+
+

@@ -123,7 +123,38 @@ const editor = new Vue({
 
             copyType: null,
             changes: {},
+
+            dragover: false,
         };
+    },
+    mounted: function() {
+        const dropzone = this.$refs.uploadContainer;
+
+        if(dropzone) {
+            // register all drag & drop event listeners
+            dropzone.addEventListener("dragenter", e => {
+                e.preventDefault();
+                this.dragover = true;
+            });
+            dropzone.addEventListener("dragleave", e => {
+                e.preventDefault();
+                this.dragover = false;
+            });
+            dropzone.addEventListener("dragover", e => {
+                e.preventDefault();
+                this.dragover = true;
+                dragCancelTimeout && resetTimeout(dragCancelTimeout);
+            });
+            dropzone.addEventListener("drop", e => {
+                e.preventDefault();
+                this.dragover = false;
+                if(e.dataTransfer && e.dataTransfer.files) {
+                    for (let f of e.dataTransfer.files) {
+                        loadFile(f);
+                    }
+                }
+            });
+        }
     },
     methods: {
         selectEntity: function(entity) {

@@ -31,8 +31,19 @@
         <v-toolbar dense flat dark color="black">
           <v-toolbar-title>Import KML/CZML/GeoJSON</v-toolbar-title>
         </v-toolbar>
-        <v-card-text class="text-center pb-1 pt-2">
-          <v-btn small @click="$refs.uploadfile.click()" class="input-text">Drag here or select file</v-btn>
+        <v-card-text
+          class="text-center pb-1 pt-2"
+          ref="uploadContainer"
+          id="uploadContainer"
+          :class="{dragover: dragover}"
+        >
+          <v-btn
+            small @click="$refs.uploadfile.click()"
+            class="input-text"
+            :style="{visibility: dragover ? 'hidden' : 'visible'}"
+          >
+            Drag here or select file
+          </v-btn>
           <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file"
             multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
         </v-card-text>
