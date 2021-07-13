@@ -30,9 +30,10 @@ const viewer = new Cesium.Viewer('viewer', {
     fullscreenButton: false,
     homeButton: false,
     navigationInstructionsInitiallyVisible: false,
-    navigationHelpButton: false
+    navigationHelpButton: false,
 });
 window.viewer = viewer;
+viewer.scene.globe.showWaterEffect = false;
 
 // LabelsButton(viewer);
 // CitiesDataSource(viewer);
