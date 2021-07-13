@@ -252,8 +252,16 @@ function writePolygon(polygon) {
 
     const result = {};
 
-    writeConstantProperty(polygon.hierarchy, result, 'positions', encodePolygonPositions);
-    writeConstantProperty(polygon.hierarchy, result, 'holes', encodeHoles);
+    if(polygon.hierarchy instanceof Cesium.ConstantProperty) {
+        writeConstantProperty(polygon.hierarchy, result, 'positions', encodePolygonPositions);
+        writeConstantProperty(polygon.hierarchy, result, 'holes', encodeHoles);
+    }
+    else {
+        result['positions'] = encodePolygonPositions({
+            positions: polygon._positions._value
+        });
+    }
+
 
     writeConstantProperty(polygon.arcType, result, 'arcType', enumEncoder(Cesium.ArcType));
 
