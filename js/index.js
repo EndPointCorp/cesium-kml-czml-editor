@@ -16,6 +16,7 @@ import './dialogues/styles-dialog.js'
 import DocumentWriter from './czml-writer.js'
 
 import LabelsButton from './cities/cesium-toolbar-button.js'
+import TilesetSwitch from './util/tileset-switch.js'
 
 import {extrudePolygon, polygonAverageHeight} from './editors/polygon.js'
 import {polylineAverageHeight} from './editors/polyline.js'
@@ -37,6 +38,8 @@ viewer.scene.globe.showWaterEffect = false;
 
 // LabelsButton(viewer);
 // CitiesDataSource(viewer);
+
+TilesetSwitch(viewer);
 
 const esriImagery = viewer.baseLayerPicker.viewModel
     .imageryProviderViewModels.find(m => m.name === 'ESRI World Imagery');
