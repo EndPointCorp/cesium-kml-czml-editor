@@ -10,7 +10,7 @@ export default function TilesetSwitch(viewer) {
     element.className = "cesium-button cesium-toolbar-button cesium-home-button";
     element.setAttribute(
         "data-bind",
-        "attr: { title: tooltip }, click: command, cesiumSvgPath: { path: _svgPath, width: 26, height: 48 }"
+        "attr: { title: tooltip }, click: command, cesiumSvgPath: { path: _svgPath, width: 26, height: 26 }"
     );
 
     const viewModel = {
