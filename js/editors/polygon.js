@@ -189,9 +189,8 @@ export function extrudePolygon(polygon, avgHeight) {
     polygon.hierarchy.setValue(hierarchy);
 
     polygon.perPositionHeight = false;
-    polygon.extrudedHeight = true;
     polygon.height = 0;
-    polygon.extrudedHeight = avgHeight;
+    polygon.extrudedHeight = Math.round(avgHeight);
 
     polygon.heightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
     polygon.extrudedHeightReference = Cesium.HeightReference.RELATIVE_TO_GROUND;
