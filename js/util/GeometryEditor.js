@@ -231,19 +231,36 @@ export default class GeometryEditor {
 
         if (cpi < 0) return;
 
-        console.log('remove point at', cpi);
+        let leftMP  = this._middlePoints[cpi - 1];
+        let rightMP = this._middlePoints[cpi];
 
-        const li = cpi;
-        const ri = (cpi + 1) % this._middlePoints.length;
+        if (this._type === 'polygon' && (cpi - 1) < 0) {
+            leftMP  = this._middlePoints[this._middlePoints.length - 1];
+        }
 
-        const leftMP  = this._middlePoints[li];
-        const rightMP = this._middlePoints[ri];
+        if (leftMP) {
+            this._middlePoints = this._middlePoints.filter(p => p !== leftMP);
+            GeometryEditor.controlPointsDisplay.entities.remove(leftMP,  true);
+        }
 
-        GeometryEditor.controlPointsDisplay.entities.remove(leftMP,  true);
-        GeometryEditor.controlPointsDisplay.entities.remove(rightMP, true);
+        if (rightMP) {
+            this._middlePoints = this._middlePoints.filter(p => p !== rightMP);
+            GeometryEditor.controlPointsDisplay.entities.remove(rightMP, true);
+        }
+
+        if ( leftMP && rightMP ) {
+            const leftCP = this._controlPoints[cpi - 1] || this._controlPoints[this._controlPoints.length - 1];
+            const rightCP = this._controlPoints[cpi + 1] || this._controlPoints[0];
+
+            if (cpi - 1 < 0) {
+                this._addMiddlePoint(leftCP, rightCP);
+            }
+            else {
+                this._addMiddlePoint(leftCP, rightCP, cpi - 1);
+            }
+        }
+
         GeometryEditor.controlPointsDisplay.entities.remove(cp, true);
-
-        this._middlePoints.splice(li,  2);
         this._controlPoints.splice(cpi, 1);
     }
 
@@ -274,9 +291,11 @@ export default class GeometryEditor {
                 const cp = this._controlPoints.includes(ent.id);
                 const mp = this._middlePoints.includes(ent.id);
 
-                // if (cp && confirm("Delete point?")) {
-                //     this._removeCP(ent.id);
-                // }
+                if (cp && this._controlPoints.length > (this._type === 'polygon' ? 3 : 2)) {
+                    if (confirm("Delete point?")) {
+                        this._removeCP(ent.id);
+                    }
+                }
 
                 if (cp || mp) return;
             }
