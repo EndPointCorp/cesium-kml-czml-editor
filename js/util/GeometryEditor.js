@@ -35,6 +35,7 @@ const CONTROL_POINT_BILLBOARD_OPTIONS = {
 export default class GeometryEditor {
     constructor(viewer) {
         this.viewer = viewer;
+        this.createMode = false;
 
         // Static custom DatataSorce, to add it only once
         if(!GeometryEditor.controlPointsDisplay) {
@@ -44,6 +45,7 @@ export default class GeometryEditor {
         }
 
         this._controlPoints = [];
+        this._middlePoints = [];
 
         this._createScreenSpaceEventHandler();
     }
@@ -51,6 +53,7 @@ export default class GeometryEditor {
     newEntity(type) {
         this._type = type;
         this._setTypeOptions();
+        this.createMode = true;
 
         this.entity = new Cesium.Entity({
             [ this._type ]: {
@@ -65,6 +68,7 @@ export default class GeometryEditor {
     editEntity(type, entity) {
         this._type = type;
         this._setTypeOptions();
+        this.createMode = false;
 
         this.entity = entity;
         this._oldGeometry = this.entity[this._type][this._entityGeometryProperty].getValue();
@@ -88,6 +92,8 @@ export default class GeometryEditor {
                 this._addControlPoint(position);
             });
         }
+        this._createMiddlePoints();
+        // this.__labels();
     }
 
     _geometryCallback() {
@@ -96,6 +102,25 @@ export default class GeometryEditor {
         }
         if (this._type === 'polygon') {
             return new Cesium.PolygonHierarchy(this._controlPoints.map(cp => cp.position.getValue()));
+        }
+    }
+
+    _createMiddlePoints() {
+        this._middlePoints.forEach(mp => {
+            GeometryEditor.controlPointsDisplay.entities.remove(mp, true);
+        });
+
+        let prev = null;
+        this._controlPoints.forEach(cp => {
+            if (prev) {
+                this._addMiddlePoint(prev, cp);
+            }
+            prev = cp;
+        });
+
+        // Close loop
+        if (this._type === 'polygon' && prev) {
+            this._addMiddlePoint(prev, this._controlPoints[0]);
         }
     }
 
@@ -159,24 +184,31 @@ export default class GeometryEditor {
         }
     }
 
-    _mouseClick(e) {
-        let ent = this.viewer.scene.pick(e.position);
-        let position = this.viewer.scene.pickPosition(e.position);
-
-        if (this.entity) {
-            // CP drag is handled by this.screenSpaceEventHandler
-            if (ent && this._controlPoints.indexOf(ent.id) >= 0) {
-                return;
+    _addMiddlePoint(p1, p2, index) {
+        const color = this._getEntityColor();
+        const cpEntity = new Cesium.Entity({
+            position: new Cesium.CallbackProperty(() => {
+                const midPoint = Cesium.Cartesian3.midpoint(
+                    p1.position.getValue(),
+                    p2.position.getValue(),
+                    new Cesium.Cartesian3()
+                );
+                return midPoint;
+            }),
+            billboard: {
+                ...CONTROL_POINT_BILLBOARD_OPTIONS,
+                scale: 0.3,
+                color
             }
+        });
 
-            if (position) {
-                this._addControlPoint(position);
-            }
-            return;
-        }
+        const inx = index === undefined ? this._middlePoints.length : index;
+        this._middlePoints.splice(inx, 0, cpEntity);
+
+        GeometryEditor.controlPointsDisplay.entities.add(cpEntity);
     }
 
-    _addControlPoint(position) {
+    _addControlPoint(position, index) {
         const color = this._getEntityColor();
         const cpEntity = new Cesium.Entity({
             position: position,
@@ -186,8 +218,33 @@ export default class GeometryEditor {
             }
         });
 
-        this._controlPoints.push(cpEntity);
+        const inx = index === undefined ? this._controlPoints.length : index;
+        this._controlPoints.splice(inx, 0, cpEntity);
+
         GeometryEditor.controlPointsDisplay.entities.add(cpEntity);
+
+        return cpEntity;
+    }
+
+    _removeCP(cp) {
+        const cpi = this._controlPoints.indexOf(cp);
+
+        if (cpi < 0) return;
+
+        console.log('remove point at', cpi);
+
+        const li = cpi;
+        const ri = (cpi + 1) % this._middlePoints.length;
+
+        const leftMP  = this._middlePoints[li];
+        const rightMP = this._middlePoints[ri];
+
+        GeometryEditor.controlPointsDisplay.entities.remove(leftMP,  true);
+        GeometryEditor.controlPointsDisplay.entities.remove(rightMP, true);
+        GeometryEditor.controlPointsDisplay.entities.remove(cp, true);
+
+        this._middlePoints.splice(li,  2);
+        this._controlPoints.splice(cpi, 1);
     }
 
     _getEntityColor() {
@@ -205,6 +262,31 @@ export default class GeometryEditor {
         }
 
         return DEFAULT_COLOR;
+    }
+
+    _mouseClick(e) {
+        let ent = this.viewer.scene.pick(e.position);
+        let position = this.viewer.scene.pickPosition(e.position);
+
+        if (this.entity) {
+            // CP drag is handled by this.screenSpaceEventHandler
+            if (ent) {
+                const cp = this._controlPoints.includes(ent.id);
+                const mp = this._middlePoints.includes(ent.id);
+
+                // if (cp && confirm("Delete point?")) {
+                //     this._removeCP(ent.id);
+                // }
+
+                if (cp || mp) return;
+            }
+
+            if (position && this.createMode) {
+                this._addControlPoint(position);
+            }
+
+            return;
+        }
     }
 
     _mouseMove(e) {
@@ -227,15 +309,49 @@ export default class GeometryEditor {
 
     _mouseDown(e) {
         const pick = this.viewer.scene.pick(e.position);
+        if (!pick) return;
 
-        if (this._controlPoints && pick && this._controlPoints.includes(pick.id)) {
-            this.disableDefaultControls();
-            this._activeControlPoint = pick.id;
-            // Use pick ellipsoid viewer.scene.pickPosition(e.position) returns null if we click on entity
-            let pc = this.viewer.camera.pickEllipsoid(e.position, this.viewer.scene.globe.ellipsoid);
-            this._mouseDownPosition = Cesium.Cartographic.fromCartesian(pc);
-            this._mouseDownEntityPosition = Cesium.Cartographic.fromCartesian(pick.id.position.getValue());
+        const subj = pick.id;
+
+        const isControlPoint = this._controlPoints.includes(subj);
+
+        const middlePointIndex = this._middlePoints.indexOf(subj);
+        const isMiddlePoint = middlePointIndex >= 0;
+
+        // Use pick ellipsoid viewer.scene.pickPosition(e.position) returns null if we click on entity
+        let pc = this.viewer.camera.pickEllipsoid(e.position, this.viewer.scene.globe.ellipsoid);
+        this._mouseDownPosition = Cesium.Cartographic.fromCartesian(pc);
+        this._mouseDownEntityPosition = Cesium.Cartographic.fromCartesian(subj.position.getValue());
+
+        console.log(`Down on ${isControlPoint ? 'CP' : ''}${isMiddlePoint ? 'MP' : ''}`, subj);
+
+        this.disableDefaultControls();
+
+        if ( isControlPoint || isMiddlePoint ) {
+            this._activeControlPoint = subj;
+
+            if (isMiddlePoint) {
+
+                const li = middlePointIndex;
+                const ri = (middlePointIndex + 1) % this._controlPoints.length;
+                const leftCP  = this._controlPoints[li];
+                const rightCP = this._controlPoints[ri];
+
+                this._activeControlPoint = this._addControlPoint(
+                    subj.position.getValue(),
+                    middlePointIndex + 1
+                );
+
+                this._middlePoints.splice(middlePointIndex, 1);
+
+                this._addMiddlePoint(leftCP,  this._activeControlPoint, middlePointIndex);
+                this._addMiddlePoint(rightCP, this._activeControlPoint, middlePointIndex + 1);
+                GeometryEditor.controlPointsDisplay.entities.remove(subj, true);
+
+            }
         }
+
+        // this.__labels();
     }
 
     _mouseUp() {
@@ -259,5 +375,23 @@ export default class GeometryEditor {
         this.screenSpaceEventHandler.setInputAction(
             this._mouseClick.bind(this),
             Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    }
+
+    __labels() {
+        this._controlPoints.forEach((p, i) => {
+            p.label = new Cesium.LabelGraphics({
+                text: 'cp' + i,
+                eyeOffset: new Cesium.Cartesian3(0.0, 0.0, -25.0),
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+            });
+        });
+
+        this._middlePoints.forEach((p, i) => {
+            p.label = new Cesium.LabelGraphics({
+                text: 'mp' + i,
+                eyeOffset: new Cesium.Cartesian3(0.0, 0.0, -25.0),
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+            });
+        });
     }
 }
