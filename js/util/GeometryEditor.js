@@ -301,7 +301,21 @@ export default class GeometryEditor {
             }
 
             if (position && this.createMode) {
-                this._addControlPoint(position);
+                const left = this._controlPoints[this._controlPoints.length - 1];
+                const right = this._addControlPoint(position);
+                if (left && right) {
+                    if (this._type === 'polygon') {
+                        const closingMP = this._middlePoints[this._middlePoints.length - 1];
+                        GeometryEditor.controlPointsDisplay.entities.remove(closingMP, true);
+                        this._middlePoints.splice(this._middlePoints.length - 1, 1);
+                    }
+
+                    this._addMiddlePoint(left, right);
+
+                    if (this._type === 'polygon') {
+                        this._addMiddlePoint(right, this._controlPoints[0]);
+                    }
+                }
             }
 
             return;
