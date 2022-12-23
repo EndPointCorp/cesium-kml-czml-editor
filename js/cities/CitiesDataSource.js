@@ -29,10 +29,12 @@ function disablePick(viewer, ds) {
     const entities = ds.entities;
     const pick = viewer.scene.pick;
     viewer.scene.pick = function(...args) {
-        let picked = pick.call(viewer.scene, ...args);
-        let id = Cesium.defaultValue(picked.id, picked.primitive.id);
-        if (id instanceof Cesium.Entity && entities.contains(id)) {
-            return null;
+        const picked = pick.call(viewer.scene, ...args);
+        if (picked) {
+            const id = Cesium.defaultValue(picked.id, picked.primitive.id);
+            if (id instanceof Cesium.Entity && entities.contains(id)) {
+                return null;
+            }
         }
         return picked;
     };
@@ -40,7 +42,6 @@ function disablePick(viewer, ds) {
 
 export default function CitiesDataSource(viewer) {
     const tilingScheme = new Cesium.GeographicTilingScheme();
-    let visibleTiles = [];
     const visibleFeatures = new FeaturesMap();
 
     let lastElevation = viewer.camera.positionCartographic.height;
@@ -49,6 +50,8 @@ export default function CitiesDataSource(viewer) {
     viewer.dataSources.add(tilesDS);
 
     disablePick(viewer, tilesDS);
+
+    const activeTiles = [];
 
     function cameraChanged() {
         let camera = viewer.camera;
@@ -124,10 +127,6 @@ export default function CitiesDataSource(viewer) {
         return result;
     }
 
-    function findByCoords(arr, x, y, level) {
-        return arr.find(t => t.x === x && t.y === y && t.level === level);
-    }
-
     function findAndRemove(arr, tile) {
         let index = arr.indexOf(tile);
         if (index >= 0) {
@@ -161,105 +160,122 @@ export default function CitiesDataSource(viewer) {
         return [city];
     }
 
-    function updateTiles(viewBBOX, newTiles, heightDelta) {
-        let tilesToRemove = [];
-        let tilesToAdd = [];
+    function tileMatch(a, b) {
+        return a.x === b.x && a.y === b.y && a.level === b.level
+    }
 
-        visibleTiles = visibleTiles.filter(t => {
-            let inViewport = Cesium.Rectangle.simpleIntersection(viewBBOX, t.bbox);
-            if (!inViewport) {
-                tilesToRemove.push(t);
-            }
-            return inViewport;
-        });
+    function updateTiles(viewBBOX, newTiles, heightDelta) {
+
+        const tilesToAdd = [];
+        const tilesToRemove = [...activeTiles];
 
         newTiles.forEach(t => {
-            let exists = findByCoords(visibleTiles, t.x, t.y, t.level);
-            if (!exists) {
+            const i = tilesToRemove.find(a => tileMatch(a, t))
+
+            if (i >= 0) {
+                tilesToRemove.splice(i, 1);
+            }
+            else {
                 tilesToAdd.push(t);
-                // We add tiles to visible tiles here,
-                // to be able to calculate parent/child relations
-                visibleTiles.push(t);
             }
         });
 
-        tilesToRemove.forEach(removeTile);
+        // tilesDS.entities.removeAll();
+        const entitiesToRemove = new Map();
+        tilesToRemove.forEach(t => {
+            tilesDS.entities.values
+                .filter(e => tileMatch(e.properties.tile.getValue(), t))
+                .forEach(e => entitiesToRemove.set(e.id, e))
+        });
+
+        // entitiesToRemove.forEach(entity => {
+        //     tilesDS.entities.remove(entity);
+        // });
+
+        const loadingTiles = [];
 
         // Because there is a delay between old feature was removed and
         // a new one were loaded and added, features are flickering.
         tilesToAdd.forEach(t => {
-            queryData(t.x, t.y, t.level).then(data => {
-                let zoomIn = (heightDelta > 0);
-                if (zoomIn) {
-                    // We are going down, remove parents
-                    listAllParents(t).forEach(p => {
-                        let parent = findByCoords(visibleTiles, p.x, p.y, p.level);
-                        if (parent) {
-                            removeTile(parent);
-                            findAndRemove(visibleTiles, parent);
-                        }
-                    });
-                }
-                else {
-                    // We are going up, remove children
-                    getChildrenTiles(t).forEach(chld => {
-                        let child = findByCoords(visibleTiles, chld.x, chld.y, chld.level);
-                        if (child) {
-                            removeTile(child);
-                            findAndRemove(visibleTiles, child);
-                        }
-                    });
-                }
-
-                if (data) {
-                    let city = filterTileData(data)[0];
-                    let tileEntity = tilesDS.entities.getOrCreateEntity(tms(t));
-
-                    if (city) {
-                        addCityEntity(tileEntity, city);
+            activeTiles.push(t);
+            loadingTiles.push(new Promise((resolve, reject) => {
+                queryData(t.x, t.y, t.level).then(data => {
+                    if (!data) {
+                        reject('Empty response');
+                        return;
                     }
-                }
+
+                    data.features.forEach(city => {
+                        entitiesToRemove.delete(city.id);
+
+                        const existingEntity = tilesDS.entities.getById(city.id);
+                        if(existingEntity) {
+                            existingEntity.properties.tile.setValue(t);
+                            return;
+                        }
+
+                        tilesDS.entities.add(createEntity(city, t));
+                    });
+
+                    resolve(t);
+                }).catch(err => reject(err));
+            }));
+        });
+
+        
+        Promise.allSettled(loadingTiles).then(loadedTiles => {
+            entitiesToRemove.forEach(entity => {
+                tilesDS.entities.remove(entity);
             });
         });
     }
 
-    function addCityEntity(tileEntity, city) {
-        if (visibleFeatures.add(tileEntity.id, city.name)) {
-            let ce = new Cesium.Entity({
-                id: city.name,
-                parent: tileEntity,
-                position : Cesium.Cartesian3.fromDegrees(city.position[0], city.position[1], 1000),
-                properties: {
-                    population: city.population,
-                    name: city.name
-                },
-                label: {
-                    font: "16px sans-serif",
-                    text: city.name,
-                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                    horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                    outlineWidth: 2,
-                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-                    fillColor: Cesium.Color.LEMONCHIFFON,
-                    outlineColor: Cesium.Color.BLACK,
-                    disableDepthTestDistance: 6000000,
-                    translucencyByDistance: new Cesium.NearFarScalar(20000, 0, 30000, 1)
-                },
-                point: {
-                    color: Cesium.Color.FIREBRICK,
-                    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-                    pixelSize: 6,
-                    disableDepthTestDistance: 6000000,
-                    translucencyByDistance: new Cesium.NearFarScalar(20000, 0, 30000, 1)
-                }
-            });
-            //tilesDS.entities.removeById(ce.id);
-            tilesDS.entities.add(ce);
+    function createEntity(city, tile) {
+        const ele = city.elevation + 500;
+        let size = 48;
+        if (city.population > 50000) {
+            size = 52;
         }
+        if (city.population > 250000) {
+            size = 64;
+        }
+        if (city.population > 1000000) {
+            size = 72;
+        }
+
+        return new Cesium.Entity({
+            id: city.id,
+            position : Cesium.Cartesian3.fromDegrees(city.position[0], city.position[1], ele),
+            label: {
+                font: `${size}px sans-serif`,
+                text: city.name,
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                eyeOffset: new Cesium.Cartesian3(0, 0, -1000),
+                pixelOffset: new Cesium.Cartesian2(0, -15),
+                outlineWidth: 4,
+                style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                fillColor: Cesium.Color.LEMONCHIFFON,
+                outlineColor: Cesium.Color.BLACK,
+                disableDepthTestDistance: Number.POSITIVE_INFINITY,
+                translucencyByDistance: new Cesium.NearFarScalar(10000, 0, 20000, 1),
+                scale: 0.25
+            },
+            point: {
+                color: Cesium.Color.FIREBRICK,
+                heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+                pixelSize: 6,
+                disableDepthTestDistance: 6000000,
+                translucencyByDistance: new Cesium.NearFarScalar(10000, 0, 20000, 1)
+            },
+            properties: {
+                tile: {...tile}
+            }
+        });
     }
 
     function queryData(x, y, level) {
-        return fetch(`http://localhost:48088/${level}/${x}/${y}`).then(resp => {
+        return fetch(`http://localhost:48088/geo/${level}/${x}/${y}.json`).then(resp => {
             return resp.json();
         });
     }

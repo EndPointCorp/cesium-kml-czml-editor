@@ -20,6 +20,7 @@ import TilesetSwitch from './util/tileset-switch.js'
 
 import {extrudePolygon, polygonAverageHeight} from './editors/polygon.js'
 import {polylineAverageHeight} from './editors/polyline.js'
+import CitiesDataSource from './cities/CitiesDataSource.js'
 
 const getParams = new URLSearchParams(window.location.search);
 Cesium.Ion.defaultAccessToken = getParams.get('ion_key') ||
@@ -37,7 +38,7 @@ window.viewer = viewer;
 viewer.scene.globe.showWaterEffect = false;
 
 // LabelsButton(viewer);
-// CitiesDataSource(viewer);
+new CitiesDataSource(viewer);
 
 TilesetSwitch(viewer);
 
