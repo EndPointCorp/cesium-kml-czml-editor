@@ -44,8 +44,6 @@ export default function CitiesDataSource(viewer) {
     const tilingScheme = new Cesium.GeographicTilingScheme();
     const visibleFeatures = new FeaturesMap();
 
-    let lastElevation = viewer.camera.positionCartographic.height;
-
     const tilesDS = new Cesium.CustomDataSource('tiles');
     viewer.dataSources.add(tilesDS);
 
@@ -54,13 +52,8 @@ export default function CitiesDataSource(viewer) {
     const activeTiles = [];
 
     function cameraChanged() {
-        let camera = viewer.camera;
-        let bbox = camera.computeViewRectangle();
-        let heightDelta = lastElevation - camera.positionCartographic.height;
-        lastElevation = camera.positionCartographic.height;
-
-        let tilesToRender = viewer.scene.globe._surface._tilesToRender;
-        let tmsCoords = tilesToRender.map(t => {
+        const tilesToRender = viewer.scene.globe._surface._tilesToRender;
+        const tmsCoords = tilesToRender.map(t => {
             return {
                 level: t._level,
                 x: t._x,
@@ -69,102 +62,14 @@ export default function CitiesDataSource(viewer) {
             };
         });
 
-        updateTiles(bbox, tmsCoords, heightDelta);
-    }
-
-    function getParentTile(tile) {
-        if (tile.level == 0) {
-            return tile;
-        }
-        let level = tile.level;
-        let bbox = tile.bbox || tilingScheme.tileXYToRectangle(tile.x, tile.y, tile.level)
-        let c = Cesium.Rectangle.center(bbox);
-
-        return tileFromCoordinates(c, level - 1);
-    }
-
-    function getChildrenTiles(tile) {
-        let level = tile.level;
-        let bbox = tile.bbox || tilingScheme.tileXYToRectangle(tile.x, tile.y, tile.level)
-
-        let c = Cesium.Rectangle.center(bbox);
-        let dx = bbox.width / 4;
-        let dy = bbox.height / 4;
-
-        let cnw = new Cesium.Cartographic(c.longitude - dx, c.latitude + dy, c.height);
-        let cne = new Cesium.Cartographic(c.longitude + dx, c.latitude + dy, c.height);
-        let snw = new Cesium.Cartographic(c.longitude - dx, c.latitude - dy, c.height);
-        let sne = new Cesium.Cartographic(c.longitude + dx, c.latitude - dy, c.height);
-
-        return [
-            tileFromCoordinates(cnw, level + 1),
-            tileFromCoordinates(cne, level + 1),
-            tileFromCoordinates(snw, level + 1),
-            tileFromCoordinates(sne, level + 1),
-        ];
-    }
-
-    function tileFromCoordinates(cartographic, level) {
-        let xy = tilingScheme.positionToTileXY(cartographic, level);
-        return {
-            x: xy.x,
-            y: xy.y,
-            level: level
-        }
-    }
-
-    function listAllParents(tile) {
-        if (tile.level === 0) {
-            return [];
-        }
-
-        let result = [getParentTile(tile)];
-
-        while (result[0].level !== 0) {
-            result.unshift(getParentTile(result[0]));
-        }
-
-        return result;
-    }
-
-    function findAndRemove(arr, tile) {
-        let index = arr.indexOf(tile);
-        if (index >= 0) {
-            arr.splice(index, 1);
-        }
-    }
-
-    function tms(t) {
-        return `${t.level}/${t.x}/${t.y}`;
-    }
-
-    function removeTile(t) {
-        let tileId = tms(t);
-        if (visibleFeatures.get(tileId)) {
-            // DataSource doesn't remove children, do it manually
-            visibleFeatures.get(tileId).forEach(featureId => {
-                tilesDS.entities.removeById(featureId);
-            });
-            visibleFeatures.remove(tileId);
-        }
-        tilesDS.entities.removeById(tileId);
-    }
-
-    function filterTileData(data) {
-        let city = data[0];
-        data.forEach(c => {
-            if (c.population > city.population) {
-                city = c;
-            }
-        });
-        return [city];
+        updateTiles(tmsCoords);
     }
 
     function tileMatch(a, b) {
         return a.x === b.x && a.y === b.y && a.level === b.level
     }
 
-    function updateTiles(viewBBOX, newTiles, heightDelta) {
+    function updateTiles(newTiles) {
 
         const tilesToAdd = [];
         const tilesToRemove = [...activeTiles];
@@ -180,7 +85,6 @@ export default function CitiesDataSource(viewer) {
             }
         });
 
-        // tilesDS.entities.removeAll();
         const entitiesToRemove = new Map();
         tilesToRemove.forEach(t => {
             tilesDS.entities.values
