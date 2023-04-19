@@ -7,6 +7,9 @@
 
   <title>Cesium KML-CZML Editor</title>
   <link rel="stylesheet" href="js/cesium-1.76/Widgets/widgets.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  
   <script src="js/cesium-1.76/Cesium.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -15,7 +18,6 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
   <script src="js/lib/jscolor.js"></script>
   <script src="js/customizations.js" type="module"></script>
@@ -45,7 +47,7 @@
             Drag here or select file
           </v-btn>
           <input v-show="false" type="file" ref="uploadfile" id="file" class="input-file"
-            multiple accept=".kml, .kmz, .json, .czml, .geojson"></input>
+            multiple accept=".kml, .kmz, .json, .czml, .czmz, .geojson"></input>
         </v-card-text>
       </v-card>
 
@@ -174,7 +176,8 @@
               <v-toolbar-title>Export CZML</v-toolbar-title>
             </v-toolbar>
             <v-card-text class="text-center  pb-1 pt-2">
-              <v-btn small @click="toCZML">Save as ...</v-btn>
+              <v-btn small @click="toCZML">Download as CZML</v-btn>
+              <v-btn small @click="toZIP">Download as ZIP CZML</v-btn>
             </v-card-text>
           </v-card>
         </v-app>

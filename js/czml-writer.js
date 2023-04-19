@@ -95,9 +95,9 @@ function stringHash(str) {
 }
 
 function throughCache(url, resourceCache, ref) {
-    let hash = stringHash(url);
+    const hash = stringHash(url);
 
-    let existingRef = resourceCache[hash];
+    const existingRef = resourceCache[hash];
     if (existingRef) {
         return {
             reference: existingRef
@@ -118,7 +118,13 @@ function _resourceEncoder(ref) {
         let url = resource.url || resource;
         let isDataURL = resource.isDataURL || /^data:/.test(url);
         if (isDataURL && resourceCache && ref) {
-            return throughCache(url, resourceCache, `${id}#${ref}`);
+            if (this.separateResources) {
+                this.resourceCache[ref] = url;
+                return ref;
+            }
+            else {
+                return throughCache(url, resourceCache, `${id}#${ref}`);
+            }
         }
         return url;
     }
@@ -409,8 +415,12 @@ function writeLabel(label) {
 
 export default class DocumentWriter {
 
-    constructor () {
+    constructor (cfg) {
+        const options = cfg || {};
+        this.separateResources = options.separateResources || true;
+
         this.resourceCache = {};
+
         this.counter = 0;
         this.document = {
             "id": "document",
@@ -503,8 +513,25 @@ export default class DocumentWriter {
         this.packets.push(packet);
     }
 
-    toJSON () {
+    toJSON() {
         return [this.document, ...this.packets]
+    }
+
+    async listResources() {
+        const resources = [];
+
+        for (let key of Object.keys(this.resourceCache)) {
+            const blob = await fetch(this.resourceCache[key])
+                .then(resp => resp.blob());
+
+            resources.push({
+                name: key, 
+                lastModified: new Date(), 
+                input: blob
+            });
+        }
+
+        return resources;
     }
 
 }

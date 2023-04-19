@@ -21,6 +21,9 @@ import TilesetSwitch from './util/tileset-switch.js'
 import {extrudePolygon, polygonAverageHeight} from './editors/polygon.js'
 import {polylineAverageHeight} from './editors/polyline.js'
 
+import { downloadZip } from "https://cdn.jsdelivr.net/npm/client-zip/index.js"
+import * as zip from "https://deno.land/x/zipjs/index.js";
+
 const getParams = new URLSearchParams(window.location.search);
 Cesium.Ion.defaultAccessToken = getParams.get('ion_key') ||
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
@@ -187,14 +190,13 @@ const editor = new Vue({
             });
         },
         toCZML: function() {
-            const w = new DocumentWriter();
+            const w = new DocumentWriter({separateResources: false});
             this.entities.forEach(e => {
                 if (e.show) {
                     w.addEntity(e);
                 }
             });
             const czmlObj = w.toJSON();
-            console.log(czmlObj);
 
             this.czml = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(czmlObj));
 
@@ -202,6 +204,34 @@ const editor = new Vue({
             link.href = this.czml;
             link.download = this.filename;
             link.click();
+            link.remove()
+        },
+        toZIP: async function() {
+            const w = new DocumentWriter({separateResources: true});
+            this.entities.forEach(e => {
+                if (e.show) {
+                    w.addEntity(e);
+                }
+            });
+            const czml = JSON.stringify(w.toJSON());
+            
+            const resources = await w.listResources();
+
+            const entries = [
+                {
+                    name: 'document.czml',
+                    lastModified: new Date(), 
+                    input: czml
+                }, 
+                ...resources
+            ];
+            
+            const blob = await downloadZip(entries).blob();
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "scene.czmz";
+            link.click();
+            link.remove();
         },
         onCopyPropertiesChange: function(properties) {
             this.copyProperties = properties;
@@ -238,37 +268,101 @@ function loadFile(file) {
         loadDataSourcePromise(Cesium.KmlDataSource.load(file));
     }
     else if (/\.czml/.test(file.name)) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            let czmljson = JSON.parse(reader.result);
-            // Sanitize references
-            let selfRefs = 0;
-            czmljson.forEach(packet => {
-                if (packet.billboard && packet.billboard.image && packet.billboard.image.reference) {
-                    if (packet.billboard.image.reference.split('#')[0] === packet.id) {
-                        console.warn('Self-referencing reference for billboard image', packet);
-                        let pb = new Cesium.PinBuilder();
-                        packet.billboard.image = pb.fromText(
-                            "" + ++selfRefs,
-                            Cesium.Color.fromRandom({"alpha": 1.0}),
-                            32).toDataURL();
-                    }
-                }
-            });
+
+        readTextFromFile(file).then(text => {
+            const czmljson = JSON.parse(text);
+            sanitizeSelfRef(czmljson);
             loadDataSourcePromise(Cesium.CzmlDataSource.load(czmljson));
-        };
-        reader.readAsText(file);
+        });
+    }
+    else if (/\.czmz/.test(file.name)) {
+        const reader = new zip.ZipReader(new zip.BlobReader(file));
+
+        reader.getEntries().then(async entries => {
+            const entriesMap = new Map();
+            for (let entry of entries) {
+                const blob = await entry.getData(new zip.BlobWriter());
+                const blobURL = URL.createObjectURL(blob);
+
+                entriesMap.set(entry.filename, blobURL);
+                entriesMap.set('/' + entry.filename, blobURL);
+            }
+
+            console.log('CZMZ entries', Array.from(entriesMap.keys()));
+
+            const documentEntry = entries.find(e => /\.czml$/i.test(e.filename));
+            if (documentEntry) {
+                documentEntry.getData(new zip.TextWriter()).then(text => {
+                    const czmljson = JSON.parse(text);
+                    sanitizeSelfRef(czmljson);
+
+                    const str = JSON.stringify(czmljson);
+                    const bytes = new TextEncoder().encode(str);
+                    const blob = new Blob([bytes], {
+                        type: "application/json;charset=utf-8"
+                    });
+
+                    loadDataSourcePromise(Cesium.CzmlDataSource.load(new Cesium.Resource({
+                        url: URL.createObjectURL(blob),
+                        proxy: {
+                            getURL: url => {
+                                if (/^blob:/.test(url)) {
+                                    const blobId = new URL(url.replace(/^blob:/, '')).pathname;
+                                    const blobUrl = entriesMap.get(blobId);
+                                    return blobUrl ? blobUrl : url;
+                                }
+                                console.warn('Url not found inside czmz', url);
+                                return url;
+                            }
+                        }
+                    })));
+                });
+            }
+        });
+
     }
     else if (/\.json|\.geojson/.test(file.name)) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            loadDataSourcePromise(Cesium.GeoJsonDataSource.load(JSON.parse(reader.result)));
-        };
-        reader.readAsText(file);
+        readTextFromFile(file).then(text => {
+            Cesium.GeoJsonDataSource.load(JSON.parse(text));
+        });
     }
     else {
         console.warn("Can't recognize file type");
     }
+}
+
+function sanitizeSelfRef(czmljson) {
+    // Sanitize references
+    let selfRefs = 0;
+    czmljson.forEach(packet => {
+        const billboardIsRef = packet.billboard && 
+            packet.billboard.image && 
+            packet.billboard.image.reference;
+        
+        const selfReference = billboardIsRef && 
+            packet.billboard.image.reference.split('#')[0] === packet.id;
+        
+        if (selfReference) {
+            console.warn('Self-referencing reference for billboard image', packet);
+            const pb = new Cesium.PinBuilder();
+            packet.billboard.image = pb.fromText(
+                "" + ++selfRefs,
+                Cesium.Color.fromRandom({"alpha": 1.0}),
+                32).toDataURL();
+        }
+    });
+}
+
+function readTextFromFile(file) {
+    const reader = new FileReader();
+    const promise =  new Promise((resolve) => {
+        reader.onload = function() {
+            resolve(reader.result);
+        };
+    });
+    reader.readAsText(file);
+    
+    return promise;
 }
 
 document.getElementById('file').addEventListener('change', handleFileSelect, false);
