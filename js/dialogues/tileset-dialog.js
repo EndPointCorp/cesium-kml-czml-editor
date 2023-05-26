@@ -120,10 +120,8 @@ Vue.component('tileset-dialog-container', {
                 });
             }
 
-            urlPromise.then((url) => {
-                let tileset = new Cesium.Cesium3DTileset({
-                    url: url
-                });
+            urlPromise.then(async url => {
+                let tileset = await Cesium.Cesium3DTileset.fromUrl(url);
 
                 this.tilesList.push({
                     resource: this.resource,

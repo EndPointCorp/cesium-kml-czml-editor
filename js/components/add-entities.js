@@ -321,9 +321,9 @@ Vue.component('add-entities', {
                 if (addToEntities) {
                     console.log(tileset);
                     let entity = viewer.entities.add({
-                        name: `Tileset (${tileset.url})`,
+                        name: `Tileset (${tileset.resource.url})`,
                         tileset: {
-                            uri: tileset.url
+                            uri: tileset.resource.url
                         }
                     });
 
