@@ -102,6 +102,7 @@ const template = `
 
         <color-field
             class="mt-3"
+            @input="inputHandler"
             :entity="entity"
             :feature="'polygon'"
             :field="'outlineColor'"
