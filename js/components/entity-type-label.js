@@ -3,29 +3,26 @@ const template = `
 `;
 
 const LABELS = {
-    billboard: 'Pin',
     polyline: 'Line',
     polygon: 'Polygon',
     model: '3d Model',
     rectangle: 'Rectangle',
+    billboard: 'Pin',
     label: 'Label'
 }
 
 const PLURALS = {
-    billboard: 'Pins',
     polyline: 'Lines',
     polygon: 'Polygons',
     model: '3d Models',
     rectangle: 'Rectangles',
+    billboard: 'Pins',
     label: 'Labels'
 }
 
 export function entityType(entity) {
     return Object.keys(LABELS).find(t => {
-        if (t === 'polyline') {
-            return entity.polyline && !entity.billboard;
-        }
-        return entity[t];
+        return entity[t] !== undefined;
     });
 }
 

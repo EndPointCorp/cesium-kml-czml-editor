@@ -18,7 +18,7 @@ import DocumentWriter from './czml-writer.js'
 import LabelsButton from './cities/cesium-toolbar-button.js'
 import TilesetSwitch from './util/tileset-switch.js'
 
-import {extrudePolygon, polygonAverageHeight} from './editors/polygon.js'
+import {extrudePolygon, getCentroid, polygonAverageHeight, stickPolygonToGround} from './editors/polygon.js'
 import {polylineAverageHeight} from './editors/polyline.js'
 
 import { downloadZip } from "https://cdn.jsdelivr.net/npm/client-zip/index.js"
@@ -104,8 +104,11 @@ function polygonDefaults(entities) {
     entities.forEach(e => {
         if (e.polygon) {
             let h = polygonAverageHeight(e.polygon);
-            if (h > 0.1) {
+            if (h > 0.5) {
                 extrudePolygon(e.polygon, h);
+            }
+            else {
+                stickPolygonToGround(e.polygon);
             }
         }
     });
@@ -124,10 +127,7 @@ const editor = new Vue({
             entities: [],
             entity: null,
             advanced: false,
-
-            typeFilters: {
-            },
-
+            
             copyType: null,
             changes: {},
 
@@ -189,6 +189,42 @@ const editor = new Vue({
                 return e.parent && e.parent.id === entity.id;
             });
         },
+        clampPolygons: function() {
+            this.entities.forEach(e => {
+                if (!this.isFolder(e)) {
+                    stickPolygonToGround(e.polygon);
+                }
+            });
+        }, 
+        createLabels: function() {
+            const newEntities = [];
+
+            this.entities.forEach(e => {
+                if (!this.isFolder(e)) {
+                    let position = e.position;
+                    
+                    if( position === undefined ) {
+                        if (e.polygon) {
+                            position = getCentroid(e.polygon);
+                        }
+                    }
+    
+                    newEntities.push(viewer.entities.add({
+                        show: true,
+                        position: position,
+                        label: new Cesium.LabelGraphics({
+                            text: e.name,
+                            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                            heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
+                        })
+                    }));
+                }
+            });
+
+            console.log('Add entities ', newEntities, 'to exisiting',  this.entities);
+
+            this.entities = [...this.entities, ...newEntities];
+        }, 
         toCZML: function() {
             const w = new DocumentWriter({separateResources: false});
             this.entities.forEach(e => {

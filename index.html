@@ -170,6 +170,16 @@
             </v-card-actions>
           </v-card>
 
+          <v-card color="grey lighten-1" flat class="mb-1" v-if="filename">
+            <v-toolbar dense flat dark color="black">
+              <v-toolbar-title>Group actions</v-toolbar-title>
+            </v-toolbar>
+            <v-card-actions class="pt-0 pb-1">
+              <v-btn small @click="clampPolygons">Clamp polygons</v-btn>
+              <v-btn small @click="createLabels">Create labels</v-btn>
+            </v-card-actions>
+          </v-card>
+
           <!-- Export Section -->
           <v-card color="grey lighten-1" flat class="mb-1" v-if="filename">
             <v-toolbar dense flat dark color="black">

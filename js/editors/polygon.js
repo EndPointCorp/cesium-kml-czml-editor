@@ -205,6 +205,24 @@ export function polygonAverageHeight(polygon) {
     return heights.reduce((acc, val) => acc + val) / heights.length;
 }
 
+export function stickPolygonToGround(polygon) {
+    polygon.height = undefined;
+    polygon.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND;
+    polygon.outlineColor = Cesium.Color.BLACK;
+    polygon.extrudedHeight = undefined;
+    polygon.perPositionHeight = false;
+}
+
+export function getCentroid(polygon) {
+    const polygonHierarchy = polygon.hierarchy.getValue(0);
+    const bs = Cesium.BoundingSphere.fromPoints(polygonHierarchy.positions);
+    const c = Cesium.Cartographic.fromCartesian(bs.center);
+    
+    c.height = 0;
+
+    return Cesium.Cartographic.toCartesian(c);
+}
+
 Vue.component('polygon-editor', {
     props: ['entity', 'polygon', 'advanced'],
     data: () => ({

@@ -118,12 +118,18 @@ Vue.component('entities-list', {
     },
     watch: {
         entities: function(newValue) {
+            const typeFilters = {};
+
             newValue.forEach(e => {
-                const t = entityType(e);
-                if (t) {
-                    this.typeFilters[t] = true;
+                const type = entityType(e);
+                if (type) {
+                    typeFilters[type] = true;
                 }
             });
+
+            this.typeFilters = typeFilters;
+
+            console.log('Updated this.typeFilters', this.typeFilters);
         }
     }
 })

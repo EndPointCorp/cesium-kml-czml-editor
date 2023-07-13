@@ -351,16 +351,18 @@ export default class GeometryEditor {
         const middlePointIndex = this._middlePoints.indexOf(subj);
         const isMiddlePoint = middlePointIndex >= 0;
 
-        // Use pick ellipsoid viewer.scene.pickPosition(e.position) returns null if we click on entity
-        let pc = this.viewer.camera.pickEllipsoid(e.position, this.viewer.scene.globe.ellipsoid);
-        this._mouseDownPosition = Cesium.Cartographic.fromCartesian(pc);
-        this._mouseDownEntityPosition = Cesium.Cartographic.fromCartesian(subj.position.getValue());
-
-        console.log(`Down on ${isControlPoint ? 'CP' : ''}${isMiddlePoint ? 'MP' : ''}`, subj);
-
-        this.disableDefaultControls();
-
         if ( isControlPoint || isMiddlePoint ) {
+
+            // Use pick ellipsoid viewer.scene.pickPosition(e.position) returns null if we click on entity
+            let pc = this.viewer.camera.pickEllipsoid(e.position, this.viewer.scene.globe.ellipsoid);
+            this._mouseDownPosition = Cesium.Cartographic.fromCartesian(pc);
+            this._mouseDownEntityPosition = Cesium.Cartographic.fromCartesian(subj.position.getValue());
+    
+            console.log(`Down on ${isControlPoint ? 'CP' : ''}${isMiddlePoint ? 'MP' : ''}`, subj);
+    
+            this.disableDefaultControls();
+
+
             this._activeControlPoint = subj;
 
             if (isMiddlePoint) {
