@@ -1,3 +1,8 @@
+# serve
+
+This is a static project
+you can just serve it with any http server of your choise
+
 # cesium-kml-editor
 
 * Convert KML to CZML
