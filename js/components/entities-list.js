@@ -109,21 +109,24 @@ Vue.component('entities-list', {
         supportedTypeFiltersShortList() {
             return this.supportedTypeFilters.slice(0, 3);
         },
-        listEntity: {
+	listEntity: {
             get() {
                 return this.entity;
             },
             set(e) {
-                this.$nextTick(() => {
-                    let target = '#s' + e.id.replace(/-/gi,'');
-                    this.$vuetify.goTo(target, {
-                        container: '#scrollable-list',
-                        duration: 300,
-                        offset: 0,
-                        easing: 'easeInOutCubic',
-                    });
-                })
                 this.$emit('select', e);
+                
+                if (e && e.id) {
+                    this.$nextTick(() => {
+                        let target = '#s' + e.id.replace(/-/gi,'');
+                        this.$vuetify.goTo(target, {
+                            container: '#scrollable-list',
+                            duration: 300,
+                            offset: 0,
+                            easing: 'easeInOutCubic',
+                        });
+                    });
+                }
             }
         }
     },
