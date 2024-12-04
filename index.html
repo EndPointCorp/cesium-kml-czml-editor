@@ -25,6 +25,7 @@
 <body>
   <!-- Vuetify application start -->
   <div id="editor" class="sidebar">
+
     <v-app style="height: 90vh">
 
       <!-- File Upload Section -->
@@ -50,7 +51,7 @@
         </v-card-text>
       </v-card>
 
-      <add-entities :kmlloaded="loadedFromFile"
+      <add-entities ref="addEntities" :kmlloaded="loadedFromFile"
         @newentity="newEntity"
       ></add-entities>
 
