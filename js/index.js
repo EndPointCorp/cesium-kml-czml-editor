@@ -289,8 +289,10 @@ viewer.selectedEntityChanged.addEventListener(viewerEntityChangeListener);
 
 export function disableSelectedEntityChangeListener() {
     viewer.selectedEntityChanged.removeEventListener(viewerEntityChangeListener);
+    editor.$refs.addEntities.maximized = false;
 }
 
 export function enableSelectedEntityChangeListener() {
     viewer.selectedEntityChanged.addEventListener(viewerEntityChangeListener);
+    editor.$refs.addEntities.maximized = true;
 }
