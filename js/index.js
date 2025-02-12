@@ -17,6 +17,7 @@ import DocumentWriter from './czml-writer.js'
 
 import LabelsButton from './cities/cesium-toolbar-button.js'
 import TilesetSwitch from './util/tileset-switch.js'
+import { switchGoogleGlobeOn, switchGoogleGlobeOff } from './util/google3d.js'
 
 import {extrudePolygon, getCentroid, polygonAverageHeight, stickPolygonToGround} from './editors/polygon.js'
 import {polylineAverageHeight} from './editors/polyline.js'
@@ -30,6 +31,7 @@ Cesium.Ion.defaultAccessToken = getParams.get('ion_key') ||
         'eyJqdGkiOiI0YzE4M2QwNS00NjcwLTQzZGMtYmViNC1mOWJiZjljMzY3ZDAiLCJpZCI6NzMxNCwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0ODk1MTczNX0.' +
         'MjNWfJWsWk4lFXRoZS1EeqaFrWxEnugRqw9M3HRfAQk';
 
+
 const viewer = new Cesium.Viewer('viewer', {
     fullscreenButton: false,
     homeButton: false,
@@ -38,6 +40,9 @@ const viewer = new Cesium.Viewer('viewer', {
 });
 window.viewer = viewer;
 viewer.scene.globe.showWaterEffect = false;
+
+window.switchGoogleGlobeOn = switchGoogleGlobeOn;
+window.switchGoogleGlobeOff = switchGoogleGlobeOff;
 
 // LabelsButton(viewer);
 // CitiesDataSource(viewer);
@@ -55,6 +60,8 @@ const ionTerrain = viewer.baseLayerPicker.viewModel
 if (ionTerrain) {
     viewer.baseLayerPicker.viewModel.selectedTerrain = ionTerrain;
 }
+
+switchGoogleGlobeOn(viewer);
 
 window.dispatchEvent(new CustomEvent('viewer-created', { detail: {viewer} }));
 

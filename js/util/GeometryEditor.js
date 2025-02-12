@@ -1,3 +1,4 @@
+import { getPickCoordinates } from "./pickCoordinates.js"
 
 const WHITE_CIRCLE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAC4jAAAuIw" +
 "F4pT92AAAF90lEQVR4Xu2bS4/jRBSFb/N+jEDADAjEIgKJYcWS/79mOStAAmUxAgHdIJB4gxp/qTrJrfJ1bCf2tJ3hSDV2exK7zrmPKtetmD3" +
@@ -283,7 +284,10 @@ export default class GeometryEditor {
 
     _mouseClick(e) {
         let ent = this.viewer.scene.pick(e.position);
-        let position = this.viewer.scene.pickPosition(e.position);
+
+        const ray = this.viewer.camera.getPickRay(e.position);
+        const position = this.viewer.scene.globe.pick(ray, this.viewer.scene);
+
 
         if (this.entity) {
             // CP drag is handled by this.screenSpaceEventHandler
@@ -324,7 +328,8 @@ export default class GeometryEditor {
 
     _mouseMove(e) {
         if (this._mouseDownPosition && this._activeControlPoint) {
-            let pc = this.viewer.camera.pickEllipsoid(e.endPosition, this.viewer.scene.globe.ellipsoid);
+            // this.viewer.camera.pickEllipsoid(e.endPosition, this.viewer.scene.globe.ellipsoid);
+            let pc = getPickCoordinates(this.viewer, e.endPosition);
             let mousePosition = Cesium.Cartographic.fromCartesian(pc);
 
             let deltaLat = mousePosition.latitude - this._mouseDownPosition.latitude;
@@ -354,7 +359,10 @@ export default class GeometryEditor {
         if ( isControlPoint || isMiddlePoint ) {
 
             // Use pick ellipsoid viewer.scene.pickPosition(e.position) returns null if we click on entity
-            let pc = this.viewer.camera.pickEllipsoid(e.position, this.viewer.scene.globe.ellipsoid);
+            // getPickCoordinates(viewer, event.position)this.viewer.camera.pickEllipsoid(e.position, this.viewer.scene.globe.ellipsoid);
+            const pc = getPickCoordinates(this.viewer, e.position);
+
+
             this._mouseDownPosition = Cesium.Cartographic.fromCartesian(pc);
             this._mouseDownEntityPosition = Cesium.Cartographic.fromCartesian(subj.position.getValue());
     

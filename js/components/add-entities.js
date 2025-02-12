@@ -1,6 +1,7 @@
 import { cesiumToCSSColor, rgbaToCesium } from '../fields/material.js'
 import '../lib/JsColor.js'
 import GeometryEditor from '../util/GeometryEditor.js'
+import { getPickCoordinates } from "../util/pickCoordinates.js"
 
 const template = `
 <v-card color="grey lighten-1" flat class="mb-1">
@@ -209,6 +210,7 @@ Vue.component('add-entities', {
         },
         addPolygon: function() {
             this.polygonInput = true;
+            console.log('addPolygon');
             this.polygonE = shapeEditController.newEntity('polygon');
             viewer.entities.add(this.polygonE);
         },
@@ -230,9 +232,7 @@ Vue.component('add-entities', {
         mouseClick: function (event) {
             if (this.billboardInput) {
                 this.billboardInput = false;
-                let position = viewer.camera.pickEllipsoid(
-                    event.position,
-                    viewer.scene.globe.ellipsoid);
+                let position = getPickCoordinates(viewer, event.position);
 
                 let entity = viewer.entities.add({
                     position: position,
@@ -249,9 +249,7 @@ Vue.component('add-entities', {
                 this.$emit('newentity', entity);
             }
             else if (this.model) {
-                let position = viewer.camera.pickEllipsoid(
-                    event.position,
-                    viewer.scene.globe.ellipsoid);
+                let position = getPickCoordinates(viewer, event.position);
 
                 let entity = viewer.entities.add({
                     position: position,
@@ -267,9 +265,7 @@ Vue.component('add-entities', {
             }
             else if (this.labelInput) {
                 this.labelInput = false;
-                let position = viewer.camera.pickEllipsoid(
-                    event.position,
-                    viewer.scene.globe.ellipsoid);
+                let position = getPickCoordinates(viewer, event.position);
 
                 let entity = viewer.entities.add({
                     position: position,
