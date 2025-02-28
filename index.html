@@ -1,10 +1,7 @@
 <!doctype html>
-
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
-
   <title>Cesium KML-CZML Editor</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="js/cesium-1.76/Widgets/widgets.css">
@@ -18,14 +15,13 @@
   <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-  <script src="js/lib/jscolor.js"></script>
+  <script src="js/lib/jscolor.js" type="module"></script>
   <script src="js/customizations.js" type="module"></script>
 </head>
 
 <body>
   <!-- Vuetify application start -->
   <div id="editor" class="sidebar">
-
     <v-app style="height: 90vh">
 
       <!-- File Upload Section -->
@@ -155,8 +151,6 @@
 
             </v-card-text>
             <v-card-actions class="pt-0 pb-1">
-              <!-- <v-btn small>Update <template v-if="entity.billboard">Pin</template><template v-else>Polygon</template></v-btn> -->
-
               <styles-dialog-container
                 :entity="entity"
                 :entities="entities"
@@ -180,10 +174,14 @@
             </v-card-text>
           </v-card>
         </v-app>
+        <!-- AI Chat component -->
+        <div id="ai-chat-container">
+          <ai-chat></ai-chat>
+        </div>
       </div>
     </div>
     <div id="viewer"></div>
+    
     <script src="js/index.js" type="module"></script>
 </body>
-
 </html>
