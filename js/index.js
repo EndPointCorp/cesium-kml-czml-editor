@@ -129,8 +129,8 @@ Vue.component('ai-chat', {
       isDragging: false,
       dragStart: { x: 0, y: 0 },
       SYSTEM_PROMPT: '',
-      API_HOST: window.API_HOST || 'localhost:43434',
-      MODEL: window.MODEL || 'llama2',
+      API_HOST: window.API_HOST || 'localhost:11434',
+      MODEL: window.MODEL || 'tulu3:8b',
       autoScroll: true // New flag to control auto-scrolling
     };
   },
