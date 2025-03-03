@@ -208,7 +208,7 @@ Vue.component('billboard-editor', {
                         height: i.height
                     });
                 };
-                i.src = resource.url;
+                i.src = resource;
             }
         }).bind(this);
         this.updateBillboardImage(this.billboard);

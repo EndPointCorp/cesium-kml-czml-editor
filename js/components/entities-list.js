@@ -56,25 +56,37 @@ Vue.component('entities-list', {
             typeFilters: {}
         };
     },
+    created() {
+        // Initialize filters for existing entities
+        this.initializeTypeFilters();
+    },
     methods: {
-        selectEntity: function(entity) {
+        initializeTypeFilters() {
+            this.entities.forEach(e => {
+                const t = entityType(e);
+                if (t && !this.typeFilters.hasOwnProperty(t)) {
+                    this.$set(this.typeFilters, t, true);
+                }
+            });
+        },
+        selectEntity(entity) {
             this.$emit('select', entity);
         },
-        zoomToEntity: function() {
+        zoomToEntity() {
             if (this.entity) {
                 viewer.zoomTo(this.entity);
             }
         },
-        isFolder: function(entity) {
+        isFolder(entity) {
             return entity.position === undefined && this.entities.some(e => {
                 return e.parent && e.parent.id === entity.id;
             });
         },
-        typeLabel: function(type) {
+        typeLabel(type) {
             return labelForType(type);
         },
-        getTargetId(entity){
-            let target = 's'+entity.id.replace(/-/gi,'');
+        getTargetId(entity) {
+            let target = 's' + entity.id.replace(/-/gi,'');
             return target;
         }
     },
@@ -88,7 +100,7 @@ Vue.component('entities-list', {
             }
 
             return this.entities.filter(e => {
-                return this.isFolder(e) || visibleTypes.indexOf[entityType(e)];
+                return this.isFolder(e) || visibleTypes.includes(entityType(e));
             });
         },
         supportedTypeFilters() {
@@ -97,39 +109,38 @@ Vue.component('entities-list', {
         supportedTypeFiltersShortList() {
             return this.supportedTypeFilters.slice(0, 3);
         },
-        listEntity: {
-            get: function() {
+	listEntity: {
+            get() {
                 return this.entity;
             },
-            set: function(e) {
-                this.$nextTick(() => {
-                    let target = '#s'+e.id.replace(/-/gi,'');
-                    this.$vuetify.goTo(target, {
-                        container:'#scrollable-list',
-                        duration: 300,
-                        offset: 0,
-                        easing: 'easeInOutCubic',
-                    });
-                })
-
+            set(e) {
                 this.$emit('select', e);
+                
+                if (e && e.id) {
+                    this.$nextTick(() => {
+                        let target = '#s' + e.id.replace(/-/gi,'');
+                        this.$vuetify.goTo(target, {
+                            container: '#scrollable-list',
+                            duration: 300,
+                            offset: 0,
+                            easing: 'easeInOutCubic',
+                        });
+                    });
+                }
             }
         }
     },
     watch: {
-        entities: function(newValue) {
-            const typeFilters = {};
-
-            newValue.forEach(e => {
-                const type = entityType(e);
-                if (type) {
-                    typeFilters[type] = true;
-                }
-            });
-
-            this.typeFilters = typeFilters;
-
-            console.log('Updated this.typeFilters', this.typeFilters);
+        entities: {
+            handler(newValue) {
+                newValue.forEach(e => {
+                    const t = entityType(e);
+                    if (t && !this.typeFilters.hasOwnProperty(t)) {
+                        this.$set(this.typeFilters, t, true);
+                    }
+                });
+            },
+            immediate: true
         }
     }
-})
+});

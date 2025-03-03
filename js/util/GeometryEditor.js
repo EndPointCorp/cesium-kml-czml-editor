@@ -66,6 +66,7 @@ export default class GeometryEditor {
     }
 
     editEntity(type, entity) {
+	this.reset();
         this._type = type;
         this._setTypeOptions();
         this.createMode = false;
@@ -154,6 +155,7 @@ export default class GeometryEditor {
         this._entityGeometryProperty = null;
         GeometryEditor.controlPointsDisplay.entities.removeAll();
         this._controlPoints = [];
+        this._middlePoints = [];
     }
 
     destroy() {
@@ -185,16 +187,29 @@ export default class GeometryEditor {
     }
 
     _addMiddlePoint(p1, p2, index) {
+        if (!p1 || !p2) {
+            console.warn('Missing points for middle point calculation');
+            return;
+        }
         const color = this._getEntityColor();
         const cpEntity = new Cesium.Entity({
             position: new Cesium.CallbackProperty(() => {
+                const pos1 = p1.position.getValue();
+                const pos2 = p2.position.getValue();
+
+                if (!pos1 || !pos2) {
+                    console.warn('Invalid positions for midpoint calculation');
+                    return undefined;
+                }
+
                 const midPoint = Cesium.Cartesian3.midpoint(
-                    p1.position.getValue(),
-                    p2.position.getValue(),
+                    pos1,
+                    pos2,
                     new Cesium.Cartesian3()
                 );
                 return midPoint;
-            }),
+            }, false),
+
             billboard: {
                 ...CONTROL_POINT_BILLBOARD_OPTIONS,
                 scale: 0.3,
@@ -347,7 +362,6 @@ export default class GeometryEditor {
         const subj = pick.id;
 
         const isControlPoint = this._controlPoints.includes(subj);
-
         const middlePointIndex = this._middlePoints.indexOf(subj);
         const isMiddlePoint = middlePointIndex >= 0;
 
@@ -366,26 +380,31 @@ export default class GeometryEditor {
             this._activeControlPoint = subj;
 
             if (isMiddlePoint) {
-
                 const li = middlePointIndex;
                 const ri = (middlePointIndex + 1) % this._controlPoints.length;
-                const leftCP  = this._controlPoints[li];
+                const leftCP = this._controlPoints[li];
                 const rightCP = this._controlPoints[ri];
 
-                this._activeControlPoint = this._addControlPoint(
+                if (!leftCP || !rightCP) {
+                    console.warn('Invalid control points for middle point');
+                    return;
+                }
+		this._activeControlPoint = this._addControlPoint(
                     subj.position.getValue(),
                     middlePointIndex + 1
                 );
 
+		if (!this._activeControlPoint) {
+                    console.warn('Failed to create new control point');
+                    return;
+                }
                 this._middlePoints.splice(middlePointIndex, 1);
 
-                this._addMiddlePoint(leftCP,  this._activeControlPoint, middlePointIndex);
+                this._addMiddlePoint(leftCP, this._activeControlPoint, middlePointIndex);
                 this._addMiddlePoint(rightCP, this._activeControlPoint, middlePointIndex + 1);
                 GeometryEditor.controlPointsDisplay.entities.remove(subj, true);
-
             }
         }
-
         // this.__labels();
     }
 

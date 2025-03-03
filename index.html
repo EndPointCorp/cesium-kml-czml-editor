@@ -1,17 +1,15 @@
 <!doctype html>
-
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
-
+  <link rel="icon" href="data:,">
   <title>Cesium KML-CZML Editor</title>
+  
   <link rel="stylesheet" href="js/cesium-1.105.1/Widgets/widgets.css">
+  <script src="js/cesium-1.105.1/Cesium.js"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
   
-  <script src="js/cesium-1.105.1/Cesium.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <link rel="stylesheet" href="css/styles.css">
 
@@ -19,7 +17,7 @@
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-  <script src="js/lib/jscolor.js"></script>
+  <script src="js/lib/jscolor.js" type="module"></script>
   <script src="js/customizations.js" type="module"></script>
 </head>
 
@@ -51,7 +49,7 @@
         </v-card-text>
       </v-card>
 
-      <add-entities :kmlloaded="loadedFromFile"
+      <add-entities ref="addEntities" :kmlloaded="loadedFromFile"
         @newentity="newEntity"
       ></add-entities>
 
@@ -155,8 +153,6 @@
 
             </v-card-text>
             <v-card-actions class="pt-0 pb-1">
-              <!-- <v-btn small>Update <template v-if="entity.billboard">Pin</template><template v-else>Polygon</template></v-btn> -->
-
               <styles-dialog-container
                 :entity="entity"
                 :entities="entities"
@@ -191,10 +187,14 @@
             </v-card-text>
           </v-card>
         </v-app>
+        <!-- AI Chat component -->
+        <div id="ai-chat-container">
+          <ai-chat></ai-chat>
+        </div>
       </div>
     </div>
     <div id="viewer"></div>
+    
     <script src="js/index.js" type="module"></script>
 </body>
-
 </html>
