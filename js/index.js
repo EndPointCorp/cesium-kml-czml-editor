@@ -21,6 +21,7 @@ import { switchGoogleGlobeOn, switchGoogleGlobeOff } from './util/google3d.js'
 
 import {extrudePolygon, getCentroid, polygonAverageHeight, stickPolygonToGround} from './editors/polygon.js'
 import {polylineAverageHeight} from './editors/polyline.js'
+import {createProxyPolygon, createProxyPolyline, createProxyBillboard} from './util/reactiveProxy.js'
 
 import { downloadZip } from "https://cdn.jsdelivr.net/npm/client-zip/index.js"
 import * as zip from "https://deno.land/x/zipjs/index.js";
@@ -131,8 +132,11 @@ const editor = new Vue({
             czml: null,
             filename: null,
             loadedFromFile: false,
-            entities: [],
+            
+            // entityId: null,
             entity: null,
+            entities: [],
+
             advanced: false,
             
             copyType: null,
@@ -175,9 +179,45 @@ const editor = new Vue({
             viewer.selectedEntity = entity;
         },
         newEntity: function(entity) {
-            this.filename = 'document.czml';
-            this.entities = [...this.entities, entity];
-            this.entity = entity;
+            this.filename = this.filename || 'document.czml';
+
+
+            this.entity = {
+                id: entity.id,
+                name: entity.name,
+                get position() {
+                    return this._entity?.position;
+                },
+                set position(value) {
+                    if (this._entity) {
+                        this._entity.position = value;
+                    }
+                }
+            };
+            // Non reactive properties
+            this.entity._entity = entity;
+            this.entity.parent = entity.parent;
+
+            if (entity.polygon) {
+                const polygon = createProxyPolygon();
+                this.$set(this.entity, 'polygon', polygon);
+                polygon._polygon = entity.polygon;
+            }
+
+            if (entity.polyline) {
+                const polyline = createProxyPolyline();
+                this.$set(this.entity, 'polyline', polyline);
+                polyline._polyline = entity.polyline;
+            }
+
+            if (entity.billboard) {
+                const billboard = createProxyBillboard();
+                this.$set(this.entity, 'billboard', billboard);
+                billboard._billboard = entity.billboard;
+            }
+            
+            this.entities = [...(this.entities || []), this.entity];
+
             this.selectEntity(entity);
         },
         updateHandler: function(value, field, feature) {
@@ -203,6 +243,13 @@ const editor = new Vue({
                 }
             });
         }, 
+        setSelectedEntity: function(selection) {
+            if (selection) {
+                const entity = this.entities.find(e => e.id === selection.id);
+                console.log('setSelectedEntity', entity);
+                this.entity = entity;
+            }
+        },
         createLabels: function() {
             const newEntities = [];
 
@@ -411,15 +458,12 @@ function readTextFromFile(file) {
 document.getElementById('file').addEventListener('change', handleFileSelect, false);
 
 function viewerEntityChangeListener(selection) {
-    editor.entity = selection;
-
     if (selection) {
         window.selectedEntity = selection;
         console.log(selection);
     }
-    else {
-        editor.selectEntity(null);
-    }
+
+    editor.setSelectedEntity(selection);
 }
 
 viewer.selectedEntityChanged.addEventListener(viewerEntityChangeListener);

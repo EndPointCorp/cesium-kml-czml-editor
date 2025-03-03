@@ -126,17 +126,22 @@ export default class GeometryEditor {
     }
 
     save() {
+        const entity = this.entity;
         // Apply changes to entity
         this.entity[this._type][this._entityGeometryProperty] = new Cesium.ConstantProperty(this._geometryCallback());
-
         this.reset();
-    }
 
+        return entity;
+    }
+    
     cancel() {
+        const entity = this.entity;
         if (this._oldGeometry) {
             this.entity[this._type][this._entityGeometryProperty] = this._oldGeometry;
         }
         this.reset();
+        
+        return entity;
     }
 
     disableDefaultControls() {
@@ -285,8 +290,9 @@ export default class GeometryEditor {
     _mouseClick(e) {
         let ent = this.viewer.scene.pick(e.position);
 
-        const ray = this.viewer.camera.getPickRay(e.position);
-        const position = this.viewer.scene.globe.pick(ray, this.viewer.scene);
+        const position = getPickCoordinates(this.viewer, e.position);
+        // const ray = this.viewer.camera.getPickRay(e.position);
+        // const position = this.viewer.scene.globe.pick(ray, this.viewer.scene);
 
 
         if (this.entity) {

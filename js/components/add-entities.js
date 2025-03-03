@@ -156,10 +156,13 @@ Vue.component('add-entities', {
             hex: true,
             labelText: 'Label 1',
             labelInput: false,
+
             polylineInput: false,
             polylineE: false,
+            
             polygonInput: false,
-            polygonE: false,
+            // polygonE: false,
+            
             theme_text_color: '#000000',
             maximized: true,
         };
@@ -193,38 +196,33 @@ Vue.component('add-entities', {
         },
         addPolyline: function() {
             this.polylineInput = true;
-            this.polylineE = shapeEditController.newEntity('polyline');
-            viewer.entities.add(this.polylineE);
+            const polylineE = shapeEditController.newEntity('polyline');
+            viewer.entities.add(polylineE);
         },
         savePolyline: function() {
             this.polylineInput = false;
-            shapeEditController.save();
-            this.$emit('newentity', this.polylineE);
-            this.polylineE = null;
+            const entity = shapeEditController.save();
+            this.$emit('newentity', entity);
         },
         cancelPolyline: function() {
             this.polylineInput = false;
-            viewer.entities.remove(this.polylineE);
-            shapeEditController.cancel();
-            this.polylineE = null;
+            const entity = shapeEditController.cancel();
+            viewer.entities.remove(entity);
         },
         addPolygon: function() {
             this.polygonInput = true;
-            console.log('addPolygon');
-            this.polygonE = shapeEditController.newEntity('polygon');
-            viewer.entities.add(this.polygonE);
+            const polygonE = shapeEditController.newEntity('polygon');
+            viewer.entities.add(polygonE);
         },
         savePolygon: function() {
             this.polygonInput = false;
-            shapeEditController.save();
-            this.$emit('newentity', this.polygonE);
-            this.polygonE = null;
+            const entity = shapeEditController.save();
+            this.$emit('newentity', entity);
         },
         cancelPolygon: function() {
             this.polygonInput = false;
-            viewer.entities.remove(this.polygonE);
-            shapeEditController.cancel();
-            this.polygonE = null;
+            const entity = shapeEditController.cancel();
+            viewer.entities.remove(entity);
         },
         addLabel: function() {
             this.labelInput = true;
