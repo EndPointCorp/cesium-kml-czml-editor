@@ -274,8 +274,24 @@ const editor = new Vue({
             typeFilters: {},
             copyType: null,
             changes: {},
-            dragover: false
+            dragover: false,
+            chatEnabled: false
         };
+    },
+    async created() {
+        // Check connectivity to the Ollama API on localhost:11434 or disable chat window
+        try {
+            const response = await fetch('http://localhost:11434');
+            if (response.ok) {
+                this.chatEnabled = true;
+            } else {
+                console.warn('Ollama API responded with an error status.');
+                this.chatEnabled = false;
+            }
+        } catch (error) {
+            console.error('Ollama API not reachable:', error);
+            this.chatEnabled = false;
+        }
     },
     mounted: function() {
         const dropzone = this.$refs.uploadContainer;

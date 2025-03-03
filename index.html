@@ -57,131 +57,130 @@
         @select="selectEntity"
       ></entities-list>
 
-          <!-- Editor Section -->
-          <v-card color="grey lighten-1" flat class="mb-1" v-if="entity && !isFolder(entity)">
-            <v-toolbar dense flat dark color="black">
-              <v-toolbar-title>Edit <entity-type-label :entity="entity"></entity-type-label></v-toolbar-title>
-            </v-toolbar>
-            <v-card-text class="pt-0 pb-1">
-              <div class="mt-2">
-                <span class="entity-name text-subtitle-1 font-weight-medium">{{ entity.name }}</span>
-                  <v-btn
-                    @click="flyToEntity();"
-                    small
-                    color="blue-grey"
-                    class="mx-2 white--text entity-flyto"
-                  >
-                FlyTo
-                  <v-icon right small dark>mdi-send</v-icon>
-                </v-btn>
-            </div>
-                <entity-info :entity="entity"></entity-info>
-
-                <billboard-editor v-if="entity.billboard"
-                  :entity="entity"
-                  :billboard="entity.billboard"
-                  :advanced="advanced"
-                  @update="updateHandler">
-
-                  <template v-slot:advancetoggle>
-                    <v-switch hide-details id="advanced" class="v-input--reverse py-2 my-0"
-                      label="Advanced Editor:" v-model="advanced"></v-switch>
-                  </template>
-                </billboard-editor>
-
-                <polygon-editor v-if="entity.polygon"
-                  :entity="entity"
-                  :polygon="entity.polygon"
-                  :advanced="advanced"
-                  @update="updateHandler"
-                >
-                  <template v-slot:advancetoggle>
-                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
-                      label="Advanced Editor:" v-model="advanced"></v-switch>
-                  </template>
-                </polygon-editor>
-
-                <rectangle-editor v-if="entity.rectangle"
-                  :entity="entity"
-                  :polygon="entity.rectangle"
-                  :advanced="advanced"
-                  @update="updateHandler"
-                >
-                  <template v-slot:advancetoggle>
-                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
-                      label="Advanced Editor:" v-model="advanced"></v-switch>
-                  </template>
-                </rectangle-editor>
-
-                <polyline-editor v-if="entity.polyline && !entity.billboard"
-                  :entity="entity"
-                  :polyline="entity.polyline"
-                  :advanced="advanced"
-                  @update="updateHandler"
-                >
-                  <template v-slot:advancetoggle>
-                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0 mt-2"
-                      label="Advanced Editor:" v-model="advanced"></v-switch>
-                  </template>
-                </polyline-editor>
-
-                <model-editor v-if="entity.model"
-                  :entity="entity"
-                  :model="entity.model"
-                  :advanced="advanced"
-                  @update="updateHandler"
-                >
-                  <template v-slot:advancetoggle>
-                    <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0 mt-2"
-                      label="Advanced Editor:" v-model="advanced"></v-switch>
-                  </template>
-                </model-editor>
-
-                <label-editor v-if="entity.label"
-                  :entity="entity"
-                  :label="entity.label"
-                  :advanced="advanced"
-                  @update="updateHandler"
-                >
-                  <template v-slot:advancetoggle>
-                    <v-switch hide-details v-if="!entity.billboard" id="advanced" class="v-input--reverse py-0 my-0 mt-2"
-                      label="Advanced Editor:" v-model="advanced"></v-switch>
-                  </template>
-                </label-editor>
-
-            </v-card-text>
-            <v-card-actions class="pt-0 pb-1">
-              <styles-dialog-container
-                :entity="entity"
-                :entities="entities"
-                :changes="changes"
-                v-if="!isFolder(entity)"
+      <!-- Editor Section -->
+      <v-card color="grey lighten-1" flat class="mb-1" v-if="entity && !isFolder(entity)">
+        <v-toolbar dense flat dark color="black">
+          <v-toolbar-title>Edit <entity-type-label :entity="entity"></entity-type-label></v-toolbar-title>
+        </v-toolbar>
+        <v-card-text class="pt-0 pb-1">
+          <div class="mt-2">
+            <span class="entity-name text-subtitle-1 font-weight-medium">{{ entity.name }}</span>
+              <v-btn
+                @click="flyToEntity();"
+                small
+                color="blue-grey"
+                class="mx-2 white--text entity-flyto"
               >
-                <template v-slot:buttonlabel class="pt-2">
-                  Copy to other &nbsp;<entity-type-label :entity="entity"></entity-type-label>
-                </template>
-              </styles-dialog-container>
-            </v-card-actions>
-          </v-card>
+            FlyTo
+              <v-icon right small dark>mdi-send</v-icon>
+            </v-btn>
+          </div>
+          <entity-info :entity="entity"></entity-info>
 
-          <!-- Export Section -->
-          <v-card color="grey lighten-1" flat class="mb-1" v-if="filename">
-            <v-toolbar dense flat dark color="black">
-              <v-toolbar-title>Export CZML</v-toolbar-title>
-            </v-toolbar>
-            <v-card-text class="text-center  pb-1 pt-2">
-              <v-btn small @click="toCZML">Save as ...</v-btn>
-            </v-card-text>
-          </v-card>
-        </v-app>
-        <!-- AI Chat component -->
-        <div id="ai-chat-container">
-          <ai-chat></ai-chat>
-        </div>
-      </div>
+          <billboard-editor v-if="entity.billboard"
+            :entity="entity"
+            :billboard="entity.billboard"
+            :advanced="advanced"
+            @update="updateHandler">
+
+            <template v-slot:advancetoggle>
+              <v-switch hide-details id="advanced" class="v-input--reverse py-2 my-0"
+                label="Advanced Editor:" v-model="advanced"></v-switch>
+            </template>
+          </billboard-editor>
+
+          <polygon-editor v-if="entity.polygon"
+            :entity="entity"
+            :polygon="entity.polygon"
+            :advanced="advanced"
+            @update="updateHandler"
+          >
+            <template v-slot:advancetoggle>
+              <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
+                label="Advanced Editor:" v-model="advanced"></v-switch>
+            </template>
+          </polygon-editor>
+
+          <rectangle-editor v-if="entity.rectangle"
+            :entity="entity"
+            :polygon="entity.rectangle"
+            :advanced="advanced"
+            @update="updateHandler"
+          >
+            <template v-slot:advancetoggle>
+              <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0"
+                label="Advanced Editor:" v-model="advanced"></v-switch>
+            </template>
+          </rectangle-editor>
+
+          <polyline-editor v-if="entity.polyline && !entity.billboard"
+            :entity="entity"
+            :polyline="entity.polyline"
+            :advanced="advanced"
+            @update="updateHandler"
+          >
+            <template v-slot:advancetoggle>
+              <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0 mt-2"
+                label="Advanced Editor:" v-model="advanced"></v-switch>
+            </template>
+          </polyline-editor>
+
+          <model-editor v-if="entity.model"
+            :entity="entity"
+            :model="entity.model"
+            :advanced="advanced"
+            @update="updateHandler"
+          >
+            <template v-slot:advancetoggle>
+              <v-switch hide-details id="advanced" class="v-input--reverse py-0 my-0 mt-2"
+                label="Advanced Editor:" v-model="advanced"></v-switch>
+            </template>
+          </model-editor>
+
+          <label-editor v-if="entity.label"
+            :entity="entity"
+            :label="entity.label"
+            :advanced="advanced"
+            @update="updateHandler"
+          >
+            <template v-slot:advancetoggle>
+              <v-switch hide-details v-if="!entity.billboard" id="advanced" class="v-input--reverse py-0 my-0 mt-2"
+                label="Advanced Editor:" v-model="advanced"></v-switch>
+            </template>
+          </label-editor>
+
+        </v-card-text>
+        <v-card-actions class="pt-0 pb-1">
+          <styles-dialog-container
+            :entity="entity"
+            :entities="entities"
+            :changes="changes"
+            v-if="!isFolder(entity)"
+          >
+            <template v-slot:buttonlabel class="pt-2">
+              Copy to other &nbsp;<entity-type-label :entity="entity"></entity-type-label>
+            </template>
+          </styles-dialog-container>
+        </v-card-actions>
+      </v-card>
+
+      <!-- Export Section -->
+      <v-card color="grey lighten-1" flat class="mb-1" v-if="filename">
+        <v-toolbar dense flat dark color="black">
+          <v-toolbar-title>Export CZML</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text class="text-center  pb-1 pt-2">
+          <v-btn small @click="toCZML">Save as ...</v-btn>
+        </v-card-text>
+      </v-card>
+    </v-app>
+    <!-- AI Chat component -->
+    <div id="ai-chat-container" v-if="chatEnabled">
+      <ai-chat></ai-chat>
     </div>
-    <div id="viewer"></div>
+  </div>
+  <div id="viewer"></div>
     
-    <script src="js/index.js" type="module"></script>
+  <script src="js/index.js" type="module"></script>
 </body>
 </html>
