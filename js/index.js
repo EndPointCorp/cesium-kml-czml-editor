@@ -484,7 +484,7 @@ function loadFile(file) {
                 }
             });
             loadDataSourcePromise(Cesium.CzmlDataSource.load(czmljson));
-        });
+        };
     }
     else if (/\.czmz/.test(file.name)) {
         const reader = new zip.ZipReader(new zip.BlobReader(file));
