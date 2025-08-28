@@ -1,3 +1,8 @@
+# New Version
+
+This is an old version which is not longer in active development.
+Check https://github.com/EndPointCorp/czml-editor for the new version.
+
 # serve
 
 This is a static project
